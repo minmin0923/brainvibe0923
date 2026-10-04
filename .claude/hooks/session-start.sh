@@ -8,7 +8,7 @@ fi
 
 # 1) agent-browser CLI 설치 (이미 있으면 건너뜀)
 if ! command -v agent-browser >/dev/null 2>&1; then
-  npm install -g agent-browser >/dev/null 2>&1
+  npm install -g agent-browser@latest >/dev/null 2>&1
 fi
 
 # 2) 미리 설치된 Chromium이 있으면 그것을 쓰고, 없으면 다운로드를 시도한다.
