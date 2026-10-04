@@ -164,7 +164,67 @@
     .method { background: var(--surface); border-radius: 12px; padding: 20px; max-width: 65ch; font-size: 14px; color: var(--text-muted); line-height: 1.6; }
     footer { margin: 96px 0 48px; font-size: 14px; color: var(--text-muted); }
 
+    /* 타임라인 차트 */
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14px; color: var(--text-muted); margin: 0 0 16px; }
+    .chart-legend span { display: inline-flex; align-items: center; gap: 8px; }
+    .swatch { width: 16px; height: 8px; border-radius: 4px; background: var(--text-muted); }
+    .swatch.in { background: var(--accent); }
+    .swatch.window { height: 16px; border-radius: 4px; background: var(--surface); border: 1px solid var(--border); }
+    .chart { position: relative; }
+    .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .chart .axis-text { fill: var(--text-muted); font-size: 12px; font-family: var(--mono); }
+    .chart .row-label { fill: var(--text); font-size: 13px; }
+    .chart .grid { stroke: var(--border); stroke-width: 1; }
+    .chart .window { fill: var(--surface); }
+    .chart .window-label { fill: var(--text-muted); font-size: 12px; }
+    .chart .bar { fill: var(--text-muted); }
+    .chart .bar.in { fill: var(--accent); }
+    .chart .hit { fill: transparent; cursor: pointer; }
+    .chart .row:hover .bar, .chart .row:focus-visible .bar { opacity: 0.8; }
+    .chart .row:focus-visible { outline: none; }
+    .chart .row:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
+    .chart .cut { fill: var(--text-muted); font-size: 12px; }
+    .tooltip {
+      position: absolute; pointer-events: none; z-index: 5; max-width: 260px;
+      background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 13px; line-height: 1.5;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+    }
+    .tooltip strong { display: block; font-weight: 600; }
+    .tooltip span { color: var(--text-muted); font-family: var(--mono); font-size: 12px; }
+    .undated { font-size: 14px; color: var(--text-muted); margin: 12px 0 0; }
+    .table-toggle { margin-top: 16px; font-size: 14px; }
+    .table-toggle summary { cursor: pointer; color: var(--accent); }
+    .table-scroll { overflow-x: auto; margin-top: 12px; }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    th.n { text-align: right; }
+
+    /* 검증 */
+    .review { display: grid; gap: 16px; }
+    .review-col { border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: grid; gap: 8px; align-content: start; }
+    .review-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .review-head strong { font-weight: 600; }
+    .review-col p, .review-col ul { font-size: 15px; }
+    .review-col .small { font-size: 14px; color: var(--text-muted); }
+    .tag.ok { color: var(--accent); border-color: var(--accent); }
+    .tag.bad { color: var(--text); border-color: var(--text); font-weight: 600; }
+    .btn-secondary {
+      height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid var(--border); background: transparent;
+      color: var(--text); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; justify-self: start;
+      touch-action: manipulation; transition: border-color 150ms var(--ease), background-color 150ms var(--ease);
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); }
+    .btn-secondary:active { background: var(--surface); }
+    .idea-img { margin: 12px 0 0; }
+    .idea-img img { display: block; width: 100%; max-width: 280px; height: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .idea-img figcaption { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+    .note { font-size: 14px; color: var(--text-muted); max-width: 65ch; margin: 0; }
+
     @media (min-width: 768px) {
+      .review { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .wrap { padding: 0 32px; }
       header.top { padding-top: 64px; }
       h1 { font-size: 44px; }
@@ -210,6 +270,22 @@
         <ul class="summary" id="summary"></ul>
       </section>
 
+      <section aria-labelledby="timeline-title">
+        <h2 id="timeline-title">사례 타임라인</h2>
+        <p class="note" style="margin-bottom:16px">처음 보인 날부터 정점까지입니다. 막대를 누르면 해당 사례로 이동합니다.</p>
+        <div class="chart-legend" aria-hidden="true">
+          <span><i class="swatch in"></i>분석 기간과 겹침</span>
+          <span><i class="swatch"></i>기간 전에 끝남</span>
+          <span><i class="swatch window"></i>분석 기간</span>
+        </div>
+        <div class="chart" id="timeline"></div>
+        <p class="undated" id="undated"></p>
+        <details class="table-toggle">
+          <summary>표로 보기</summary>
+          <div class="table-scroll"><table id="timeline-table"></table></div>
+        </details>
+      </section>
+
       <section aria-labelledby="items-title">
         <h2 id="items-title" tabindex="-1">사례</h2>
         <div class="filters" role="group" aria-label="사례 필터">
@@ -231,6 +307,11 @@
         <ul class="items" id="items"></ul>
       </section>
 
+      <section aria-labelledby="insta-title">
+        <h2 id="insta-title">인스타그램 실측 후보</h2>
+        <div id="insta"></div>
+      </section>
+
       <section aria-labelledby="patterns-title">
         <h2 id="patterns-title">공통 패턴</h2>
         <div class="patterns" id="patterns"></div>
@@ -247,7 +328,7 @@
       </section>
     </main>
 
-    <footer>데이터 파일: <span class="num">trend-report/data.js</span>. 작성 규칙은 같은 폴더의 README.md를 보세요.</footer>
+    <footer>원본 데이터: <span class="num">trend-report/reports/</span>. ChatGPT 연동과 설정 방법은 같은 폴더의 GUIDE.md를 보세요.</footer>
   </div>
 
   <script src="data.js"></script>
@@ -257,6 +338,10 @@
       var REGION = { kr: "국내", global: "해외", both: "국내외" };
       var STATUS = { peak: "이번 주 정점", ongoing: "확산 중", reference: "참고" };
       var EVIDENCE = { metric: "수치 확인", press: "보도로 확인", unverified: "확인 필요" };
+      var VERDICT = { confirmed: "확인", partial: "일부 확인", unconfirmed: "미확인", contradicted: "반박" };
+      var SVGNS = "http://www.w3.org/2000/svg";
+      var numFmt = new Intl.NumberFormat("ko-KR");
+      var DAY = 86400000;
       var state = { report: null, reportIndex: 0, region: "all", status: "all" };
       var $ = function (id) { return document.getElementById(id); };
 
@@ -290,6 +375,74 @@
         history.replaceState(null, "", location.pathname + (qs ? "?" + qs : ""));
       }
 
+      function reviewBy(item, who) {
+        return (item.review || []).filter(function (v) { return v.by === who; })[0] || null;
+      }
+      // Claude와 ChatGPT 판정을 합친 최종 상태
+      function crossCheck(item) {
+        var c = reviewBy(item, "claude"), g = reviewBy(item, "chatgpt");
+        if (!g) return { label: "ChatGPT 검증 전", cls: "" };
+        if ((c && c.verdict === "contradicted") || g.verdict === "contradicted") return { label: "반박 있음", cls: "bad" };
+        if (c && c.verdict === "confirmed" && g.verdict === "confirmed") return { label: "교차 확인", cls: "ok" };
+        return { label: "부분 확인", cls: "" };
+      }
+      function verdictTag(v) {
+        var cls = v === "confirmed" ? " ok" : v === "contradicted" ? " bad" : "";
+        return el("span", { class: "tag" + cls, text: VERDICT[v] || "미확인" });
+      }
+      function link(label, url) {
+        return el("a", { href: url, target: "_blank", rel: "noopener noreferrer", text: label });
+      }
+
+      function copyPrompt(item, btn) {
+        var done = function (ok) {
+          btn.textContent = ok ? "복사했습니다" : "복사하지 못했습니다. 다시 눌러 주세요";
+          setTimeout(function () { btn.textContent = "ChatGPT 검증 프롬프트 복사"; }, 2000);
+        };
+        // 클릭 직후에 바로 끝나는 방식을 먼저 쓰고, 안 되면 클립보드 API를 쓴다.
+        if (fallbackCopy(item.gptPrompt)) return done(true);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(item.gptPrompt).then(function () { done(true); }, function () { done(false); });
+        } else { done(false); }
+      }
+      function fallbackCopy(text) {
+        var ta = el("textarea", { "aria-hidden": "true", readonly: "", style: "position:fixed;left:-9999px" });
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        ta.remove();
+        return ok;
+      }
+
+      function renderReview(item) {
+        var c = reviewBy(item, "claude"), g = reviewBy(item, "chatgpt");
+        var claudeCol = el("div", { class: "review-col" }, [
+          el("div", { class: "review-head" }, [el("strong", { text: "Claude 1차 확인" }), c ? verdictTag(c.verdict) : null]),
+          el("p", { text: c ? c.notes : "아직 확인하지 않았습니다." }),
+          c ? el("p", { class: "small", text: "확인일 " + c.checkedAt }) : null
+        ]);
+        var gptChildren;
+        if (g) {
+          gptChildren = [
+            el("div", { class: "review-head" }, [el("strong", { text: "ChatGPT 교차 검증" }), verdictTag(g.verdict)]),
+            el("p", { text: g.notes }),
+            g.claims && g.claims.length ? list(g.claims.map(function (x) { return (VERDICT[x.result] || "") + ": " + x.claim + ". " + x.note; })) : null,
+            g.newMetrics && g.newMetrics.length ? el("div", null, [el("h4", { text: "새로 찾은 수치" }), list(g.newMetrics.map(function (m) { return m.text; }))]) : null,
+            g.newSources && g.newSources.length ? el("ul", { class: "sources" }, g.newSources.map(function (x) { return el("li", null, [link(x.label, x.url)]); })) : null,
+            el("p", { class: "small", text: (g.model || "") + " · " + g.checkedAt + (g.inWindow === false ? " · 기간 밖으로 판단" : "") })
+          ];
+        } else {
+          var btn = el("button", { type: "button", class: "btn-secondary", "aria-live": "polite", text: "ChatGPT 검증 프롬프트 복사" });
+          btn.addEventListener("click", function () { copyPrompt(item, btn); });
+          gptChildren = [
+            el("div", { class: "review-head" }, [el("strong", { text: "ChatGPT 교차 검증" }), el("span", { class: "tag", text: "검증 전" })]),
+            el("p", { class: "small", text: "API로 자동 검증하려면 tools/gpt_verify.py를 실행하세요. API 없이 하려면 아래 버튼으로 프롬프트를 복사해 ChatGPT에 붙여 넣고, 받은 JSON을 tools/gpt_verify.py --import로 저장합니다." }),
+            btn
+          ];
+        }
+        return el("div", { class: "review" }, [claudeCol, el("div", { class: "review-col" }, gptChildren)]);
+      }
+
       function matches(item) {
         var regionOk = state.region === "all" || item.region === state.region || item.region === "both";
         var statusOk = state.status === "all" || item.status === state.status;
@@ -307,7 +460,8 @@
           el("span", { class: "tag" + (item.status === "peak" ? " peak" : ""), text: STATUS[item.status] }),
           el("span", { class: "tag", text: REGION[item.region] }),
           el("span", { class: "tag", text: item.type }),
-          el("span", { class: "tag", text: EVIDENCE[item.evidence] })
+          el("span", { class: "tag", text: EVIDENCE[item.evidence] }),
+          el("span", { class: "tag " + crossCheck(item).cls, text: crossCheck(item).label })
         ]);
         var head = el("div", null, [el("h3", { text: item.title }), meta]);
         var summary = el("summary", null, [head, chev]);
@@ -330,9 +484,22 @@
           block("기본 정보", facts),
           block("왜 퍼졌나", list(item.why)),
           block("주의할 점", el("p", { text: item.caution })),
-          el("div", { class: "idea full" }, [el("h4", { text: "우리 채널에서 만든다면" }), el("p", { text: item.idea })]),
+          el("div", { class: "idea full" }, [
+            el("h4", { text: "우리 채널에서 만든다면" }),
+            el("p", { text: item.idea }),
+            item.image ? el("figure", { class: "idea-img" }, [
+              el("img", { src: item.image.src, width: "1024", height: "1536", loading: "lazy", decoding: "async",
+                alt: item.title + "을 참고한 우리 채널 버전 3컷 스토리보드 시안" }),
+              el("figcaption", { text: "ChatGPT 이미지 모델(" + item.image.model + ")로 만든 시안 · " + item.image.createdAt })
+            ]) : null
+          ]),
+          block("검증", renderReview(item), true),
           block("인스타그램에서 직접 확인할 것", el("p", { text: item.checkOnInstagram })),
-          block("출처", sources)
+          block("출처", sources),
+          (function () {
+            var g = reviewBy(item, "chatgpt");
+            return g && g.ideas && g.ideas.length ? block("ChatGPT 제안: 결과를 높이는 방법", list(g.ideas), true) : null;
+          })()
         ]);
 
         var details = el("details", null, [summary, detail]);
@@ -367,11 +534,12 @@
           total: r.items.length,
           peak: r.items.filter(function (i) { return i.status === "peak"; }).length,
           kr: r.items.filter(function (i) { return i.region === "kr" || i.region === "both"; }).length,
-          metric: r.items.filter(function (i) { return i.evidence === "metric"; }).length
+          cross: r.items.filter(function (i) { return crossCheck(i).label === "교차 확인"; }).length,
+          gpt: r.items.filter(function (i) { return reviewBy(i, "chatgpt"); }).length
         };
         var stats = $("stats");
         stats.textContent = "";
-        [["전체 사례", counts.total], ["이번 주 정점", counts.peak], ["국내 관련", counts.kr], ["수치 확인", counts.metric]]
+        [["전체 사례", counts.total], ["이번 주 정점", counts.peak], ["국내 관련", counts.kr], ["교차 확인", counts.cross + " / " + counts.gpt]]
           .forEach(function (s) {
             stats.appendChild(el("div", { class: "stat" }, [el("dt", { text: s[0] }), el("dd", { text: String(s[1]) })]));
           });
@@ -386,7 +554,7 @@
             var it = r.items.filter(function (x) { return x.id === id; })[0];
             if (!it) return;
             if (j) refs.appendChild(document.createTextNode(", "));
-            var b = el("button", { type: "button", class: "link-btn", text: it.title.split(",")[0] });
+            var b = el("button", { type: "button", class: "link-btn", text: (it.short || it.title) });
             b.addEventListener("click", function () { openItem(id); });
             refs.appendChild(b);
           });
@@ -400,9 +568,137 @@
 
         var next = $("next"); next.textContent = "";
         r.nextActions.forEach(function (t) { next.appendChild(el("li", { text: t })); });
-        $("method").textContent = r.method + " 수집일: " + fmtDate(r.collectedAt) + ".";
+        $("method").textContent = r.method + " " + (r.reviewPolicy || "") + " 수집일: " + fmtDate(r.collectedAt) + ".";
+        renderTimeline();
+        renderTimelineTable(r);
+        renderInstagram(r);
         renderItems();
       }
+
+      // ---------- 타임라인 차트 ----------
+      var tip = null;
+      function svg(tag, attrs) {
+        var n = document.createElementNS(SVGNS, tag);
+        Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+        return n;
+      }
+      function ts(d) { return Date.parse(d + "T00:00:00Z"); }
+      function shortDate(t) { var d = new Date(t); return (d.getUTCMonth() + 1) + "/" + d.getUTCDate(); }
+
+      function renderTimeline() {
+        var r = state.report, box = $("timeline");
+        box.textContent = "";
+        var dated = r.items.filter(function (i) { return i.timeline; });
+        var undated = r.items.filter(function (i) { return !i.timeline; });
+        $("undated").textContent = undated.length ? "날짜 미확인으로 차트에서 뺀 사례: " + undated.map(function (i) { return (i.short || i.title); }).join(", ") : "";
+
+        var winS = ts(r.periodStart), winE = ts(r.periodEnd) + DAY;
+        var axisS = winS - 26 * DAY, axisE = winE + DAY;  // 분석 기간 앞 약 4주를 보여 준다
+        var width = Math.max(box.clientWidth, 300);
+        var narrow = width < 640;
+        var labelW = narrow ? 0 : 220, rowH = narrow ? 44 : 32, top = 24, barH = 8;
+        var plotW = width - labelW - 8;
+        var x = function (t) { return labelW + Math.max(0, Math.min(1, (t - axisS) / (axisE - axisS))) * plotW; };
+        var height = top + dated.length * rowH + 24;
+        var root = svg("svg", { viewBox: "0 0 " + width + " " + height, width: width, height: height, role: "img",
+          "aria-label": "사례별 처음 보인 날부터 정점까지의 기간 차트. 같은 내용을 아래 표에서 볼 수 있습니다." });
+
+        root.appendChild(svg("rect", { class: "window", x: x(winS), y: top - 8, width: x(winE) - x(winS), height: dated.length * rowH + 8, rx: 4 }));
+        var wl = svg("text", { class: "window-label", x: x(winS) + 4, y: top - 12 }); wl.textContent = "분석 기간";
+        root.appendChild(wl);
+        // 주 단위 눈금
+        for (var t = axisS; t <= axisE; t += 7 * DAY) {
+          root.appendChild(svg("line", { class: "grid", x1: x(t), x2: x(t), y1: top - 8, y2: top + dated.length * rowH }));
+          var tx = svg("text", { class: "axis-text", x: x(t), y: height - 4, "text-anchor": "middle" }); tx.textContent = shortDate(t);
+          root.appendChild(tx);
+        }
+
+        dated.forEach(function (item, i) {
+          var s = ts(item.timeline.start), e = ts(item.timeline.end) + DAY;
+          var inWin = e > winS && s < winE;
+          var g = svg("g", { class: "row", tabindex: "0", role: "button",
+            "aria-label": item.title + ", " + shortDate(s) + "부터 " + shortDate(e - DAY) + "까지" + (inWin ? ", 분석 기간과 겹침" : "") });
+          var y = top + i * rowH + (narrow ? 20 : rowH / 2);
+          if (narrow) {
+            var lab = svg("text", { class: "row-label", x: 0, y: y - 10 }); lab.textContent = (item.short || item.title);
+            g.appendChild(lab);
+          } else {
+            var lab2 = svg("text", { class: "row-label", x: 0, y: y + 4 }); lab2.textContent = (item.short || item.title);
+            g.appendChild(lab2);
+          }
+          g.appendChild(svg("rect", { class: "hit", x: narrow ? 0 : labelW, y: y - rowH / 2 + (narrow ? -6 : 0), width: narrow ? width : plotW, height: rowH - 2, rx: 4 }));
+          var x1 = x(s), x2 = Math.max(x(e), x1 + barH);
+          g.appendChild(svg("rect", { class: "bar" + (inWin ? " in" : ""), x: x1, y: y - barH / 2, width: x2 - x1, height: barH, rx: 4 }));
+          if (s < axisS) {
+            var cut = svg("text", { class: "cut", x: labelW + 2, y: y - 8 }); cut.textContent = "← " + shortDate(s) + " 시작";
+            g.appendChild(cut);
+          }
+          var show = function (ev) {
+            tip = tip || box.appendChild(el("div", { class: "tooltip", role: "status" }));
+            tip.textContent = "";
+            tip.appendChild(el("strong", { text: item.title }));
+            tip.appendChild(el("span", { text: item.timeline.start + " ~ " + item.timeline.end + " · " + STATUS[item.status] }));
+            var bx = box.getBoundingClientRect();
+            var px = ev && ev.clientX ? ev.clientX - bx.left : x2;
+            tip.style.left = Math.min(px + 12, width - 260) + "px";
+            tip.style.top = (y + 12) + "px";
+            tip.hidden = false;
+          };
+          var hide = function () { if (tip) tip.hidden = true; };
+          g.addEventListener("mousemove", show);
+          g.addEventListener("mouseleave", hide);
+          g.addEventListener("focus", function () { show(); });
+          g.addEventListener("blur", hide);
+          g.addEventListener("click", function () { hide(); openItem(item.id); });
+          g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openItem(item.id); } });
+          root.appendChild(g);
+        });
+        box.appendChild(root);
+        tip = null;
+      }
+
+      function renderTimelineTable(r) {
+        var t = $("timeline-table"); t.textContent = "";
+        t.appendChild(el("thead", null, [el("tr", null, ["사례", "처음 보인 때", "정점까지", "상태", "최종 검증"].map(function (h) { return el("th", { scope: "col", text: h }); }))]));
+        t.appendChild(el("tbody", null, r.items.map(function (i) {
+          return el("tr", null, [
+            el("td", { text: i.title }),
+            el("td", { class: "n", text: i.timeline ? i.timeline.start : "미확인" }),
+            el("td", { class: "n", text: i.timeline ? i.timeline.end : "미확인" }),
+            el("td", { text: STATUS[i.status] }),
+            el("td", { text: crossCheck(i).label })
+          ]);
+        })));
+      }
+
+      function renderInstagram(r) {
+        var box = $("insta"); box.textContent = "";
+        var data = r.instagram;
+        if (!data || !data.candidates || !data.candidates.length) {
+          box.appendChild(el("p", { class: "note", text: "아직 실측 데이터가 없습니다. Apify를 연결하고 tools/collect_instagram.py를 실행하면, 분석 기간에 올라온 해시태그 릴스가 실제 조회수 순으로 여기에 표시됩니다. 설정 방법은 GUIDE.md를 보세요." }));
+          return;
+        }
+        box.appendChild(el("p", { class: "note", text: "해시태그 " + data.hashtags.map(function (h) { return "#" + h; }).join(" ") + " 에서 " + numFmt.format(data.fetched) + "개를 받아 기간 안의 게시물만 남겼습니다. 수집일 " + data.collectedAt + ". 사람이 보고 사례로 옮길 후보입니다." }));
+        var table = el("table");
+        table.appendChild(el("thead", null, [el("tr", null, [["계정"], ["올린 날"], ["조회수", "n"], ["좋아요", "n"], ["댓글", "n"], ["링크"]].map(function (h) { return el("th", { scope: "col", class: h[1] || "", text: h[0] }); }))]));
+        table.appendChild(el("tbody", null, data.candidates.slice(0, 15).map(function (c) {
+          return el("tr", null, [
+            el("td", { text: "@" + c.owner }),
+            el("td", { class: "n", text: String(c.postedAt).slice(0, 10) }),
+            el("td", { class: "n", text: numFmt.format(c.views) }),
+            el("td", { class: "n", text: numFmt.format(c.likes) }),
+            el("td", { class: "n", text: numFmt.format(c.comments) }),
+            el("td", null, [link("열기", c.url)])
+          ]);
+        })));
+        box.appendChild(el("div", { class: "table-scroll" }, [table]));
+      }
+
+      var resizeTimer;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () { if (state.report) renderTimeline(); }, 150);
+      });
 
       function syncFilters() {
         document.querySelectorAll(".filter-group").forEach(function (g) {

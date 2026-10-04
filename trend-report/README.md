@@ -4,7 +4,16 @@
 채널 만들기 1단계(자료 확인, 분석, 제시)에 해당합니다.
 
 - 화면: `index.html`을 브라우저로 열면 됩니다. 서버가 필요 없습니다.
-- 데이터: `data.js`의 `TREND_REPORTS` 배열. 맨 앞 항목이 최신 주차입니다.
+- 원본 데이터: `reports/<주차>.json` (예: `reports/2026-W40.json`). 사례를 고칠 때는 이 파일을 고칩니다.
+- 화면용 데이터: `data.js`는 `python3 tools/build.py`가 자동으로 만듭니다. 직접 고치지 않습니다.
+- ChatGPT 교차 검증, 이미지 시안, 인스타그램 실측 수집은 [GUIDE.md](GUIDE.md)를 보세요.
+
+| 폴더 | 내용 |
+|---|---|
+| `reports/` | 주차별 사례 원본, ChatGPT 검증 결과, 인스타그램 실측 후보 |
+| `tools/` | `gpt_verify.py`, `gpt_images.py`, `collect_instagram.py`, `build.py` |
+| `prompts/` | ChatGPT에 보내는 검증, 이미지 프롬프트 |
+| `images/` | ChatGPT가 만든 스토리보드 시안 |
 
 ## 매주 하는 일
 
@@ -17,7 +26,8 @@
    - 후보 계정의 최근 릴스 조회수, 올린 날짜, 오디오 사용 수를 적습니다.
    - 각 사례의 "인스타그램에서 직접 확인할 것" 칸을 채웁니다.
 4. **판정하기.** 아래 기준으로 상태와 근거를 정합니다.
-5. **`data.js`에 추가하고** 화면에서 확인합니다.
+5. **`reports/<주차>.json`에 추가하고** `python3 tools/build.py`를 실행한 뒤 화면에서 확인합니다.
+6. **ChatGPT로 교차 검증하고 이미지 시안을 만듭니다** (GUIDE.md 4장).
 
 ## 바이럴 판정 기준
 
@@ -46,6 +56,7 @@
 ## 항목 모양
 
 ```js
+// reports/<주차>.json 의 items 배열 안 항목
 {
   id: "jean-phil",              // 영문 소문자와 하이픈
   region: "global",             // kr | global | both
@@ -62,6 +73,10 @@
   caution: "",
   idea: "",                     // 우리 채널에서 만든다면
   checkOnInstagram: "",
-  sources: [{ label: "", url: "" }]
+  sources: [{ label: "", url: "" }],
+  short: "",                    // 차트에 쓸 짧은 이름
+  timeline: { start: "YYYY-MM-DD", end: "YYYY-MM-DD" },  // 날짜를 모르면 null
+  review: [{ by: "claude", checkedAt: "", verdict: "confirmed", notes: "" }]
+  // verdict: confirmed | partial | unconfirmed | contradicted
 }
 ```
