@@ -1,0 +1,315 @@
+// AI 바이럴 주간 리포트 데이터.
+// 새 주차를 추가할 때는 TREND_REPORTS 배열 맨 앞에 같은 모양의 객체를 넣는다.
+// 작성 규칙은 README.md를 따른다. 확인하지 못한 숫자는 적지 않는다.
+//
+// status: "peak"(이번 주에 정점), "ongoing"(전에 시작, 이번 주에도 확산), "reference"(기간 밖, 포맷 참고용)
+// evidence: "metric"(조회수 등 수치 확인), "press"(보도로만 확인), "unverified"(날짜나 수치 미확인)
+
+window.TREND_REPORTS = [
+  {
+    id: "2026-W40",
+    title: "2026년 40주차",
+    periodStart: "2026-09-27",
+    periodEnd: "2026-10-04",
+    collectedAt: "2026-10-04",
+    method:
+      "웹 검색으로 해외 매체, 국내 트렌드 레터, 밈 아카이브에 실린 사례를 모았다. 이 수집 환경에서는 인스타그램에 직접 접속할 수 없어서, 조회수는 보도된 숫자만 적었다. 인스타그램 앱에서 직접 확인할 항목은 각 사례 아래에 따로 적었다.",
+    summary: [
+      "이번 주 해외에서 가장 크게 터진 AI 콘텐츠는 가상 인물 Jean Philanthrope(장 필)다. 영상 8개로 누적 7,700만 회를 넘겼고, 경쟁자 캐릭터까지 따라 나왔다.",
+      "사진 한 장을 넣어 따라 하는 참여형 AI 템플릿(80년대 사진, 주유소 댄스)은 9월 초에 시작해 이번 주에도 계속 퍼지고 있다.",
+      "인스타그램에서 잘 되는 AI 영상은 AI를 먼저 보여주지 않는다. 상황이나 문제를 먼저 보여주고, 그 다음에 AI 결과를 보여준다.",
+      "국내에서 이번 주 날짜까지 확인된 AI 바이럴 사례는 찾지 못했다. 국내 쪽은 인스타그램에서 직접 확인이 필요하다."
+    ],
+    items: [
+      {
+        id: "jean-phil",
+        region: "global",
+        status: "peak",
+        evidence: "metric",
+        title: "Jean Philanthrope (장 필), AI 가상 인물",
+        account: "@jean_philanthrope",
+        type: "AI 캐릭터 시리즈",
+        firstSeen: "2026-09-17",
+        peak: "2026-09-28 ~ 10-01",
+        what:
+          "갈색 체크 정장에 금발 단발, 말린 콧수염을 한 프랑스 남자가 에펠탑 앞, 교차로, 카페 같은 곳에서 갑자기 일어나 섀도복싱을 한다. 매 영상 장소만 바뀌고 동작과 인물은 같다.",
+        metrics: [
+          "10월 1일 기준 영상 8개 누적 조회수 7,700만 회",
+          "가장 많이 본 영상 하나가 3,590만 회",
+          "첫 틱톡 영상 560만 회, 인스타그램 팔로워 3일 만에 약 14만 5천 명"
+        ],
+        why: [
+          "한 번 보면 잊기 힘든 외모, 같은 동작 반복이라 알아보기 쉽다.",
+          "진짜 사람인지 AI인지 논쟁이 댓글을 키웠다.",
+          "장소만 바꾸면 되는 구조라 영상을 빨리 많이 찍어낼 수 있다."
+        ],
+        caution:
+          "프로필 링크가 밈코인(JEANPHIL)으로 이어진다. 9월 25일 시가총액 약 880만 달러로 보도됐다. 캐릭터 인기를 코인 홍보에 쓰는 구조라서, 따라 할 때 이 부분은 빼야 한다.",
+        idea:
+          "한국적인 외모와 옷차림의 고정 캐릭터 한 명을 만들고, 광화문, 편의점, 지하철 같은 익숙한 장소에서 같은 엉뚱한 동작을 반복하는 시리즈.",
+        checkOnInstagram: "@jean_philanthrope 최근 릴스 조회수, 댓글에서 한국어 반응 비율",
+        sources: [
+          { label: "LADbible, 9월 28일", url: "https://www.ladbible.com/news/world-news/influencer-jean-phil-ai-generated-302949-20260928" },
+          { label: "EarlyGame", url: "https://earlygame.com/news/entertainment/this-influencer-doesnt-exist-jean-phil-leaves-the-internet-fooled" },
+          { label: "Cointribune (밈코인)", url: "https://www.cointribune.com/en/jean-philanthrope-the-viral-sensation-with-a-12-million-crypto-behind-it/" },
+          { label: "제작 방법 정리 (Starrd)", url: "https://www.getstarrd.app/blog/how-to-make-an-ai-character-like-jean-phil" }
+        ]
+      },
+      {
+        id: "archibrown",
+        region: "global",
+        status: "peak",
+        evidence: "press",
+        title: "Archibrown, 장 필의 영국인 라이벌",
+        account: "확인 필요",
+        type: "AI 캐릭터 파생",
+        firstSeen: "2026-09-30 보도",
+        peak: "2026-09-30 ~",
+        what:
+          "장 필이 뜬 직후 등장한 또 다른 AI 인물. 스스로를 장 필의 영국인 라이벌이라고 소개한다. 원조 캐릭터의 인기에 대결 구도를 붙인 형태다.",
+        metrics: [],
+        why: [
+          "이미 뜬 캐릭터에 라이벌을 붙이면 원조 팬이 그대로 넘어온다.",
+          "누가 이길지 같은 대결 구도는 댓글과 공유를 부른다."
+        ],
+        caution: "조회수 수치는 확인하지 못했다.",
+        idea:
+          "우리 캐릭터를 만든 뒤 두 번째 캐릭터를 라이벌로 붙여서 대결 에피소드를 만든다.",
+        checkOnInstagram: "계정 이름과 조회수 직접 확인",
+        sources: [
+          { label: "LADbible, 9월 30일", url: "https://www.ladbible.com/news/ai-generated-social-media-videos-jean-phil-rival-433454-20260930" }
+        ]
+      },
+      {
+        id: "context-first",
+        region: "global",
+        status: "peak",
+        evidence: "press",
+        title: "상황 먼저, AI는 나중에 보여주는 앱 소개 릴스",
+        account: "@sakur.amood, @travelwdan",
+        type: "AI 앱 소개 포맷",
+        firstSeen: "2026-10-03 리포트",
+        peak: "이번 주",
+        what:
+          "@sakur.amood는 일본어 학습 AI 앱 SakuraSpeak을 같은 공식으로 반복한다. 실제로 쓸 법한 일본어 문장, 틀린 대답, 앱의 매서운 반응, 안도하는 정정 순서다. @travelwdan은 AI 사진 도구를 미래의 아이폰 카메라 기능처럼 보여주고, 화면이 구도를 잡는 모습을 그대로 보여준다. 이번 주에 관련 영상 여러 개가 같이 떴다.",
+        metrics: [],
+        why: [
+          "보는 사람이 왜 필요한지 먼저 이해한 다음에 화면이 나온다.",
+          "같은 공식을 반복하는 시리즈라 하나가 뜨면 다른 영상도 같이 뜬다.",
+          "AI를 광고처럼 보이지 않게 웃음이나 일상 문제로 감싼다."
+        ],
+        caution: "두 계정 모두 조회수는 확인하지 못했다.",
+        idea:
+          "새 AI 도구를 소개할 때 기능 설명 대신, 그 도구가 없어서 생긴 곤란한 상황 5초를 먼저 보여주고 해결 장면으로 넘어간다.",
+        checkOnInstagram: "@sakur.amood, @travelwdan 최근 릴스 조회수와 업로드 간격",
+        sources: [
+          { label: "lightreel 주간 리포트, 10월 3일 갱신", url: "https://lightreel.ai/blogs/whats-trending-on-instagram" }
+        ]
+      },
+      {
+        id: "ai-tipping-scene",
+        region: "global",
+        status: "ongoing",
+        evidence: "press",
+        title: "AI tipping scene, 제품을 넣는 AI 영화 장면",
+        account: "다수",
+        type: "참여형 AI 템플릿",
+        firstSeen: "2026-09-18",
+        peak: "9월 말 ~ 이번 주",
+        what:
+          "AI로 만든 영화 같은 장면 속에 음료, 선글라스, 가방 같은 내 제품을 떨어뜨려 넣는다. 촬영 없이 광고처럼 보이는 영상을 만든다.",
+        metrics: [],
+        why: [
+          "작은 가게나 개인 판매자도 광고 같은 영상을 바로 만들 수 있다.",
+          "결과물이 짧고 화려해서 첫 1초에 손을 멈추게 한다."
+        ],
+        caution: "조회수 수치는 확인하지 못했다.",
+        idea:
+          "편의점 신상, 동네 카페 메뉴를 AI 영화 장면에 넣어 보는 시리즈. 만드는 과정을 같이 보여주면 저장이 늘어난다.",
+        checkOnInstagram: "릴스 검색 'AI tipping', 오디오 페이지의 사용 수",
+        sources: [
+          { label: "Later 릴스 트렌드", url: "https://later.com/blog/instagram-reels-trends/" }
+        ]
+      },
+      {
+        id: "80s-photo",
+        region: "both",
+        status: "ongoing",
+        evidence: "press",
+        title: "ChatGPT 80년대 사진 트렌드",
+        account: "다수 (스토리 '나도 해보기' 스티커)",
+        type: "참여형 AI 사진",
+        firstSeen: "2026-09 첫째 주",
+        peak: "9월 중순 ~ 이번 주",
+        what:
+          "지금 셀카를 올리고 1980년대 사진관에서 찍은 것처럼 바꿔 달라고 한다. 졸업앨범 레이저 배경, 네온 신스웨이브, 쇼핑몰 사진관 버전이 많다. 얼굴은 그대로 알아볼 수 있게 남는다.",
+        metrics: [],
+        why: [
+          "9월 8일 나온 GPT Image 2.5가 얼굴을 잘 유지해서 결과가 그럴듯하다.",
+          "스토리의 '나도 해보기' 스티커로 친구에서 친구로 프롬프트가 넘어갔다.",
+          "졸업앨범처럼 누구나 아는 물건을 흉내 내서 바로 알아본다."
+        ],
+        caution: "국내 확산 정도는 수치로 확인하지 못했다. 얼굴 사진을 외부 앱에 올리는 데 대한 개인정보 우려 글이 함께 돈다.",
+        idea:
+          "한국판으로 바꾼다. 90년대 학교 앨범, 2000년대 싸이월드 프로필 사진처럼 한국 사람이 아는 시대 물건으로 프롬프트를 만든다.",
+        checkOnInstagram: "해시태그 #80년대사진 #80stend, 스토리 스티커 참여 수",
+        sources: [
+          { label: "TechJuice", url: "https://www.techjuice.pk/instagram-chatgpt-80s-photo-trend-prompts/" },
+          { label: "프롬프트 모음 (Miraflow)", url: "https://miraflow.ai/blog/chatgpt-80s-photo-trend-prompts-2026" },
+          { label: "OpenAI, ChatGPT Images 2.5", url: "https://openai.com/index/introducing-chatgpt-images-2-5/" }
+        ]
+      },
+      {
+        id: "gas-station",
+        region: "global",
+        status: "ongoing",
+        evidence: "unverified",
+        title: "AI 주유소 댄스 템플릿",
+        account: "다수 (CapCut 템플릿)",
+        type: "참여형 AI 영상",
+        firstSeen: "원본 2024, AI 템플릿 2026",
+        peak: "시기 확인 필요",
+        what:
+          "해 질 녘 주유소에서 춤추는 장면, 걸으며 셀카 찍는 장면, 차에서 내리는 장면 세 컷. 사진 한 장만 넣으면 내가 그 장면 속에서 춤춘다. 원본은 러시아 인플루언서가 올린 새벽 4시 주유소 댄스 영상이다.",
+        metrics: [],
+        why: [
+          "원본 밈을 아는 사람이 많아 바로 알아본다.",
+          "사진 한 장이면 되니 참여가 쉽다. 연예인, 운동선수 버전도 많이 나온다."
+        ],
+        caution: "이번 주에 다시 떴는지 날짜를 확인하지 못했다. 다른 사람 얼굴로 만드는 것은 초상권 문제가 있다.",
+        idea: "우리 채널 고정 캐릭터로만 만들어 본다. 실존 인물 얼굴은 쓰지 않는다.",
+        checkOnInstagram: "릴스 검색 'gas station dance AI', 최근 7일 업로드 수",
+        sources: [
+          { label: "LightX 따라 하기", url: "https://www.lightxeditor.com/blog/how-to-do-gas-station-dance-ai-trend/" }
+        ]
+      },
+      {
+        id: "bts-concept",
+        region: "kr",
+        status: "ongoing",
+        evidence: "unverified",
+        title: "영화 촬영장 비하인드(BTS) 콘셉트 AI 사진",
+        account: "다수",
+        type: "참여형 AI 사진",
+        firstSeen: "확인 필요",
+        peak: "확인 필요",
+        what:
+          "평범한 길거리 사진이나 실내 사진을 블록버스터 영화 촬영장 뒷모습처럼 바꾼다. 영화 속 주인공이 옆에 서 있고 조명과 카메라 장비가 보이는 식이다.",
+        metrics: [],
+        why: [
+          "내 일상 사진이 영화 촬영장이 되는 반전이 있다.",
+          "흔들린 손 카메라, 다큐 같은 조명이 진짜 같은 느낌을 준다."
+        ],
+        caution: "국내 매체에 소개됐지만 날짜와 수치를 확인하지 못했다. 영화 캐릭터 저작권에 주의.",
+        idea: "영화 대신 한국 드라마 촬영장 느낌으로 바꾸고, 저작권 없는 우리 캐릭터를 주인공으로 넣는다.",
+        checkOnInstagram: "해시태그 #비하인드AI #BTS콘셉트, 최근 게시물 날짜",
+        sources: [
+          { label: "AI매터스", url: "https://aimatters.co.kr/ai-trend/35327/" }
+        ]
+      },
+      {
+        id: "bad-drawing",
+        region: "kr",
+        status: "reference",
+        evidence: "unverified",
+        title: "'잘 그리지 마' 프롬프트 (그림판, 크레용 그림)",
+        account: "@ai.trend.kr (Threads) 등",
+        type: "AI 이미지 프롬프트",
+        firstSeen: "2026-04 말 (원조 그림판 트렌드)",
+        peak: "4~5월, 이후 변형 계속",
+        what:
+          "AI에게 일부러 못 그리게 시킨다. 옛날 그림판에서 마우스로 그린 픽셀 그림, 10살 아이가 크레용으로 그린 그림 같은 결과를 프로필 사진으로 쓴다. 국내 Threads 사용자가 처음 퍼뜨렸다는 보도가 있다.",
+        metrics: [
+          "OpenAI 공식 계정이 올린 그림판 스타일 프로필 사진 좋아요 5만 4천 개 이상 (Threads 게시물 기준)"
+        ],
+        why: [
+          "매끈한 AI 그림에 지친 사람들에게 일부러 엉성한 결과가 웃음을 준다.",
+          "결과를 프로필 사진으로 바꾸기 쉬워 퍼지는 속도가 빠르다."
+        ],
+        caution: "이번 주 새 사례가 아니다. 지금도 변형이 돈다는 국내 게시물이 있어 참고로 넣었다.",
+        idea: "구독자 사진을 받아 '세상에서 제일 못 그린 AI 초상화'로 바꿔 주는 참여형 시리즈.",
+        checkOnInstagram: "해시태그 #그림판프롬프트, 최근 7일 게시물 수",
+        sources: [
+          { label: "Threads @ai.trend.kr", url: "https://www.threads.com/@ai.trend.kr/post/DX8AzMJD7Gg" },
+          { label: "Forbes, 5월 6일", url: "https://www.forbes.com/sites/lesliekatz/2026/05/06/chatgpt-trend-has-users-requesting-clumsy-scribbly-and-pathetic-ai-images/" }
+        ]
+      },
+      {
+        id: "seodam",
+        region: "kr",
+        status: "reference",
+        evidence: "metric",
+        title: "서담시, deer: AI로 만든 괴담 세계관",
+        account: "서담시 계정, @deer",
+        type: "AI 세계관 시리즈",
+        firstSeen: "2026-08 보도",
+        peak: "8월",
+        what:
+          "가상의 도시 서담시에서 이상 현상을 조사하는 시청 TF팀 이야기. 폐장한 워터파크 같은 익숙한 장소를 1인칭 흔들리는 카메라로 찍은 것처럼 만든다. deer 계정은 어딘가 어긋난 꿈 같은 분위기(드림코어)를 AI로 표현한다.",
+        metrics: [
+          "서담시 영상 하나가 인스타그램 380만 회 이상",
+          "서담시 계정 개설 한 달 만에 팔로워 5만 7천 명",
+          "deer 계정 개설 하루 만에 콘텐츠 조회수 100만 회"
+        ],
+        why: [
+          "AI 특유의 어색함을 단점이 아니라 공포 분위기로 바꿨다.",
+          "서담시가 진짜 있는 것처럼 반응하는 댓글, 금기가 뭐였는지 추리하는 댓글이 쌓인다."
+        ],
+        caution: "이번 주 사례가 아니다. 국내에서 수치까지 확인된 가장 가까운 AI 세계관 성공 사례라 포맷 참고로 넣었다.",
+        idea: "한국 사람이 아는 장소(폐교, 오래된 아파트 놀이터)를 배경으로 한 짧은 세계관 시리즈. 매 화 끝에 다음 화 단서를 남긴다.",
+        checkOnInstagram: "서담시, deer 계정의 최근 릴스 조회수 추이",
+        sources: [
+          { label: "한국경제, 8월 5일", url: "https://www.hankyung.com/article/202608056895H" },
+          { label: "Trend A Word #602", url: "https://maily.so/trendaword/posts/92zekj58zep" }
+        ]
+      },
+      {
+        id: "remember-november",
+        region: "kr",
+        status: "reference",
+        evidence: "press",
+        title: "Remember November 2026, AI 북극곰 노래",
+        account: "다수",
+        type: "AI 노래 밈",
+        firstSeen: "2026-09 초",
+        peak: "9월 초, 지금은 하락",
+        what: "AI로 만든 북극곰이 '2026년 11월이 온다'고 노래한다. 뜻 없는 예언 같은 말투가 웃음 포인트다.",
+        metrics: [],
+        why: ["의미 없이 불길한 말투가 밈으로 쓰기 좋다.", "짧은 노래라 다른 영상 배경음으로 재사용된다."],
+        caution: "정점이 지났다. 11월이 가까워지면 다시 쓰일 수 있다.",
+        idea: "10월 말에 '11월이 왔다' 후속편을 우리 캐릭터로 만들어 재유행을 노린다.",
+        checkOnInstagram: "오디오 페이지 사용 수 추이",
+        sources: [
+          { label: "인스타공백닷컴 밈 사전", url: "https://www.instablank.com/meme?year=2026" }
+        ]
+      }
+    ],
+    patterns: [
+      {
+        title: "고정 캐릭터, 같은 동작, 장소만 바꾸기",
+        body: "장 필, 서담시처럼 캐릭터와 공식은 고정하고 배경만 바꾼다. 하나가 뜨면 나머지 영상도 같이 본다. 제작 속도도 빠르다.",
+        examples: ["jean-phil", "archibrown", "seodam"]
+      },
+      {
+        title: "사진 한 장으로 따라 하는 템플릿",
+        body: "80년대 사진, 주유소 댄스, 비하인드 콘셉트. 보는 사람이 바로 따라 할 수 있어야 공유가 일어난다. 프롬프트를 같이 주면 저장이 늘어난다.",
+        examples: ["80s-photo", "gas-station", "bts-concept", "ai-tipping-scene"]
+      },
+      {
+        title: "상황 먼저, AI 결과는 나중",
+        body: "AI 기능을 먼저 보여주면 광고로 넘긴다. 곤란한 상황이나 웃긴 실수를 먼저 보여주고 AI가 해결하는 장면을 뒤에 둔다.",
+        examples: ["context-first"]
+      },
+      {
+        title: "진짜인지 가짜인지 헷갈리게",
+        body: "AI라는 걸 바로 알 수 없을 때 댓글 논쟁이 생긴다. 다만 인스타그램 AI 표시 규칙은 지켜야 한다.",
+        examples: ["jean-phil", "seodam"]
+      }
+    ],
+    nextActions: [
+      "인스타그램 앱에서 각 사례의 '직접 확인' 항목을 보고 조회수를 채운다.",
+      "국내 사례 3개 이상을 인스타그램 릴스 탭에서 직접 찾는다 (README의 확인 방법 참고).",
+      "패턴 중 하나를 골라 우리 채널 첫 시리즈 기획안을 만든다 (2단계)."
+    ]
+  }
+];
