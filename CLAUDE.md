@@ -24,4 +24,6 @@
 
 - 스킬 설명과 찾을 단어는 `.claude/skill-catalog.json` 한 곳에 둔다. 스킬을 추가하거나 바꾸면 여기를 고치고 `node skill-board/build.mjs`로 안내판 페이지를 다시 만든다.
 - 명령을 보낼 때마다 `UserPromptSubmit` 훅(`.claude/hooks/skill-match.mjs`)이 `스킬 체크:` 줄을, 스킬이 실제로 불리면 `PostToolUse` 훅이 `스킬 사용됨:` 줄을 띄운다. 이 후보는 단어로 고른 것이므로, 실제로 맞을 때만 스킬을 쓴다.
-- Claude Code 터미널/데스크톱에서 쓰는 패널 모드는 `.claude/mods/skill-panel/`에 있다. 판별 규칙은 `hooks/match.ts`와 `.claude/hooks/skill-match-core.mjs` 두 곳에 있으니 같이 고친다.
+- Claude Code 터미널/데스크톱에서 쓰는 패널 모드는 `.claude/skills/skill-panel/`에 있고, 프로젝트를 열면 저절로 불러온다. 판별 규칙은 `hooks/match.ts`와 `.claude/hooks/` 쪽 `.mjs` 파일 두 곳에 있으니 같이 고친다.
+- 자동 열기 설정은 `.claude/skill-board.json`(`autoOpen`, 안내판 주소 `url`)에 있다. 켜져 있으면 `SessionStart` 훅이 알려 주므로, 세션의 첫 답에서 Artifact `open`으로 안내판을 연다.
+- "안내판 열어/닫아", "안내판 자동 열기 꺼/켜"는 훅이 알아듣는다. 자동 열기 설정이 바뀌면 `.claude/skill-board.json`을 커밋하고 푸시해서 다음 세션에도 남게 한다.

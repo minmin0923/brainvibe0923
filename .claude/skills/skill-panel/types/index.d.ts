@@ -15,6 +15,7 @@ declare module 'claude-code' {
       last: LastPrompt | null
       catalog: SkillRow[]
       isExpanded: boolean
+      autoOpen: boolean
     }
   }
 }

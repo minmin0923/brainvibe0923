@@ -30,3 +30,19 @@ export function matchSkills(text: string, catalog: Catalog): SkillMatch[] {
     .map(([name, hits]) => ({ name, hits }))
     .sort((a, b) => b.hits.length - a.hits.length)
 }
+
+export type BoardCommand = 'open' | 'close' | 'auto-on' | 'auto-off'
+
+// .claude/hooks/skill-board-control.mjs의 boardCommand와 같은 규칙.
+export function boardCommand(text: string): BoardCommand | null {
+  const t = text.replace(/\s+/g, ' ').trim().toLowerCase()
+  if (!/(스킬 ?)?안내판|skill-board/.test(t)) return null
+  if (/자동/.test(t) || /\bauto\b/.test(t)) {
+    if (/(꺼|끄|끔|off|안 ?열|열지 ?마)/.test(t)) return 'auto-off'
+    if (/(켜|켬|on)/.test(t) || /열(어|기|리게)/.test(t)) return 'auto-on'
+    return null
+  }
+  if (/(닫|숨|치워|close)/.test(t)) return 'close'
+  if (/(열어|열기|띄워|보여|open)/.test(t)) return 'open'
+  return null
+}

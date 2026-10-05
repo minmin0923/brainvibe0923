@@ -121,11 +121,17 @@ code { font-family: var(--mono); font-size: 0.9em; }
   </section>
 
   <section class="howto" aria-labelledby="howto-title">
-    <h2 id="howto-title" style="font-size:20px">스킬을 추가하거나 단어를 바꾸려면</h2>
+    <h2 id="howto-title" style="font-size:20px">안내판 열고 닫기</h2>
+    <ul class="small" style="margin:0;padding-left:20px;display:grid;gap:8px">
+      <li>Claude를 시작하면 첫 답과 함께 이 안내판이 열립니다. 터미널에서는 옆 패널로 뜹니다.</li>
+      <li>Claude에게 <strong>“안내판 열어”</strong>, <strong>“안내판 닫아”</strong>라고 말하면 열고 닫습니다. 앱에서는 창의 닫기 버튼으로도 닫힙니다.</li>
+      <li><strong>“안내판 자동 열기 꺼 줘”</strong> 또는 <strong>“켜 줘”</strong>로 시작할 때 자동으로 열지 정합니다. 터미널에서는 <code>/skill-board</code>, <code>/skill-board auto off</code>도 됩니다.</li>
+    </ul>
+    <h2 style="font-size:20px">스킬을 추가하거나 단어를 바꾸려면</h2>
     <ol class="small">
       <li><code>.claude/skill-catalog.json</code>에 스킬 이름, 한 줄 설명, 찾을 단어를 넣습니다.</li>
       <li><code>node skill-board/build.mjs</code>로 이 페이지를 다시 만듭니다.</li>
-      <li>Claude에게 "스킬 안내판 다시 올려 줘"라고 하면 같은 주소로 갱신됩니다.</li>
+      <li>Claude에게 <strong>“스킬 안내판 다시 올려 줘”</strong>라고 하면 같은 주소로 갱신됩니다.</li>
     </ol>
   </section>
 </main>
