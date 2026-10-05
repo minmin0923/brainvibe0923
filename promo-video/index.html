@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>의정부혜택지도 홍보 영상</title>
+<meta name="description" content="의정부혜택지도 홍보용 20초 세로형 모션그래픽">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="assets/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Pretendard Variable"; src: url("assets/PretendardVariable.woff2") format("woff2-variations"); font-weight: 45 920; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("assets/GeistMono-Variable.woff2") format("woff2-variations"); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --bg: #FFFFFF; --surface: #F6F7F8; --border: #E4E6E9; --text: #111315;
+  --text-muted: #5D636B; --accent: #0F6E5C; --accent-contrast: #FFFFFF;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+/* 페이지 바깥(플레이어)만 테마를 따른다. 영상 화면은 브랜드 라이트 톤으로 고정. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: "Pretendard Variable", system-ui, -apple-system, sans-serif;
+  word-break: keep-all; -webkit-font-smoothing: antialiased;
+  min-height: 100dvh; display: grid; place-items: center; padding: 20px; overflow-x: hidden;
+}
+.player { display: grid; gap: 16px; justify-items: center; }
+.viewport {
+  width: calc(1080px * var(--s)); height: calc(1920px * var(--s));
+  border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative;
+}
+.controls { display: flex; gap: 8px; align-items: center; width: 100%; }
+.btn {
+  height: 44px; padding: 0 20px; border-radius: 8px; font: 600 15px/1 inherit; font-family: inherit;
+  border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease), transform 150ms var(--ease);
+  touch-action: manipulation;
+}
+.btn:hover { background: var(--surface); }
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent); filter: brightness(1.08); }
+.time { margin-left: auto; font: 400 14px/1.6 "Geist Mono", monospace; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.bar { width: 100%; height: 4px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); }
+
+/* ===== 영상 화면 (1080 × 1920) ===== */
+#stage {
+  --v-bg: #FFFFFF; --v-surface: #F6F7F8; --v-border: #E4E6E9; --v-text: #111315;
+  --v-muted: #5D636B; --v-accent: #0F6E5C; --v-on-accent: #FFFFFF;
+  width: 1080px; height: 1920px; position: absolute; left: 0; top: 0;
+  transform-origin: 0 0; transform: scale(var(--s));
+  background: var(--v-bg); color: var(--v-text); overflow: hidden;
+}
+body.render { padding: 0; display: block; }
+body.render .viewport { border: 0; border-radius: 0; }
+body.render .controls, body.render .bar { display: none; }
+
+.scene { position: absolute; inset: 0; opacity: 0; }
+.abs { position: absolute; }
+.ln { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.ln > span { display: inline-block; will-change: transform; }
+.display { font-size: 136px; font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; }
+.h1 { font-size: 104px; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; }
+.h2 { font-size: 64px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+.body { font-size: 48px; font-weight: 400; line-height: 1.5; color: var(--v-muted); }
+.mono { font-family: "Geist Mono", monospace; font-variant-numeric: tabular-nums; }
+.accent { color: var(--v-accent); }
+.ico { width: 1em; height: 1em; display: inline-block; vertical-align: -0.125em; fill: currentColor; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ico svg { width: 100%; height: 100%; display: block; }
+.label {
+  font: 500 36px/1 "Geist Mono", monospace; letter-spacing: 0.08em; color: var(--v-muted);
+  text-transform: uppercase;
+}
+
+/* scene 2 */
+#map2 path { fill: none; stroke: var(--v-border); stroke-width: 6; stroke-linecap: round; }
+#map2 path.major { stroke-width: 14; }
+#map2 path.river { stroke: #E3EFEC; stroke-width: 64; }
+.pin { position: absolute; width: 96px; height: 96px; margin: -96px 0 0 -48px; color: var(--v-accent); }
+.pin .ico { width: 96px; height: 96px; }
+.pin-shadow { position: absolute; width: 40px; height: 12px; margin: -6px 0 0 -20px; border-radius: 50%; background: rgba(17,19,21,.12); }
+.logo {
+  position: absolute; left: 96px; right: 96px; top: 760px; padding: 64px 64px;
+  background: var(--v-bg); border: 2px solid var(--v-border); border-radius: 36px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.04), 0 24px 72px rgba(0,0,0,.06);
+}
+.logo-mark {
+  width: 128px; height: 128px; border-radius: 24px; background: var(--v-accent); color: var(--v-on-accent);
+  display: grid; place-items: center; font-size: 80px; margin-bottom: 40px;
+}
+
+/* scene 3 */
+.card {
+  position: absolute; background: var(--v-bg); border: 2px solid var(--v-border); border-radius: 36px;
+}
+.receipt { left: 96px; right: 96px; top: 860px; padding: 56px 64px; }
+.row { display: flex; justify-content: space-between; align-items: center; font-size: 48px; line-height: 1.5; padding: 20px 0; }
+.row + .row { border-top: 2px dashed var(--v-border); }
+.row .mono { font-size: 46px; }
+.row.disc { color: var(--v-accent); font-weight: 600; }
+.stamp {
+  position: absolute; right: -24px; top: -200px; width: 248px; height: 248px; border-radius: 50%;
+  background: var(--v-accent); color: var(--v-on-accent); display: grid; place-items: center; text-align: center;
+  font-size: 48px; font-weight: 700; line-height: 1.2;
+}
+.stamp .ico { font-size: 64px; display: block; margin: 0 auto 4px; }
+
+/* scene 4 */
+.people { position: absolute; left: 140px; top: 800px; display: grid; grid-template-columns: repeat(8, 72px); gap: 32px; }
+.people .ico { width: 72px; height: 72px; color: var(--v-border); }
+
+/* scene 5 */
+.chips { position: absolute; left: 96px; right: 96px; top: 680px; display: flex; gap: 16px; }
+.chip {
+  height: 96px; padding: 0 36px; border-radius: 999px; border: 2px solid var(--v-border);
+  display: flex; align-items: center; gap: 12px; font-size: 40px; font-weight: 600; color: var(--v-muted); background: var(--v-bg);
+}
+.chip .ico { font-size: 44px; }
+.chip.on { background: var(--v-accent); border-color: var(--v-accent); color: var(--v-on-accent); }
+.mapcard { left: 96px; right: 96px; top: 824px; height: 880px; overflow: hidden; background: var(--v-surface); }
+#map5 path { fill: none; stroke: #FFFFFF; stroke-width: 18; stroke-linecap: round; }
+#map5 path.river { stroke: #E3EFEC; stroke-width: 56; }
+.spot {
+  position: absolute; width: 104px; height: 104px; margin: -52px 0 0 -52px; border-radius: 50%;
+  background: var(--v-bg); border: 4px solid var(--v-accent); color: var(--v-accent);
+  display: grid; place-items: center; font-size: 52px;
+}
+.me { position: absolute; left: 444px; top: 440px; }
+.me i { position: absolute; border-radius: 50%; }
+.me .dot { width: 40px; height: 40px; margin: -20px 0 0 -20px; background: #111315; border: 6px solid #fff; }
+.me .ring { width: 40px; height: 40px; margin: -20px 0 0 -20px; border: 4px solid #111315; }
+
+/* scene 6 */
+#cta-bg { position: absolute; inset: 0; background: var(--v-accent); }
+#s6 { color: var(--v-on-accent); }
+#s6 .body { color: rgba(255,255,255,.82); }
+.checks { position: absolute; left: 96px; right: 96px; top: 300px; display: grid; gap: 28px; }
+.check { display: flex; align-items: center; gap: 24px; font-size: 56px; font-weight: 600; }
+.check .ico { font-size: 64px; }
+.cta-btn {
+  position: absolute; left: 96px; right: 96px; top: 1260px; height: 176px; border-radius: 24px;
+  background: #FFFFFF; color: var(--v-accent); display: flex; align-items: center; justify-content: center; gap: 24px;
+  font-size: 60px; font-weight: 700; letter-spacing: -0.01em;
+}
+.cta-btn .ico { font-size: 64px; }
+.hand { position: absolute; font-size: 160px; color: #FFFFFF; filter: drop-shadow(0 0 2px rgba(17,19,21,.55)) drop-shadow(0 8px 16px rgba(17,19,21,.3)); }
+.search {
+  position: absolute; left: 96px; right: 96px; top: 1520px; height: 128px; border-radius: 999px;
+  border: 2px solid rgba(255,255,255,.4); display: flex; align-items: center; gap: 24px; padding: 0 48px;
+  font-size: 48px; font-weight: 600;
+}
+.search .ico { font-size: 56px; }
+.caret { width: 4px; height: 56px; background: #fff; display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+}
+</style>
+</head>
+<body>
+<main class="player">
+  <h1 class="sr-only">의정부혜택지도 홍보 영상</h1>
+  <p class="sr-only" id="desc">20초 세로 영상. 의정부에서 쓰는 돈, 그냥 내고 계셨나요? 의정부혜택지도는 우리 동네 혜택을 지도 한 장에 모았습니다. 가입만 해도 가맹점 할인. 의정부시민 누구나, 복잡한 조건 없이 가입 한 번이면 됩니다. 내 주변 가맹점을 카페, 음식점, 미용, 의류별로 지도에서 한눈에. 지금 가입하고 혜택 받으세요. 검색창에 의정부혜택지도.</p>
+  <div class="viewport" id="viewport">
+    <div id="stage" role="img" aria-labelledby="desc">
+
+      <!-- 1. 질문으로 시선 잡기 -->
+      <section class="scene" id="s1">
+        <div class="abs label" style="left:96px; top:240px" data-in="0.1">UIJEONGBU</div>
+        <div class="abs h1" style="left:96px; top:680px; right:96px">
+          <span class="ln"><span data-in="0.25">의정부에서 쓰는 돈,</span></span>
+          <span class="ln"><span data-in="0.55"><span class="accent">그냥</span> 내고</span></span>
+          <span class="ln"><span data-in="0.75">계셨나요?</span></span>
+        </div>
+        <div class="abs" style="left:96px; right:96px; top:1400px; border-top:2px solid var(--v-border); padding-top:40px" id="zero">
+          <div class="body" style="font-size:40px">지금까지 받은 동네 할인</div>
+          <div class="mono" style="font-size:160px; font-weight:500; letter-spacing:-0.04em; line-height:1.1">0<span style="font-size:80px">원</span></div>
+        </div>
+      </section>
+
+      <!-- 2. 브랜드 등장 -->
+      <section class="scene" id="s2">
+        <svg id="map2" class="abs" width="1080" height="1920" viewBox="0 0 1080 1920" style="left:0;top:0">
+          <path class="river" pathLength="1" d="M 760 -40 C 700 300, 860 520, 760 820 S 560 1260, 680 1560 S 720 1880, 640 1980"/>
+          <path class="major" pathLength="1" d="M -40 560 L 1120 420"/>
+          <path class="major" pathLength="1" d="M 300 -40 L 380 1980"/>
+          <path class="major" pathLength="1" d="M -40 1380 L 1120 1240"/>
+          <path pathLength="1" d="M -40 240 L 1120 180"/>
+          <path pathLength="1" d="M -40 980 L 1120 860"/>
+          <path pathLength="1" d="M -40 1700 L 1120 1600"/>
+          <path pathLength="1" d="M 120 -40 L 180 1980"/>
+          <path pathLength="1" d="M 560 -40 L 600 1980"/>
+          <path pathLength="1" d="M 960 -40 L 940 1980"/>
+          <path pathLength="1" d="M 0 120 L 1080 1820"/>
+        </svg>
+        <div id="pins2"></div>
+        <div class="logo" id="logo">
+          <div class="logo-mark"><span class="ico" data-icon="map-pin"></span></div>
+          <div class="h1" style="font-size:112px">
+            <span class="ln"><span data-in="4.15">의정부혜택지도</span></span>
+          </div>
+          <div class="body" style="margin-top:24px">
+            <span class="ln"><span data-in="4.35">우리 동네 혜택을 지도 한 장에</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 가입만 해도 가맹점 할인 -->
+      <section class="scene" id="s3">
+        <div class="abs label" style="left:96px; top:240px" data-in="6.1">BENEFIT 01</div>
+        <div class="abs display" style="left:96px; top:340px; right:96px">
+          <span class="ln"><span data-in="6.15">가입만 해도</span></span>
+          <span class="ln accent"><span data-in="6.4">가맹점 할인</span></span>
+        </div>
+        <div class="card receipt" id="receipt">
+          <div class="row"><span>아메리카노</span><span class="mono">4,500원</span></div>
+          <div class="row"><span>소금빵</span><span class="mono">3,800원</span></div>
+          <div class="row disc" id="discRow"><span><span class="ico" data-icon="seal-percent"></span> 혜택지도 회원 할인</span><span>적용</span></div>
+          <div class="stamp" id="stamp"><div><span class="ico" data-icon="check-circle"></span>할인<br>적용</div></div>
+        </div>
+        <div class="abs body" style="left:96px; right:96px; top:1560px">
+          <span class="ln"><span data-in="8.3">동네 가게에서 쓸 때마다 아끼세요.</span></span>
+        </div>
+      </section>
+
+      <!-- 4. 의정부시민 누구나 -->
+      <section class="scene" id="s4">
+        <div class="abs label" style="left:96px; top:240px" data-in="9.7">BENEFIT 02</div>
+        <div class="abs display" style="left:96px; top:340px; right:96px">
+          <span class="ln"><span data-in="9.75">의정부시민</span></span>
+          <span class="ln"><span data-in="10.0"><span class="accent">누구나</span></span></span>
+        </div>
+        <div class="people" id="people"></div>
+        <div class="abs h2" style="left:96px; right:96px; top:1500px">
+          <span class="ln"><span data-in="11.6">복잡한 조건 없이,</span></span>
+          <span class="ln"><span data-in="11.8">가입 한 번이면 됩니다.</span></span>
+        </div>
+      </section>
+
+      <!-- 5. 지도에서 한눈에 -->
+      <section class="scene" id="s5">
+        <div class="abs label" style="left:96px; top:240px" data-in="13.1">BENEFIT 03</div>
+        <div class="abs display" style="left:96px; top:340px; right:96px">
+          <span class="ln"><span data-in="13.15">내 주변 가맹점,</span></span>
+          <span class="ln accent"><span data-in="13.4">지도에서 한눈에</span></span>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="card mapcard" id="mapcard">
+          <svg id="map5" class="abs" width="888" height="880" viewBox="0 0 888 880" style="left:0;top:0">
+            <path class="river" d="M 640 -20 C 560 220, 760 420, 620 620 S 520 820, 560 900"/>
+            <path d="M -20 300 L 908 240"/>
+            <path d="M -20 640 L 908 580"/>
+            <path d="M 220 -20 L 260 900"/>
+            <path d="M 470 -20 L 490 900"/>
+            <path d="M 0 40 L 888 860"/>
+          </svg>
+          <div id="spots"></div>
+          <div class="me"><i class="ring" id="ring"></i><i class="dot"></i></div>
+        </div>
+      </section>
+
+      <!-- 6. CTA -->
+      <section class="scene" id="s6">
+        <div id="cta-bg"></div>
+        <div class="checks" id="checks">
+          <div class="check"><span class="ico" data-icon="check-circle"></span>가입만 해도 가맹점 할인</div>
+          <div class="check"><span class="ico" data-icon="check-circle"></span>의정부시민 누구나</div>
+          <div class="check"><span class="ico" data-icon="check-circle"></span>내 주변 가맹점을 지도로</div>
+        </div>
+        <div class="abs display" style="left:96px; right:96px; top:760px">
+          <span class="ln"><span data-in="17.6">지금 가입하고</span></span>
+          <span class="ln"><span data-in="17.8">혜택 받으세요</span></span>
+        </div>
+        <div class="cta-btn" id="ctaBtn"><span class="ico" data-icon="user-plus"></span>의정부혜택지도 가입하기</div>
+        <div class="hand" id="hand"><span class="ico" data-icon="hand-tap"></span></div>
+        <div class="search" id="search"><span class="ico" data-icon="magnifying-glass"></span><span id="q"></span><i class="caret" id="caret"></i></div>
+      </section>
+
+    </div>
+  </div>
+  <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+  <div class="controls">
+    <button class="btn btn-primary" id="play" type="button">일시정지</button>
+    <button class="btn" id="restart" type="button">처음부터</button>
+    <span class="time" id="time" aria-live="off">0.0 / 20.5초</span>
+  </div>
+</main>
+
+<script src="assets/icons.js"></script>
+<script>
+const DURATION = 20.5;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const icon = (n) => `<span class="ico">${`<svg viewBox="0 0 256 256" aria-hidden="true">${ICONS[n]}</svg>`}</span>`;
+$$('[data-icon]').forEach(el => { el.innerHTML = `<svg viewBox="0 0 256 256" aria-hidden="true">${ICONS[el.dataset.icon]}</svg>`; });
+
+/* ---- easing ---- */
+const clamp = x => Math.min(1, Math.max(0, x));
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = x => 1 - Math.pow(1 - x, 3);
+const eExpo = x => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+const eInOut = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const eIn = x => x * x * x;
+const eBack = x => { const c1 = 1.6, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+
+/* ---- scene windows [in, out] ---- */
+const SCENES = { s1: [0, 2.7], s2: [2.6, 6.0], s3: [5.95, 9.6], s4: [9.55, 13.0], s5: [12.95, 16.5], s6: [16.4, 99] };
+
+/* ---- build dynamic parts ---- */
+const PINS2 = [[200, 420, 3.0], [640, 300, 3.12], [880, 640, 3.24], [430, 1430, 3.36], [820, 1340, 3.48], [180, 1640, 3.6], [700, 1760, 3.72]];
+$('#pins2').innerHTML = PINS2.map(([x, y]) =>
+  `<i class="pin-shadow" style="left:${x}px;top:${y}px"></i><div class="pin" style="left:${x}px;top:${y}px">${icon('map-pin')}</div>`).join('');
+
+const people = $('#people');
+people.innerHTML = Array.from({ length: 48 }, () => icon('user')).join('');
+// 고정 순서의 의사 난수로 채워지는 순서를 정한다
+const order = Array.from({ length: 48 }, (_, i) => i).sort((a, b) => ((a * 37) % 48) - ((b * 37) % 48));
+const fillAt = new Array(48); order.forEach((idx, k) => { fillAt[idx] = 10.3 + k * 0.022; });
+
+const CATS = [['카페', 'coffee'], ['음식점', 'fork-knife'], ['미용', 'scissors'], ['의류', 't-shirt']];
+$('#chips').innerHTML = CATS.map(([n, ic]) => `<div class="chip">${icon(ic)}${n}</div>`).join('');
+const SPOTS = [
+  [[130, 180], [560, 120], [720, 760]],
+  [[340, 540], [120, 760], [780, 360]],
+  [[620, 470], [300, 220], [180, 470]],
+  [[800, 140], [430, 720], [600, 280]],
+];
+const CAT_T0 = 14.0, CAT_STEP = 0.6;
+$('#spots').innerHTML = SPOTS.map((g, c) => g.map(([x, y]) => `<div class="spot" data-c="${c}" style="left:${x}px;top:${y}px">${icon(CATS[c][1])}</div>`).join('')).join('');
+
+/* ---- render(t): 시간 하나로 모든 프레임이 결정된다 ---- */
+function reveal(el, t) {
+  const a = parseFloat(el.dataset.in);
+  const p = eExpo(P(t, a, a + 0.7));
+  el.style.transform = `translateY(${(1 - p) * 110}%)`;
+}
+function sceneOpacity(id, t) {
+  const [a, b] = SCENES[id];
+  if (t < a || t > b) return 0;
+  return Math.min(P(t, a, a + 0.15), 1 - P(t, b - 0.15, b));
+}
+
+function render(t) {
+  for (const id in SCENES) {
+    const o = sceneOpacity(id, t);
+    const el = document.getElementById(id);
+    el.style.opacity = o;
+    el.style.visibility = o > 0 ? 'visible' : 'hidden';
+  }
+  $$('[data-in]').forEach(el => {
+    if (el.classList.contains('label')) {
+      const a = parseFloat(el.dataset.in), p = eOut(P(t, a, a + 0.5));
+      el.style.opacity = p; el.style.transform = `translateX(${(1 - p) * -24}px)`;
+    } else reveal(el, t);
+  });
+
+  /* s1: 퇴장 시 위로 밀려남 */
+  const z = eOut(P(t, 1.2, 1.7));
+  $('#zero').style.opacity = z;
+  $('#zero').style.transform = `translateY(${(1 - z) * 32}px)`;
+  const ex1 = eIn(P(t, 2.2, 2.7));
+  $('#s1').style.transform = `translateY(${-ex1 * 160}px)`;
+
+  /* s2: 길이 그려지고 핀이 떨어진 뒤 로고 */
+  $$('#map2 path').forEach((p, i) => {
+    const d = eInOut(P(t, 2.65 + i * 0.05, 3.5 + i * 0.05));
+    p.style.strokeDasharray = 1; p.style.strokeDashoffset = 1 - d;
+  });
+  const pins = $$('#pins2 .pin'), shadows = $$('#pins2 .pin-shadow');
+  PINS2.forEach(([, , a], i) => {
+    const p = P(t, a, a + 0.45), e = eBack(p);
+    pins[i].style.opacity = clamp(p * 4);
+    pins[i].style.transform = `translateY(${(1 - e) * -140}px)`;
+    shadows[i].style.opacity = clamp(p * 2);
+    shadows[i].style.transform = `scale(${lerp(0.3, 1, eOut(p))})`;
+  });
+  const lg = eExpo(P(t, 4.0, 4.6));
+  $('#logo').style.opacity = lg;
+  $('#logo').style.transform = `translateY(${(1 - lg) * 48}px) scale(${lerp(0.96, 1, lg)})`;
+  const zoom2 = eIn(P(t, 5.5, 6.0));
+  $('#s2').style.transform = `scale(${1 + zoom2 * 0.08})`;
+
+  /* s3: 영수증 + 할인 도장 */
+  const rc = eExpo(P(t, 6.7, 7.3));
+  $('#receipt').style.opacity = rc;
+  $('#receipt').style.transform = `translateY(${(1 - rc) * 80}px)`;
+  const rows = $$('#receipt .row');
+  rows.forEach((r, i) => {
+    const p = eOut(P(t, 6.9 + i * 0.18, 7.3 + i * 0.18));
+    r.style.opacity = p; r.style.transform = `translateX(${(1 - p) * 40}px)`;
+  });
+  const st = P(t, 7.9, 8.2);
+  $('#stamp').style.opacity = clamp(st * 3);
+  $('#stamp').style.transform = `rotate(-10deg) scale(${lerp(1.8, 1, eOut(st))})`;
+  const ex3 = eIn(P(t, 9.2, 9.6));
+  $('#s3').style.transform = `translateX(${-ex3 * 120}px)`;
+
+  /* s4: 사람 아이콘이 하나씩 강조색으로 */
+  $$('#people .ico').forEach((p, i) => {
+    const a = fillAt[i], f = P(t, a, a + 0.25);
+    p.style.color = f > 0.5 ? 'var(--v-accent)' : 'var(--v-border)';
+    p.style.transform = `scale(${f > 0 ? lerp(1.35, 1, eOut(f)) : 0.9})`;
+    p.style.opacity = lerp(0.0, 1, eOut(P(t, 9.9 + (i % 8) * 0.02, 10.3 + (i % 8) * 0.02)));
+  });
+  const ex4 = eIn(P(t, 12.6, 13.0));
+  $('#s4').style.transform = `translateX(${-ex4 * 120}px)`;
+
+  /* s5: 업종 칩이 바뀌며 가맹점이 뜬다 */
+  const mc = eExpo(P(t, 13.5, 14.1));
+  $('#mapcard').style.opacity = mc;
+  $('#mapcard').style.transform = `translateY(${(1 - mc) * 80}px)`;
+  const chips = $$('#chips .chip');
+  const active = t < CAT_T0 ? -1 : Math.min(3, Math.floor((t - CAT_T0) / CAT_STEP));
+  chips.forEach((c, i) => {
+    const p = eOut(P(t, 13.6 + i * 0.07, 14.0 + i * 0.07));
+    c.style.opacity = p; c.style.transform = `translateY(${(1 - p) * 24}px)`;
+    c.classList.toggle('on', i === active);
+  });
+  $$('#spots .spot').forEach((s, k) => {
+    const c = +s.dataset.c, j = k % 3;
+    const a = CAT_T0 + c * CAT_STEP + j * 0.06;
+    const p = P(t, a, a + 0.35);
+    const dim = c < active ? 0.35 : 1;
+    s.style.opacity = clamp(p * 3) * dim;
+    s.style.transform = `scale(${p > 0 ? eBack(p) : 0})`;
+  });
+  const ringT = active < 0 ? 1 : ((t - CAT_T0) % CAT_STEP) / CAT_STEP;
+  $('#ring').style.opacity = (1 - ringT) * mc;
+  $('#ring').style.transform = `scale(${1 + ringT * 3.5})`;
+
+  /* s6: 강조색이 화면을 덮고 CTA */
+  const cb = eInOut(P(t, 16.4, 17.0));
+  $('#cta-bg').style.clipPath = `circle(${cb * 120}% at 50% 60%)`;
+  $$('#checks .check').forEach((c, i) => {
+    const p = eOut(P(t, 16.9 + i * 0.15, 17.4 + i * 0.15));
+    c.style.opacity = p; c.style.transform = `translateX(${(1 - p) * -40}px)`;
+  });
+  const bt = eExpo(P(t, 18.2, 18.8));
+  const press = P(t, 19.15, 19.25) - P(t, 19.3, 19.45);
+  $('#ctaBtn').style.opacity = bt;
+  $('#ctaBtn').style.transform = `translateY(${(1 - bt) * 60}px) scale(${1 - press * 0.05})`;
+  const hm = eOut(P(t, 18.6, 19.15));
+  $('#hand').style.left = `${lerp(1100, 700, hm)}px`;
+  $('#hand').style.top = `${lerp(1700, 1330, hm) + press * 16}px`;
+  $('#hand').style.opacity = clamp(P(t, 18.6, 18.8)) * (1 - P(t, 19.8, 20.1));
+  const se = eOut(P(t, 19.4, 19.8));
+  $('#search').style.opacity = se;
+  $('#search').style.transform = `translateY(${(1 - se) * 32}px)`;
+  const query = '의정부혜택지도';
+  const n = Math.round(P(t, 19.6, 20.1) * query.length);
+  $('#q').textContent = query.slice(0, n);
+  $('#caret').style.opacity = t > 20.15 ? (Math.floor(t * 2.5) % 2 ? 0 : 1) : 1;
+
+  $('#prog').style.width = `${(t / DURATION) * 100}%`;
+  $('#time').textContent = `${t.toFixed(1)} / ${DURATION}초`;
+}
+window.render = render;
+window.DURATION = DURATION;
+
+/* ---- 화면 맞춤 ---- */
+const isRender = new URLSearchParams(location.search).has('render');
+if (isRender) document.body.classList.add('render');
+function fit() {
+  const s = isRender ? 1 : Math.min((innerWidth - 40) / 1080, (innerHeight - 140) / 1920);
+  document.documentElement.style.setProperty('--s', Math.max(0.15, s));
+}
+fit(); addEventListener('resize', fit);
+
+/* ---- 미리보기 플레이어 ---- */
+let playing = false, t0 = 0, cur = 0;
+const playBtn = $('#play');
+function tick(now) {
+  if (!playing) return;
+  cur = (now - t0) / 1000;
+  if (cur >= DURATION) { cur = DURATION; playing = false; playBtn.textContent = '다시 재생'; }
+  render(cur);
+  if (playing) requestAnimationFrame(tick);
+}
+function play() { if (cur >= DURATION) cur = 0; playing = true; t0 = performance.now() - cur * 1000; playBtn.textContent = '일시정지'; requestAnimationFrame(tick); }
+function pause() { playing = false; playBtn.textContent = '재생'; }
+playBtn.addEventListener('click', () => (playing ? pause() : play()));
+$('#restart').addEventListener('click', () => { cur = 0; render(0); play(); });
+
+if (isRender) render(0);
+else if (matchMedia('(prefers-reduced-motion: reduce)').matches) { cur = DURATION; render(DURATION); playBtn.textContent = '재생'; }
+else document.fonts.ready.then(play);
+</script>
+</body>
+</html>
