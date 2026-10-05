@@ -1,0 +1,219 @@
+<title>스킬 안내판</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* 배치: 위는 명령 확인기(입력 → 맞는 스킬), 아래는 묶음별 전체 스킬 목록. 한 열, 최대 폭 760px. */
+:root {
+  --bg: #FFFFFF; --surface: #F6F7F8; --border: #E4E6E9;
+  --text: #111315; --text-muted: #5D636B;
+  --accent: #0F6E5C; --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D;
+    --text: #ECEDEF; --text-muted: #9AA0A8;
+    --accent: #3FB59A; --accent-contrast: #06231D; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D;
+  --text: #ECEDEF; --text-muted: #9AA0A8;
+  --accent: #3FB59A; --accent-contrast: #06231D; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 16px; line-height: 1.7;
+  word-break: keep-all; overflow-wrap: anywhere;
+  padding-inline: 20px; padding-block: 48px 96px;
+}
+main { max-width: 760px; margin-inline: auto; display: grid; gap: 64px; }
+h1 { font-size: 32px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h2 { font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; margin: 0; }
+h3 { font-size: 14px; font-weight: 600; line-height: 1.6; margin: 0; color: var(--text-muted); letter-spacing: 0.04em; }
+p { margin: 0; max-width: 65ch; }
+.muted { color: var(--text-muted); }
+.small { font-size: 14px; line-height: 1.6; }
+header { display: grid; gap: 12px; }
+section { display: grid; gap: 24px; }
+
+label { font-weight: 600; font-size: 14px; }
+textarea {
+  width: 100%; min-height: 88px; resize: vertical;
+  font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px;
+}
+textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.examples { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-btn {
+  font: inherit; font-size: 14px; color: var(--text); background: transparent;
+  border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; min-height: 32px; cursor: pointer; touch-action: manipulation;
+  transition: border-color 200ms var(--ease), color 200ms var(--ease);
+}
+.chip-btn:hover { border-color: var(--accent); color: var(--accent); }
+.chip-btn:active { opacity: 0.8; }
+.chip-btn:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.result { display: grid; gap: 12px; }
+.result-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.count { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 500; }
+.match { border-top: 1px solid var(--border); padding-block: 12px; display: grid; gap: 4px; }
+.match:last-child { border-bottom: 1px solid var(--border); }
+.name { font-family: var(--mono); font-size: 15px; font-weight: 500; }
+.hits { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 14px; color: var(--text-muted); }
+.hits span { background: var(--surface); border-radius: 8px; padding: 0 8px; }
+.empty { max-width: none; padding: 16px; background: var(--surface); border-radius: 12px; }
+
+.list-tools { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.list-tools input {
+  flex: 1 1 220px; min-width: 0; height: 44px; font: inherit; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding-inline: 16px;
+}
+.group { display: grid; gap: 8px; }
+.skill { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 4px 24px; padding-block: 12px; border-top: 1px solid var(--border); }
+.skill.on .name { color: var(--accent); }
+.skill.on .name::after { content: "  이번 명령에 맞음"; font-family: var(--font); font-size: 12px; font-weight: 600; }
+.skill p { font-size: 15px; }
+@media (max-width: 600px) { .skill { grid-template-columns: minmax(0, 1fr); } }
+
+.howto { display: grid; gap: 12px; padding: 24px; background: var(--surface); border-radius: 12px; }
+.howto ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+code { font-family: var(--mono); font-size: 0.9em; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main>
+  <header>
+    <h1>스킬 안내판</h1>
+    <p class="muted">Claude에게 보낼 명령을 넣으면 어떤 스킬이 맞는지 보여 줍니다. 같은 규칙이 이 저장소의 훅에도 들어 있어서, 실제 명령을 보낼 때마다 Claude Code 화면에 <code>스킬 체크</code> 줄이, 스킬이 정말 쓰이면 <code>스킬 사용됨</code> 줄이 뜹니다.</p>
+  </header>
+
+  <section aria-labelledby="check-title">
+    <h2 id="check-title">명령 넣어 보기</h2>
+    <div style="display:grid;gap:8px">
+      <label for="cmd">보낼 명령</label>
+      <textarea id="cmd" name="command" autocomplete="off" spellcheck="false">이 시안 이미지 보고 랜딩 페이지 만들어 줘</textarea>
+    </div>
+    <div class="examples" aria-label="예시 명령">
+      <button class="chip-btn" type="button">PR 코드 리뷰하고 보안도 봐 줘</button>
+      <button class="chip-btn" type="button">매출 데이터로 차트 그려 줘</button>
+      <button class="chip-btn" type="button">5분마다 배포 상태 확인해 줘</button>
+      <button class="chip-btn" type="button">회의록을 워드 파일로 만들어 줘</button>
+      <button class="chip-btn" type="button">README 오타 고쳐 줘</button>
+    </div>
+    <div class="result" aria-live="polite">
+      <div class="result-head"><h3>맞는 스킬</h3><span class="count" id="count"></span></div>
+      <div id="matches"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="all-title">
+    <h2 id="all-title">전체 스킬 <span class="count" id="total"></span></h2>
+    <div class="list-tools">
+      <label for="filter" class="small muted">이름이나 설명으로 찾기</label>
+      <input id="filter" name="filter" type="search" placeholder="예: 브라우저, pdf, 리뷰…" autocomplete="off">
+    </div>
+    <div id="groups" style="display:grid;gap:32px"></div>
+  </section>
+
+  <section class="howto" aria-labelledby="howto-title">
+    <h2 id="howto-title" style="font-size:20px">스킬을 추가하거나 단어를 바꾸려면</h2>
+    <ol class="small">
+      <li><code>.claude/skill-catalog.json</code>에 스킬 이름, 한 줄 설명, 찾을 단어를 넣습니다.</li>
+      <li><code>node skill-board/build.mjs</code>로 이 페이지를 다시 만듭니다.</li>
+      <li>Claude에게 "스킬 안내판 다시 올려 줘"라고 하면 같은 주소로 갱신됩니다.</li>
+    </ol>
+  </section>
+</main>
+
+<script>
+const CATALOG = {"description":"스킬 안내판 데이터. summary는 패널에 보이는 한 줄 설명, keywords는 명령에 들어 있으면 그 스킬을 추천하는 단어(영문은 단어 단위로 비교). 스킬을 추가하면 여기에 한 항목을 넣는다.","uiRule":{"label":"화면 규칙","words":["화면","ui","페이지","버튼","레이아웃","디자인","웹사이트","사이트 만들","css","html"],"skills":["agent-browser","web-design-guidelines"]},"skills":[{"name":"agent-browser","group":"project","summary":"브라우저를 직접 열어 클릭·입력·스크린샷. 만든 화면 확인, 사이트 테스트","keywords":["브라우저","스크린샷","캡처해","열어","클릭","눌러","사이트","웹사이트","웹페이지","로그인","입력 폼","테스트해","browser","screenshot","website"]},{"name":"design-taste-frontend","group":"project","summary":"랜딩 페이지·포트폴리오·리디자인을 템플릿 티 안 나게 만듦 (DESIGN.md 다이얼 우선)","keywords":["랜딩","포트폴리오","리디자인","홈페이지","소개 페이지","프론트","landing","portfolio","redesign"]},{"name":"image-to-code","group":"project","summary":"참고 이미지·시안을 보고 그대로 웹 화면으로 구현","keywords":["이미지","시안","사진","목업","피그마","그대로","똑같이","mockup","figma"]},{"name":"web-design-guidelines","group":"project","summary":"만든 UI를 웹 인터페이스 가이드라인·접근성 기준으로 점검","keywords":["점검","검토","접근성","가이드라인","ux","ui 리뷰","디자인 리뷰","accessibility","a11y"]},{"name":"dataviz","group":"builtin","summary":"차트·그래프·대시보드를 일관된 색과 규칙으로 그림","keywords":["차트","그래프","시각화","대시보드","통계","chart","graph","dashboard"]},{"name":"code-review","group":"builtin","summary":"바뀐 코드나 PR에서 버그를 찾아 리뷰","keywords":["코드 리뷰","코드리뷰","리뷰해","버그","pr 봐","review"]},{"name":"simplify","group":"builtin","summary":"바뀐 코드를 더 단순하고 깔끔하게 정리 (버그 찾기는 아님)","keywords":["정리해","단순하게","깔끔하게","리팩터","리팩토링","refactor","simplify"]},{"name":"security-review","group":"builtin","summary":"현재 브랜치 변경 사항의 보안 점검","keywords":["보안","취약점","security"]},{"name":"loop","group":"builtin","summary":"명령을 일정 간격으로 반복 실행 (예: 5분마다 확인)","keywords":["반복","주기적","마다","계속 확인","loop"]},{"name":"update-config","group":"builtin","summary":"settings.json 설정: 권한, 환경변수, \"~할 때마다 자동으로\" 훅","keywords":["설정","권한","허용","환경변수","자동으로","할 때마다","훅","hook","settings"]},{"name":"run","group":"builtin","summary":"프로젝트 앱을 실행해서 바뀐 게 실제로 동작하는지 확인","keywords":["실행","띄워","서버","돌려","run"]},{"name":"session-start-hook","group":"builtin","summary":"클라우드 세션 시작 때 도구 설치·준비하는 훅 만들기","keywords":["세션 시작","시작할 때","세션 훅","sessionstart"]},{"name":"init","group":"builtin","summary":"저장소를 읽고 CLAUDE.md 새로 만들기","keywords":["claude.md 만들","claude.md 생성","init"]},{"name":"claude-api","group":"builtin","summary":"Claude API·Anthropic SDK 사용법, 모델·가격·캐싱","keywords":["claude api","anthropic","앤트로픽","api 키","모델 가격","sdk"]},{"name":"plugin-authoring","group":"builtin","summary":"Claude Code 안에 패널·상태줄·알림·훅 모드 만들기 (이 패널도 이걸로 만듦)","keywords":["패널","상태줄","상시","띄워놓","모드","플러그인","plugin"]},{"name":"artifact-design","group":"builtin","summary":"공유용 웹 페이지(아티팩트) 디자인 기준","keywords":["아티팩트","공유 페이지","공유할","artifact"]},{"name":"artifact-diagramming","group":"builtin","summary":"아티팩트에 들어갈 다이어그램 그리기","keywords":["다이어그램","도식","흐름도","diagram"]},{"name":"artifact-capabilities","group":"builtin","summary":"아티팩트 페이지에 저장·공유 데이터·로그인 사용자 같은 기능 붙이기","keywords":["투표","신청서","체크리스트 공유","데이터 저장"]},{"name":"keybindings-help","group":"builtin","summary":"키보드 단축키 바꾸기","keywords":["단축키","키 바인딩","keybinding"]},{"name":"fewer-permission-prompts","group":"builtin","summary":"자주 묻는 권한 확인을 줄이도록 허용 목록 추가","keywords":["권한 묻","권한 확인 줄","승인 줄","허락 그만"]},{"name":"anthropic-skills:deep-research","group":"anthropic","summary":"여러 자료를 조사·비교해서 보고서로 정리","keywords":["조사","리서치","비교해","시장","동향","research"]},{"name":"anthropic-skills:docs","group":"anthropic","summary":"공유·댓글 가능한 문서 만들기 (보고서, 제안서, 이력서 등)","keywords":["문서","보고서","제안서","이력서","자기소개서","기획서"]},{"name":"anthropic-skills:docx","group":"anthropic","summary":"Word(.docx) 파일 만들기·고치기","keywords":["워드","docx","word"]},{"name":"anthropic-skills:pdf","group":"anthropic","summary":"PDF 읽기·합치기·나누기·만들기","keywords":["pdf"]},{"name":"anthropic-skills:xlsx","group":"anthropic","summary":"엑셀·CSV 스프레드시트 만들기·정리","keywords":["엑셀","스프레드시트","xlsx","csv"]},{"name":"anthropic-skills:pptx","group":"anthropic","summary":"PowerPoint(.pptx) 발표 자료","keywords":["파워포인트","ppt","발표 자료","슬라이드"]},{"name":"anthropic-skills:skill-creator","group":"anthropic","summary":"새 스킬 만들기·기존 스킬 고치기·성능 측정","keywords":["스킬 만들","스킬을 만들","스킬 고쳐","스킬 수정"]},{"name":"anthropic-skills:google-workspace","group":"anthropic","summary":"구글 문서·시트·슬라이드 파일 만들기·고치기","keywords":["구글 문서","구글 시트","구글 드라이브","google"]},{"name":"anthropic-skills:morning","group":"anthropic","summary":"아침 브리핑 만들기","keywords":["아침 브리핑","모닝 브리핑"]}]};
+const matchSkills = function matchSkills(text, catalog) {
+  const lower = text.toLowerCase()
+  const isAscii = word => /^[\x00-\x7f]+$/.test(word)
+  const has = word => {
+    const w = word.toLowerCase()
+    if (!isAscii(w)) return lower.includes(w)
+    const escaped = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(lower)
+  }
+  const found = new Map()
+  const add = (name, hit) => {
+    if (!found.has(name)) found.set(name, [])
+    if (!found.get(name).includes(hit)) found.get(name).push(hit)
+  }
+
+  for (const skill of catalog.skills) {
+    const short = skill.name.split(':').pop()
+    if (lower.includes(`/${skill.name}`) || has(`/${short}`)) add(skill.name, `/${short}`)
+    for (const word of skill.keywords) if (has(word)) add(skill.name, word)
+  }
+
+  const rule = catalog.uiRule
+  const uiHit = rule && rule.words.find(has)
+  if (uiHit) for (const name of rule.skills) add(name, `${rule.label}(${uiHit})`)
+
+  return [...found]
+    .map(([name, hits]) => ({ name, hits }))
+    .sort((a, b) => b.hits.length - a.hits.length)
+};
+const GROUPS = { project: '이 저장소에 설치된 스킬', builtin: 'Claude Code 기본 스킬', anthropic: 'Anthropic 스킬' };
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; if (cls === 'name') n.translate = false; return n; };
+const summaryOf = name => (CATALOG.skills.find(s => s.name === name) || {}).summary || '';
+let matched = new Set();
+
+function renderMatches() {
+  const found = matchSkills($('cmd').value, CATALOG);
+  matched = new Set(found.map(m => m.name));
+  $('count').textContent = found.length ? `${found.length}개` : '';
+  const box = $('matches');
+  box.replaceChildren();
+  if (!found.length) {
+    box.append(el('p', 'empty small muted', '맞는 스킬이 없습니다. Claude가 스킬 없이 바로 작업합니다.'));
+  }
+  for (const m of found) {
+    const row = el('div', 'match');
+    row.append(el('div', 'name', m.name), el('p', 'small', summaryOf(m.name)));
+    const hits = el('div', 'hits');
+    hits.append(el('span', null, '찾은 단어'));
+    for (const h of m.hits) hits.append(el('span', null, h));
+    row.append(hits);
+    box.append(row);
+  }
+  renderList();
+}
+
+function renderList() {
+  const q = $('filter').value.trim().toLowerCase();
+  const wrap = $('groups');
+  wrap.replaceChildren();
+  let shown = 0;
+  for (const [key, title] of Object.entries(GROUPS)) {
+    const items = CATALOG.skills.filter(s => s.group === key &&
+      (!q || s.name.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q) || s.keywords.some(k => k.toLowerCase().includes(q))));
+    if (!items.length) continue;
+    const g = el('div', 'group');
+    g.append(el('h3', null, `${title} · ${items.length}`));
+    for (const s of items) {
+      const row = el('div', 'skill' + (matched.has(s.name) ? ' on' : ''));
+      row.append(el('div', 'name', s.name), el('p', null, s.summary));
+      g.append(row);
+      shown++;
+    }
+    wrap.append(g);
+  }
+  if (!shown) wrap.append(el('p', 'empty small muted', '찾는 스킬이 없습니다. 다른 단어로 찾아 보세요.'));
+  $('total').textContent = `${CATALOG.skills.length}개`;
+}
+
+$('cmd').addEventListener('input', renderMatches);
+$('filter').addEventListener('input', renderList);
+document.querySelectorAll('.examples .chip-btn').forEach(b => b.addEventListener('click', () => { $('cmd').value = b.textContent; renderMatches(); $('cmd').focus(); }));
+renderMatches();
+</script>

@@ -1,0 +1,6 @@
+{
+  "name": "skill-panel",
+  "version": "0.1.0",
+  "description": "사용 가능한 스킬 설명을 패널에 띄우고, 보낸 명령에 어떤 스킬이 맞는지·실제로 쓰였는지 보여준다",
+  "types": "./types/index.d.ts"
+}

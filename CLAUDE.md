@@ -19,3 +19,9 @@
 
 - 클라우드 세션에서는 `.claude/hooks/session-start.sh`가 `agent-browser`를 설치하고, 미리 설치된 Chromium 경로를 `AGENT_BROWSER_EXECUTABLE_PATH`로 잡아 준다.
 - `.env`처럼 비밀키가 들어 있는 파일은 읽거나 출력하지 않는다.
+
+## 스킬 안내판
+
+- 스킬 설명과 찾을 단어는 `.claude/skill-catalog.json` 한 곳에 둔다. 스킬을 추가하거나 바꾸면 여기를 고치고 `node skill-board/build.mjs`로 안내판 페이지를 다시 만든다.
+- 명령을 보낼 때마다 `UserPromptSubmit` 훅(`.claude/hooks/skill-match.mjs`)이 `스킬 체크:` 줄을, 스킬이 실제로 불리면 `PostToolUse` 훅이 `스킬 사용됨:` 줄을 띄운다. 이 후보는 단어로 고른 것이므로, 실제로 맞을 때만 스킬을 쓴다.
+- Claude Code 터미널/데스크톱에서 쓰는 패널 모드는 `.claude/mods/skill-panel/`에 있다. 판별 규칙은 `hooks/match.ts`와 `.claude/hooks/skill-match-core.mjs` 두 곳에 있으니 같이 고친다.
