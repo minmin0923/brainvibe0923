@@ -1,0 +1,28 @@
+{
+  "_설명": "file은 clips 폴더 안의 파일 이름, in은 원본에서 시작할 초, dur는 쓸 길이(초), speed 0.7이면 슬로우. role은 hook/info/accent/sfx. 줄바꿈은 \\N",
+  "clipsDir": "../clips",
+  "bgm": null,
+  "bgmVolume": 0.25,
+  "warm": true,
+  "endcard": "../endcard/out/endcard.mp4",
+  "styles": {
+    "hook":   { "font": "Pretendard Black",     "size": 104, "color": "#FFFFFF", "outline": "#000000", "outlineW": 7, "align": 8, "marginV": 300, "highlight": "#FFD43B" },
+    "info":   { "font": "Pretendard ExtraBold", "size": 66,  "color": "#FFFFFF", "outline": "#000000", "outlineW": 5, "align": 2, "marginV": 430, "highlight": "#FFD43B" },
+    "accent": { "font": "Pretendard Black",     "size": 84,  "color": "#FFD43B", "outline": "#000000", "outlineW": 6, "align": 5, "marginV": 0,   "highlight": "#FFFFFF" },
+    "sfx":    { "font": "Pretendard ExtraBold", "size": 64,  "color": "#FFFFFF", "outline": "#000000", "outlineW": 5, "align": 5, "marginV": 0,   "highlight": "#FFD43B", "angle": 6 }
+  },
+  "cuts": [
+    { "scene": "반반 불판에 고기 올리기",  "file": "01.mp4", "in": 0, "dur": 1.2, "subs": [{ "role": "hook", "text": "호원동 단골들만\\N아는 {hl}오리집{/hl}" }] },
+    { "scene": "로스 펼치기",            "file": "02.mp4", "in": 0, "dur": 1.8, "subs": [{ "role": "info", "text": "로스 반 + 주물럭 반 = 고민 끝" }, { "role": "hook", "text": "끝에 {hl}볶음밥{/hl} 있음", "size": 60, "at": 0.3 }] },
+    { "scene": "로스 뒤집기",            "file": "03.mp4", "in": 0, "dur": 2.0, "subs": [{ "role": "accent", "text": "생오리로스" }] },
+    { "scene": "주물럭 양념 김",          "file": "04.mp4", "in": 0, "dur": 2.0, "subs": [{ "role": "accent", "text": "매콤달달\\N양념 주물럭" }] },
+    { "scene": "가위로 자르기",           "file": "05.mp4", "in": 0, "dur": 2.0, "subs": [{ "role": "sfx", "text": "이 비주얼 실화?" }] },
+    { "scene": "로스 한 점 슬로우",        "file": "06.mp4", "in": 0, "dur": 3.0, "speed": 0.7, "subs": [{ "role": "info", "text": "기름 쫙 빠진 {hl}겉바속촉{/hl}" }] },
+    { "scene": "쌈 싸서 한입",           "file": "07.mp4", "in": 0, "dur": 3.0, "subs": [{ "role": "info", "text": "로스는 쌈, 주물럭은 {hl}밥도둑{/hl}" }] },
+    { "scene": "양념 남은 불판",          "file": "08.mp4", "in": 0, "dur": 2.0, "subs": [{ "role": "hook", "text": "근데 진짜는\\N{hl}지금부터{/hl}" }] },
+    { "scene": "볶음밥 볶기",            "file": "09.mp4", "in": 0, "dur": 4.0, "subs": [{ "role": "info", "text": "남은 양념 = {hl}볶음밥{/hl} 재료" }] },
+    { "scene": "누룽지 긁기",            "file": "10.mp4", "in": 0, "dur": 3.0, "subs": [{ "role": "sfx", "text": "바닥 누룽지 긁는 소리" }] },
+    { "scene": "해신탕 뚜껑 열기",         "file": "11.mp4", "in": 0, "dur": 1.5, "subs": [{ "role": "hook", "text": "그리고 이 집\\N{hl}숨은 메뉴{/hl}…" }] },
+    { "scene": "해신탕 김",              "file": "11.mp4", "in": 1.5, "dur": 2.0, "subs": [{ "role": "info", "text": "이거까지 {hl}10% 할인{/hl} 받는 법" }] }
+  ]
+}

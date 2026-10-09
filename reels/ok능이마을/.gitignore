@@ -1,0 +1,4 @@
+clips/
+edit/out/
+endcard/out/still-*.png
+node_modules
