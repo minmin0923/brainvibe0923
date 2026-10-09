@@ -6,6 +6,13 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
+# 0) ig-* 스킬이 읽고 쓰는 ~/.claude/instagram 을 저장소의 instagram/ 폴더로 연결한다.
+#    (클라우드 세션은 끝나면 지워지므로 말투·레퍼런스·기록을 저장소에 남긴다)
+if [ ! -e "$HOME/.claude/instagram" ] || [ -L "$HOME/.claude/instagram" ]; then
+  mkdir -p "$HOME/.claude"
+  ln -sfn "$CLAUDE_PROJECT_DIR/instagram" "$HOME/.claude/instagram"
+fi
+
 # 1) agent-browser CLI 설치 (이미 있으면 건너뜀)
 if ! command -v agent-browser >/dev/null 2>&1; then
   npm install -g agent-browser@latest >/dev/null 2>&1
