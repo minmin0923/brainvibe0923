@@ -3,7 +3,7 @@
 import base64, json, re, sys, urllib.request, concurrent.futures as cf
 md, outdir = sys.argv[1], sys.argv[2]
 blocks = re.findall(r"^## (\d)\. (.+?)\n```\n(.*?)```", open(md, encoding="utf-8").read(), re.S | re.M)
-jobs = [(n, t, p) for n, t, p in blocks if n in "12345"]
+jobs = [(n, t, p) for n, t, p in blocks if n in "12345789"]
 def run(job):
     n, title, prompt = job
     body = json.dumps({"model": "gpt-image-2.5-sunburst", "prompt": prompt.strip(),
