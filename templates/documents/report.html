@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>분석 보고서</title>
+<meta name="description" content="결재란, 요약, 차트, 표, 결론을 갖춘 A4 보고서 양식. 화면으로 보거나 PDF로 인쇄합니다.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="../assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== 토큰 (DESIGN.md 2~3장) ===== */
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local("Pretendard Variable"), url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations"), url("../assets/fonts/PretendardVariable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Geist Mono"), url("../assets/fonts/GeistMono.woff2") format("woff2");
+}
+:root {
+  --bg: #FFFFFF;
+  --surface: #F6F7F8;
+  --border: #E4E6E9;
+  --text: #111315;
+  --text-muted: #5D636B;
+  --accent: #0F6E5C;
+  --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  color-scheme: dark;
+}
+
+/* ===== 기본 ===== */
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--accent); color: var(--accent-contrast); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+.skip:focus-visible { top: 12px; text-decoration: none; }
+
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 1024px) { body { font-size: 17px; } }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { width: 20px; height: 20px; flex: none; fill: currentColor; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-muted); }
+
+.toolbar { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); }
+.toolbar-inner { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+.toolbar .crumb { flex: 1 1 auto; min-width: 0; font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toolbar .crumb b { color: var(--text); font-weight: 600; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid transparent;
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease);
+  touch-action: manipulation;
+}
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface); }
+.btn-secondary:active { background: var(--border); }
+
+/* ===== 종이 ===== */
+.page {
+  max-width: 840px; margin: 32px auto 96px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  padding: 64px 72px;
+}
+@media screen and (max-width: 767px) {
+  .page { margin: 0; border: 0; border-radius: 0; padding: 32px 20px 64px; }
+}
+
+/* ===== 문서 머리 ===== */
+.doc-kind { font-size: 14px; font-weight: 600; color: var(--accent); margin: 0 0 12px; }
+.doc-title { font-size: 32px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+@media (min-width: 1024px) { .doc-title { font-size: 40px; } }
+.doc-sub { margin: 12px 0 0; color: var(--text-muted); max-width: 65ch; }
+.doc-head { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; padding-bottom: 32px; border-bottom: 1px solid var(--text); }
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; border-bottom: 1px solid var(--border); }
+.meta > div { padding: 16px 16px 16px 0; }
+.meta dt { font-size: 13px; color: var(--text-muted); }
+.meta dd { margin: 4px 0 0; font-size: 15px; font-weight: 500; }
+@media screen and (max-width: 767px) {
+  .doc-head { grid-template-columns: 1fr; gap: 24px; }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* 결재란 */
+.approval { border-collapse: collapse; font-size: 13px; text-align: center; }
+.approval th, .approval td { border: 1px solid var(--border); padding: 0; width: 72px; }
+.approval th { font-weight: 500; color: var(--text-muted); height: 28px; background: var(--surface); }
+.approval td { height: 56px; }
+.approval .stamp { display: inline-block; font-size: 12px; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; }
+
+/* ===== 본문 ===== */
+.doc-body { counter-reset: sec; }
+.doc-body section { margin-top: 48px; }
+.doc-body h2 { counter-increment: sec; font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 16px; display: flex; gap: 12px; align-items: baseline; }
+.doc-body h2::before { content: counter(sec) "."; font-family: var(--mono); font-size: 18px; color: var(--accent); }
+.doc-body h3 { font-size: 18px; font-weight: 600; line-height: 1.4; margin: 32px 0 8px; }
+.doc-body p, .doc-body li { max-width: 65ch; }
+.doc-body p { margin: 0 0 16px; }
+.doc-body ul, .doc-body ol { margin: 0 0 16px; padding-left: 1.25em; }
+.doc-body li + li { margin-top: 4px; }
+@media (min-width: 1024px) { .doc-body h2 { font-size: 28px; } .doc-body h3 { font-size: 20px; } }
+
+.summary { background: var(--surface); border-radius: 12px; padding: 24px 24px 8px; margin-top: 32px; }
+.summary h2 { font-size: 16px !important; color: var(--text-muted); counter-increment: none !important; margin-bottom: 8px !important; }
+.summary h2::before { content: none !important; }
+.summary ul { padding-left: 1.1em; }
+.summary b { font-weight: 600; }
+
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 20px; margin: 24px 0; }
+.callout p:last-child { margin-bottom: 0; }
+.callout .label { display: block; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+
+.table-wrap { overflow-x: auto; margin: 16px 0 24px; }
+table.data { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.data caption { caption-side: bottom; text-align: left; font-size: 13px; color: var(--text-muted); padding-top: 8px; }
+table.data th, table.data td { text-align: left; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.data thead th { font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom-color: var(--text); white-space: nowrap; }
+table.data .r { text-align: right; font-variant-numeric: tabular-nums; padding-left: 16px; padding-right: 24px; }
+table.data .r:last-child { padding-right: 0; }
+table.data tfoot td { font-weight: 600; border-bottom: 0; }
+
+figure { margin: 24px 0; }
+figcaption { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .grid { stroke: var(--border); stroke-width: 1; }
+.chart .axis { fill: var(--text-muted); font-size: 12px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.chart .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .line.prev { stroke: var(--text-muted); }
+.chart .dot { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.chart .lbl { fill: var(--text); font-size: 13px; font-weight: 600; font-family: var(--font); }
+.chart .bar { fill: var(--accent); }
+.chart .bar.dim { fill: var(--text-muted); opacity: 0.4; }
+.legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: var(--text-muted); margin: 0 0 8px; padding: 0; list-style: none; }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 16px; height: 2px; background: var(--accent); display: inline-block; }
+.legend i.prev { background: var(--text-muted); }
+
+.checklist { list-style: none; padding: 0 !important; }
+.checklist li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start; }
+.checklist input { width: 18px; height: 18px; margin: 4px 0 0; accent-color: var(--accent); }
+
+.foot { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* ===== 인쇄 (A4) ===== */
+@page { size: A4; margin: 18mm 16mm 20mm; }
+@media print {
+  :root { --bg: #fff; --surface: #F6F7F8; --border: #E4E6E9; --text: #111315; --text-muted: #5D636B; --accent: #0F6E5C; }
+  body { background: #fff; font-size: 10.5pt; }
+  .toolbar { display: none; }
+  .page { max-width: none; margin: 0; padding: 0; border: 0; }
+  .doc-body section { break-inside: auto; }
+  h2, h3 { break-after: avoid; }
+  table.data tr, figure, .callout, .summary { break-inside: avoid; }
+  .summary, .approval th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: inherit; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-print" viewBox="0 0 256 256"><path d="M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+</svg>
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <a class="btn btn-secondary" href="../index.html" aria-label="양식 모음으로 돌아가기" style="padding:0 12px"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></a>
+    <span class="crumb">양식 모음 / <b>분석 보고서</b></span>
+    <button class="btn btn-secondary" type="button" onclick="window.print()"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>인쇄 / PDF</button>
+  </div>
+</header>
+<main class="page" id="main">
+  <header class="doc-head">
+    <div>
+      <p class="doc-kind">분석 보고서</p>
+      <h1 class="doc-title">3분기 고객 문의 분석과 4분기 대응 방안</h1>
+      <p class="doc-sub">7~9월 고객센터 문의 13,760건을 유형별로 나눠 원인을 찾고, 상담 인력 배치와 안내 문구 개선안을 정리했습니다.</p>
+    </div>
+    <table class="approval" aria-label="결재란">
+      <thead><tr><th scope="col">작성</th><th scope="col">검토</th><th scope="col">승인</th></tr></thead>
+      <tbody><tr><td><span class="stamp">완료</span></td><td></td><td></td></tr></tbody>
+    </table>
+  </header>
+  <dl class="meta">
+    <div><dt>작성자</dt><dd>고객경험팀 이수민</dd></div>
+    <div><dt>작성일</dt><dd class="num">2026. 10. 13</dd></div>
+    <div><dt>문서 번호</dt><dd class="num">CX-2026-031</dd></div>
+    <div><dt>공개 범위</dt><dd>사내 전체</dd></div>
+  </dl>
+
+  <div class="doc-body">
+    <div class="summary">
+      <h2>요약</h2>
+      <ul>
+        <li>3분기 문의는 <b>13,760건</b>으로 작년 같은 기간보다 <b>19% 늘었습니다</b>.</li>
+        <li>늘어난 문의의 64%가 <b>배송 지연</b> 관련이며, 8월 물류센터 이전 영향이 컸습니다.</li>
+        <li>주문 화면의 배송 안내 문구를 바꾸고 8~9월에 상담원 4명을 임시 배치하면, 4분기 문의를 약 2,100건 줄일 수 있습니다.</li>
+      </ul>
+    </div>
+
+    <section>
+      <h2>배경과 목적</h2>
+      <p>3분기에 문의가 평소보다 많이 늘어 응답 대기 시간이 평균 11분까지 길어졌습니다. 이 보고서는 늘어난 문의의 원인을 유형별로 확인하고, 4분기 성수기 전에 할 수 있는 대응을 제안하기 위해 작성했습니다.</p>
+    </section>
+
+    <section>
+      <h2>월별 문의 추이</h2>
+      <p>7월부터 작년과의 차이가 커졌고, 8월에 17,500건으로 가장 많았습니다. 9월에는 물류센터가 안정되며 줄기 시작했습니다.</p>
+      <figure class="chart">
+        <ul class="legend" aria-hidden="true"><li><i></i>2026년</li><li><i class="prev"></i>2025년</li></ul>
+        <svg viewBox="0 0 660 256" role="img" aria-labelledby="fig1">
+          <title id="fig1">월별 고객 문의 수. 2026년이 2025년보다 매달 많고, 8월에 17.5천 건으로 가장 많습니다.</title>
+<line class="grid" x1="56" x2="640" y1="220" y2="220"/><text class="axis" x="44" y="224" text-anchor="end">0천</text>
+<line class="grid" x1="56" x2="640" y1="170" y2="170"/><text class="axis" x="44" y="174" text-anchor="end">5천</text>
+<line class="grid" x1="56" x2="640" y1="120" y2="120"/><text class="axis" x="44" y="124" text-anchor="end">10천</text>
+<line class="grid" x1="56" x2="640" y1="70" y2="70"/><text class="axis" x="44" y="74" text-anchor="end">15천</text>
+<line class="grid" x1="56" x2="640" y1="20" y2="20"/><text class="axis" x="44" y="24" text-anchor="end">20천</text>
+<text class="axis" x="56" y="244" text-anchor="middle">1월</text>
+<text class="axis" x="128" y="244" text-anchor="middle">2월</text>
+<text class="axis" x="200" y="244" text-anchor="middle">3월</text>
+<text class="axis" x="272" y="244" text-anchor="middle">4월</text>
+<text class="axis" x="344" y="244" text-anchor="middle">5월</text>
+<text class="axis" x="416" y="244" text-anchor="middle">6월</text>
+<text class="axis" x="488" y="244" text-anchor="middle">7월</text>
+<text class="axis" x="560" y="244" text-anchor="middle">8월</text>
+<text class="axis" x="632" y="244" text-anchor="middle">9월</text>
+<polyline class="line prev" points="56,111 128,118 200,106 272,110 344,102 416,99 488,90 560,84 632,96"/>
+<polyline class="line" points="56,96 128,102 200,89 272,94 344,81 416,72 488,58 560,45 632,69"/>
+<circle class="dot" cx="56" cy="96" r="4"><title>2026년 1월 12.4천 건 (2025년 10.9천 건)</title></circle>
+<circle class="dot" cx="128" cy="102" r="4"><title>2026년 2월 11.8천 건 (2025년 10.2천 건)</title></circle>
+<circle class="dot" cx="200" cy="89" r="4"><title>2026년 3월 13.1천 건 (2025년 11.4천 건)</title></circle>
+<circle class="dot" cx="272" cy="94" r="4"><title>2026년 4월 12.6천 건 (2025년 11.0천 건)</title></circle>
+<circle class="dot" cx="344" cy="81" r="4"><title>2026년 5월 13.9천 건 (2025년 11.8천 건)</title></circle>
+<circle class="dot" cx="416" cy="72" r="4"><title>2026년 6월 14.8천 건 (2025년 12.1천 건)</title></circle>
+<circle class="dot" cx="488" cy="58" r="4"><title>2026년 7월 16.2천 건 (2025년 13.0천 건)</title></circle>
+<circle class="dot" cx="560" cy="45" r="4"><title>2026년 8월 17.5천 건 (2025년 13.6천 건)</title></circle>
+<circle class="dot" cx="632" cy="69" r="4"><title>2026년 9월 15.1천 건 (2025년 12.4천 건)</title></circle>
+<text class="lbl" x="560" y="33" text-anchor="middle">17.5천</text>
+        </svg>
+        <figcaption>그림 1. 월별 고객 문의 수 (단위: 천 건). 점에 마우스를 올리면 값이 보입니다.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>유형별 분석</h2>
+      <div class="table-wrap">
+      <table class="data">
+        <caption>표 1. 3분기 문의 유형별 건수와 작년 대비 증감</caption>
+        <thead><tr><th scope="col">유형</th><th scope="col" class="r">2026 3분기</th><th scope="col" class="r">2025 3분기</th><th scope="col" class="r">증감</th><th scope="col">주요 원인</th></tr></thead>
+        <tbody>
+          <tr><td>배송 지연</td><td class="r">5,180</td><td class="r">3,770</td><td class="r">+37%</td><td>물류센터 이전, 출고 지연</td></tr>
+          <tr><td>교환·반품</td><td class="r">3,420</td><td class="r">3,150</td><td class="r">+9%</td><td>의류 사이즈 문의</td></tr>
+          <tr><td>결제·환불</td><td class="r">2,640</td><td class="r">2,480</td><td class="r">+6%</td><td>부분 환불 처리 기간</td></tr>
+          <tr><td>회원 정보</td><td class="r">1,370</td><td class="r">1,290</td><td class="r">+6%</td><td>휴대폰 번호 변경</td></tr>
+          <tr><td>기타</td><td class="r">1,150</td><td class="r">870</td><td class="r">+32%</td><td>이벤트 경품 배송</td></tr>
+        </tbody>
+        <tfoot><tr><td>합계</td><td class="r">13,760</td><td class="r">11,560</td><td class="r">+19%</td><td></td></tr></tfoot>
+      </table>
+      </div>
+      <h3>배송 지연 문의가 늘어난 이유</h3>
+      <p>주문 화면에 표시되는 예상 도착일이 이전 전 기준으로 계산되어, 실제 도착이 평균 1.8일 늦었습니다. 고객이 늦어진 이유를 알 방법이 없어 상담으로 이어졌습니다.</p>
+      <div class="callout">
+        <span class="label">확인된 사실</span>
+        <p>배송 지연 문의 중 71%는 “언제 오나요”라는 같은 질문이었고, 상담원은 같은 답을 반복했습니다.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>대응 방안</h2>
+      <ol>
+        <li><b>예상 도착일 계산 수정:</b> 새 물류센터 출고 시간을 반영합니다. 개발 3일, 10월 4주 적용.</li>
+        <li><b>지연 안내 자동 발송:</b> 예상일보다 하루 이상 늦어지면 알림톡으로 먼저 알립니다.</li>
+        <li><b>성수기 임시 인력:</b> 11월 20일부터 12월 31일까지 상담원 4명을 추가 배치합니다.</li>
+      </ol>
+      <div class="table-wrap">
+      <table class="data">
+        <caption>표 2. 대응 방안별 비용과 예상 효과</caption>
+        <thead><tr><th scope="col">방안</th><th scope="col" class="r">비용</th><th scope="col" class="r">예상 문의 감소</th><th scope="col">담당</th></tr></thead>
+        <tbody>
+          <tr><td>예상 도착일 계산 수정</td><td class="r">내부 인력</td><td class="r">1,200건</td><td>주문개발팀</td></tr>
+          <tr><td>지연 안내 자동 발송</td><td class="r">월 40만 원</td><td class="r">900건</td><td>CRM팀</td></tr>
+          <tr><td>성수기 임시 인력</td><td class="r">1,680만 원</td><td class="r">대기 시간 단축</td><td>고객경험팀</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>결론과 요청 사항</h2>
+      <p>세 가지 방안을 모두 적용하면 4분기 예상 문의 15,800건 중 약 2,100건을 줄이고, 응답 대기 시간을 5분 이내로 되돌릴 수 있습니다. 10월 20일까지 임시 인력 예산 승인을 요청드립니다.</p>
+    </section>
+
+    <section>
+      <h2>부록</h2>
+      <ul>
+        <li>데이터 출처: 상담 시스템 문의 기록 (2025. 7. 1 ~ 2026. 9. 30)</li>
+        <li>유형 분류 기준: 상담원이 입력한 1차 분류, 데이터팀 표본 검수 500건</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="foot"><span>CX-2026-031 · 고객경험팀</span><span>사내 전체 공개</span></footer>
+</main>
+</body>
+</html>

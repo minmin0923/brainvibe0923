@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>분기 프로젝트 보고</title>
+<meta name="description" content="분기 프로젝트 진행 보고용 16:9 발표 자료 8장. 요약, 지표, 현황표, 위험, 일정, 결정 요청 순서입니다.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="../assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== 1. 토큰 (DESIGN.md 2~3장) ===== */
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local("Pretendard Variable"), url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations"), url("../assets/fonts/PretendardVariable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Geist Mono"), url("../assets/fonts/GeistMono.woff2") format("woff2");
+}
+:root {
+  --bg: #FFFFFF;
+  --surface: #F6F7F8;
+  --border: #E4E6E9;
+  --text: #111315;
+  --text-muted: #5D636B;
+  --accent: #0F6E5C;
+  --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  color-scheme: dark;
+}
+
+/* ===== 2. 페이지 ===== */
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--accent); color: var(--accent-contrast); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+.skip:focus-visible { top: 12px; text-decoration: none; }
+
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { width: 20px; height: 20px; flex: none; fill: currentColor; }
+
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.toolbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.toolbar h1 { font-size: 16px; font-weight: 600; line-height: 1.4; margin: 0; flex: 1 1 auto; min-width: 0; }
+.toolbar p { margin: 0; font-size: 14px; color: var(--text-muted); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 20px;
+  border-radius: 8px; border: 1px solid transparent;
+  font: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease);
+  touch-action: manipulation;
+}
+.btn-primary { background: var(--accent); color: var(--accent-contrast); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--text)); }
+.btn-primary:active { background: color-mix(in srgb, var(--accent) 78%, var(--text)); }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface); }
+.btn-secondary:active { background: var(--border); }
+
+.deck { max-width: 1200px; margin: 0 auto; padding: 32px 20px 96px; display: grid; gap: 48px; }
+.slide-wrap { display: grid; gap: 12px; container-type: inline-size; }
+.slide-caption { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-muted); }
+
+/* ===== 3. 슬라이드 공통 =====
+   크기는 1280px 폭 기준의 '디자인 px'로 적고 var(--s)를 곱합니다.
+   슬라이드 폭이 바뀌면 전체가 같은 비율로 줄고 늘어납니다.
+   cqw는 바깥 .slide-wrap(컨테이너) 폭 기준입니다. */
+.slide {
+  --s: calc(100cqw / 1280);
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: calc(80 * var(--s)) calc(96 * var(--s));
+  display: flex; flex-direction: column;
+  font-size: calc(26 * var(--s));
+  line-height: 1.6;
+}
+.slide > * { min-width: 0; }
+.eyebrow {
+  font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s));
+  color: var(--accent); margin: 0 0 calc(24 * var(--s));
+}
+.s-display { font-size: calc(64 * var(--s)); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+.s-title { font-size: calc(44 * var(--s)); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 calc(40 * var(--s)); text-wrap: balance; }
+.s-sub { font-size: calc(28 * var(--s)); color: var(--text-muted); margin: calc(24 * var(--s)) 0 0; max-width: 40ch; }
+.s-lead { font-size: calc(30 * var(--s)); line-height: 1.5; margin: 0; max-width: 34ch; }
+.muted { color: var(--text-muted); }
+.slide p { margin: 0; }
+.slide-foot {
+  margin-top: auto; padding-top: calc(24 * var(--s));
+  display: flex; justify-content: space-between; gap: calc(24 * var(--s));
+  font-variant-numeric: tabular-nums; font-size: calc(16 * var(--s)); color: var(--text-muted);
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* 레이아웃별 */
+.l-cover { justify-content: flex-end; }
+.l-cover .s-display { max-width: 18ch; }
+.l-cover .meta { margin-top: calc(48 * var(--s)); display: flex; gap: calc(32 * var(--s)); font-size: calc(20 * var(--s)); color: var(--text-muted); flex-wrap: wrap; }
+
+.agenda { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 calc(64 * var(--s)); counter-reset: ag; }
+.agenda li { counter-increment: ag; display: grid; grid-template-columns: calc(64 * var(--s)) 1fr; align-items: baseline; padding: calc(20 * var(--s)) 0; border-top: 1px solid var(--border); }
+.agenda li::before { content: counter(ag, decimal-leading-zero); font-family: var(--mono); font-size: calc(18 * var(--s)); color: var(--accent); }
+.agenda b { font-weight: 600; display: block; }
+.agenda span { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.l-section { justify-content: center; background: var(--surface); }
+.l-section .big-no { font-family: var(--mono); font-size: calc(120 * var(--s)); line-height: 1; color: var(--accent); margin: 0 0 calc(32 * var(--s)); }
+
+.bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(24 * var(--s)); max-width: 46ch; }
+.bullets li { padding-left: calc(32 * var(--s)); position: relative; }
+.bullets li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: calc(12 * var(--s)); height: 2px; background: var(--accent); }
+.bullets b { font-weight: 600; }
+.split { display: grid; grid-template-columns: 5fr 7fr; gap: calc(64 * var(--s)); align-items: start; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: calc(32 * var(--s)); flex: 1; }
+.compare > div { border: 1px solid var(--border); border-radius: 12px; padding: calc(40 * var(--s)); }
+.compare > div.is-pick { border-color: var(--accent); }
+.compare h3 { font-size: calc(28 * var(--s)); font-weight: 600; margin: 0 0 calc(20 * var(--s)); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tag { font-size: calc(16 * var(--s)); font-weight: 600; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: calc(4 * var(--s)) calc(12 * var(--s)); }
+.compare ul { margin: 0; padding-left: 1.1em; display: grid; gap: calc(12 * var(--s)); font-size: calc(22 * var(--s)); }
+
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(32 * var(--s)); margin-top: auto; }
+.kpi { border-top: 2px solid var(--text); padding-top: calc(24 * var(--s)); }
+.kpi:first-child { border-color: var(--accent); }
+.kpi .label { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+.kpi .value { font-size: calc(88 * var(--s)); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: calc(8 * var(--s)) 0; }
+.kpi .value small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; margin-left: 0.15em; }
+.kpi .delta { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.chart-row { display: grid; grid-template-columns: 4fr 8fr; gap: calc(64 * var(--s)); flex: 1; align-items: end; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .bar { fill: var(--text-muted); opacity: 0.35; }
+.chart .bar.hl { fill: var(--accent); opacity: 1; }
+.chart .grid { stroke: var(--border); stroke-width: 1; }
+.chart text { fill: var(--text-muted); font-family: var(--font); font-size: 15px; }
+.chart text.val { fill: var(--text); font-family: var(--font); font-weight: 600; font-size: 16px; }
+
+.s-table { width: 100%; border-collapse: collapse; font-size: calc(21 * var(--s)); }
+.s-table th, .s-table td { text-align: left; padding: calc(16 * var(--s)) calc(16 * var(--s)); border-bottom: 1px solid var(--border); }
+.s-table th { font-weight: 600; color: var(--text-muted); font-size: calc(18 * var(--s)); }
+.s-table td.r, .s-table th.r { text-align: right; font-variant-numeric: tabular-nums; }
+.s-table tr.hl td { font-weight: 600; }
+.s-table tr.hl td:first-child { box-shadow: inset 3px 0 0 var(--accent); padding-left: calc(24 * var(--s)); }
+
+.timeline { list-style: none; margin: auto 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(24 * var(--s)); }
+.timeline li { border-top: 2px solid var(--border); padding-top: calc(24 * var(--s)); position: relative; }
+.timeline li.done { border-color: var(--accent); }
+.timeline li.now { border-image: linear-gradient(to right, var(--accent) 50%, var(--border) 50%) 1; }
+.timeline .when { font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s)); color: var(--text-muted); }
+.timeline b { display: block; font-weight: 600; margin: calc(8 * var(--s)) 0; }
+.timeline p { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.l-quote { justify-content: center; }
+.l-quote blockquote { margin: 0; font-size: calc(44 * var(--s)); font-weight: 600; line-height: 1.45; letter-spacing: -0.015em; max-width: 26ch; text-wrap: balance; }
+.l-quote blockquote::before { content: ""; display: block; width: calc(48 * var(--s)); height: 3px; background: var(--accent); margin-bottom: calc(40 * var(--s)); }
+.l-quote cite { display: block; margin-top: calc(40 * var(--s)); font-style: normal; font-size: calc(22 * var(--s)); color: var(--text-muted); }
+
+.media-row { display: grid; grid-template-columns: 7fr 5fr; gap: calc(56 * var(--s)); flex: 1; min-height: 0; }
+.media {
+  border-radius: 12px; background: var(--surface); border: 1px solid var(--border);
+  display: grid; place-items: center; color: var(--text-muted);
+  font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s)); text-align: center; padding: 16px;
+}
+.media-row .s-title { margin-bottom: calc(24 * var(--s)); }
+.steps { margin: calc(32 * var(--s)) 0 0; padding: 0; list-style: none; display: grid; gap: calc(16 * var(--s)); counter-reset: st; font-size: calc(22 * var(--s)); }
+.steps li { counter-increment: st; display: grid; grid-template-columns: calc(40 * var(--s)) 1fr; }
+.steps li::before { content: counter(st); font-family: var(--mono); color: var(--accent); }
+
+.l-close { justify-content: space-between; }
+.contact { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: calc(16 * var(--s)) calc(64 * var(--s)); font-size: calc(22 * var(--s)); }
+.contact dt { font-size: calc(16 * var(--s)); font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.contact dd { margin: 0; }
+
+/* ===== 4. 좁은 화면: 비율을 풀고 문서처럼 다시 흐르게 ===== */
+@media screen and (max-width: 899px) {
+  .deck { padding: 24px 16px 64px; gap: 40px; }
+  .slide { --s: 0.62px; aspect-ratio: auto; min-height: 0; padding: 32px 24px; }
+  .split, .compare, .chart-row, .media-row { grid-template-columns: 1fr; gap: 24px; }
+  .agenda, .kpis, .timeline { grid-template-columns: 1fr; }
+  .kpis, .timeline { margin-top: 32px; }
+  .contact { grid-template-columns: 1fr; }
+  .media { min-height: 160px; }
+  .l-cover .s-display { font-size: 36px; }
+  .s-title { font-size: 26px; margin-bottom: 24px; }
+  .slide { font-size: 16px; }
+  .s-table { font-size: 14px; }
+  .table-scroll { overflow-x: auto; }
+}
+
+/* ===== 5. 발표 모드 ===== */
+body.presenting { background: #000; overflow: hidden; }
+body.presenting .toolbar, body.presenting .slide-caption { display: none; }
+body.presenting .deck { position: fixed; inset: 0; max-width: none; padding: 0; display: grid; place-items: center; }
+body.presenting .slide-wrap { display: none; }
+body.presenting .slide-wrap.is-current { display: block; width: min(100vw, calc(100dvh * 16 / 9)); }
+body.presenting .slide {
+  border: 0; border-radius: 0;
+  --s: calc(100cqw / 1280); aspect-ratio: 16 / 9; padding: calc(80 * var(--s)) calc(96 * var(--s));
+}
+.present-nav { display: none; }
+body.presenting .present-nav {
+  position: fixed; right: 16px; bottom: 16px; z-index: 20;
+  display: flex; gap: 8px; align-items: center;
+  opacity: 0.2; transition: opacity 200ms var(--ease);
+}
+body.presenting .present-nav:hover, body.presenting .present-nav:focus-within { opacity: 1; }
+.present-nav .btn { height: 44px; width: 44px; padding: 0; background: var(--bg); }
+.present-nav output { font-family: var(--mono); font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; height: 44px; display: inline-flex; align-items: center; padding: 0 12px; font-variant-numeric: tabular-nums; }
+
+/* ===== 6. 인쇄 / PDF: 한 장에 슬라이드 하나 ===== */
+@page { size: 13.333in 7.5in; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .toolbar, .slide-caption, .present-nav { display: none !important; }
+  .deck { display: block; max-width: none; padding: 0; }
+  .slide-wrap { display: block !important; width: 13.333in; break-after: page; }
+  .slide { height: 7.5in; aspect-ratio: auto; border: 0; border-radius: 0; --s: calc(100cqw / 1280); padding: calc(80 * var(--s)) calc(96 * var(--s)); }
+  .l-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#deck">본문으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-present" viewBox="0 0 256 256"><path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-print" viewBox="0 0 256 256"><path d="M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></symbol>
+  <symbol id="i-next" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+</svg>
+
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <h1>분기 프로젝트 보고 <span class="muted" style="font-weight:400">· 8장</span></h1>
+    <button class="btn btn-secondary" type="button" data-action="print"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>PDF로 저장</button>
+    <button class="btn btn-primary" type="button" data-action="present"><svg class="icon" aria-hidden="true"><use href="#i-present"/></svg>발표 시작</button>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+  <div class="slide-wrap"><div class="slide-caption">01 · 표지</div>
+  <section class="slide l-cover" aria-label="표지">
+    <p class="eyebrow">3분기 프로젝트 보고</p>
+    <h2 class="s-display">고객센터 상담 시스템 전환, 일정대로 82% 진행했습니다</h2>
+    <p class="s-sub">7월부터 9월까지의 진행 상황, 위험 요소, 4분기 계획과 결정이 필요한 사항</p>
+    <div class="meta"><span>CX플랫폼팀 박지훈</span><span class="num">2026. 10. 13</span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">02 · 한 장 요약</div>
+  <section class="slide" aria-label="한 장 요약">
+    <p class="eyebrow">요약</p>
+    <div class="split">
+      <h2 class="s-title">출시일은 지키고, 예산은 4% 아꼈습니다</h2>
+      <ul class="bullets">
+        <li><b>진행률 82%</b>. 상담 화면, 고객 이력 조회, 자동 분류까지 끝났습니다.</li>
+        <li><b>예산 집행 61%</b>. 계획 대비 3,200만 원 적게 썼습니다.</li>
+        <li><b>위험 1건</b>. 전화 연동 업체의 API 지연으로 2주 여유가 줄었습니다.</li>
+        <li><b>결정 요청 1건</b>. 상담 기록 보관 기간을 3년으로 할지 5년으로 할지 정해야 합니다.</li>
+      </ul>
+    </div>
+    <div class="slide-foot"><span>기준일 2026. 9. 30</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">03 · 핵심 지표</div>
+  <section class="slide" aria-label="핵심 지표">
+    <p class="eyebrow">시범 운영 지표 · 9월</p>
+    <h2 class="s-title">새 시스템에서 상담 처리가 빨라졌습니다</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="label">평균 처리 시간</div><div class="value">4.2<small>분</small></div><div class="delta">기존 6.8분 대비 38% 단축</div></div>
+      <div class="kpi"><div class="label">첫 응답 해결률</div><div class="value">71<small>%</small></div><div class="delta">기존 58%에서 13%p 상승</div></div>
+      <div class="kpi"><div class="label">상담원 만족도</div><div class="value">4.3<small>/5</small></div><div class="delta">시범 상담원 24명 설문</div></div>
+    </div>
+    <div class="slide-foot"><span>시범 운영 9.1 ~ 9.30, 상담 11,420건</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">04 · 차트와 해설</div>
+  <section class="slide" aria-label="차트와 해설">
+    <p class="eyebrow">문의 유형별</p>
+    <div class="chart-row">
+      <div>
+        <h2 class="s-title">배송 문의에서 시간이 가장 많이 줄었습니다</h2>
+        <p class="muted">주문 이력을 화면 한쪽에 바로 띄워, 다른 시스템을 열지 않아도 됩니다.</p>
+      </div>
+      <figure class="chart" style="margin:0">
+        <svg viewBox="0 0 640 320" role="img" aria-labelledby="c2t">
+          <title id="c2t">문의 유형별 처리 시간 단축률: 배송 47%, 교환·반품 39%, 결제 31%, 회원 정보 22%, 기타 12%</title>
+          <line class="grid" x1="120" x2="600" y1="300" y2="300"/>
+          <text x="108" y="44" text-anchor="end">배송</text><path class="bar hl" d="M120 26h382a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-382z"><title>배송 47%</title></path><text class="val" x="518" y="44">47%</text>
+          <text x="108" y="104" text-anchor="end">교환·반품</text><path class="bar" d="M120 86h316a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-316z"><title>교환·반품 39%</title></path><text class="val" x="452" y="104">39%</text>
+          <text x="108" y="164" text-anchor="end">결제</text><path class="bar" d="M120 146h251a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-251z"><title>결제 31%</title></path><text class="val" x="387" y="164">31%</text>
+          <text x="108" y="224" text-anchor="end">회원 정보</text><path class="bar" d="M120 206h178a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-178z"><title>회원 정보 22%</title></path><text class="val" x="314" y="224">22%</text>
+          <text x="108" y="284" text-anchor="end">기타</text><path class="bar" d="M120 266h96a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-96z"><title>기타 12%</title></path><text class="val" x="232" y="284">12%</text>
+        </svg>
+      </figure>
+    </div>
+    <div class="slide-foot"><span>처리 시간 단축률, 8월 기존 시스템 대비</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">05 · 작업 현황표</div>
+  <section class="slide" aria-label="작업 현황표">
+    <p class="eyebrow">작업 현황</p>
+    <h2 class="s-title">여섯 개 작업 중 네 개를 마쳤습니다</h2>
+    <div class="table-scroll">
+    <table class="s-table">
+      <thead><tr><th>작업</th><th>담당</th><th class="r">진행률</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td>상담 화면</td><td>프론트엔드</td><td class="r">100%</td><td>완료</td></tr>
+        <tr><td>고객 이력 조회</td><td>백엔드</td><td class="r">100%</td><td>완료</td></tr>
+        <tr><td>문의 자동 분류</td><td>데이터</td><td class="r">100%</td><td>완료</td></tr>
+        <tr><td>상담 품질 리포트</td><td>데이터</td><td class="r">100%</td><td>완료</td></tr>
+        <tr class="hl"><td>전화 연동</td><td>인프라</td><td class="r">45%</td><td>지연 위험</td></tr>
+        <tr><td>기존 데이터 이관</td><td>백엔드</td><td class="r">60%</td><td>진행 중</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="slide-foot"><span>기준일 2026. 9. 30</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">06 · 위험과 대응 (2단)</div>
+  <section class="slide" aria-label="위험과 대응">
+    <p class="eyebrow">위험 요소</p>
+    <h2 class="s-title">전화 연동 지연에 두 가지로 대응합니다</h2>
+    <div class="compare">
+      <div>
+        <h3>원인</h3>
+        <ul>
+          <li>연동 업체의 새 API 공개가 9월 8일에서 9월 29일로 늦어졌습니다</li>
+          <li>통화 녹음 파일 형식이 문서와 달라 변환 작업이 추가됐습니다</li>
+        </ul>
+      </div>
+      <div class="is-pick">
+        <h3>대응 <span class="tag">진행 중</span></h3>
+        <ul>
+          <li>업체와 주 2회 점검 회의를 잡고, 담당 엔지니어를 지정받았습니다</li>
+          <li>최악의 경우 기존 전화 시스템을 한 달 병행 운영합니다 (추가 비용 약 900만 원)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-foot"><span>CX플랫폼팀</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">07 · 4분기 일정</div>
+  <section class="slide" aria-label="4분기 일정">
+    <p class="eyebrow">4분기 계획</p>
+    <h2 class="s-title">12월 첫 주에 전체 상담원에게 엽니다</h2>
+    <ol class="timeline">
+      <li class="now"><span class="when">10월</span><b>전화 연동 완료</b><p>업체 API 반영, 통화 녹음 변환</p></li>
+      <li><span class="when">11월 1~2주</span><b>데이터 이관</b><p>최근 3년 상담 기록 1,200만 건</p></li>
+      <li><span class="when">11월 3~4주</span><b>전체 리허설</b><p>상담원 180명 교육과 모의 상담</p></li>
+      <li><span class="when">12월 1주</span><b>전면 전환</b><p>기존 시스템은 읽기 전용으로 유지</p></li>
+    </ol>
+    <div class="slide-foot"><span>CX플랫폼팀</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <div class="slide-wrap"><div class="slide-caption">08 · 결정 요청</div>
+  <section class="slide l-close" aria-label="결정 요청">
+    <div>
+      <p class="eyebrow">결정이 필요한 사항</p>
+      <h2 class="s-display" style="max-width:22ch">상담 기록 보관 기간을 10월 24일까지 정해 주세요</h2>
+      <p class="s-sub">3년이면 저장 비용이 연 1,100만 원, 5년이면 연 1,800만 원입니다. 법무팀은 3년이면 충분하다는 의견입니다.</p>
+    </div>
+    <dl class="contact">
+      <div><dt>담당</dt><dd>CX플랫폼팀 박지훈</dd></div>
+      <div><dt>메일</dt><dd>cx-platform@company.example</dd></div>
+      <div><dt>다음 보고</dt><dd>2026. 11. 10</dd></div>
+    </dl>
+  </section></div>
+
+</main>
+
+<nav class="present-nav" aria-label="발표 이동">
+  <button class="btn btn-secondary" type="button" data-action="prev" aria-label="이전 슬라이드"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg></button>
+  <output id="counter" aria-live="polite">1 / 8</output>
+  <button class="btn btn-secondary" type="button" data-action="next" aria-label="다음 슬라이드"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
+  <button class="btn btn-secondary" type="button" data-action="exit" aria-label="발표 끝내기"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+</nav>
+
+<script>
+/* 발표 모드: → Space PageDown 다음 / ← PageUp 이전 / Home End / Esc 끝내기 / F 전체 화면 */
+(() => {
+  const wraps = [...document.querySelectorAll('.slide-wrap')];
+  const counter = document.getElementById('counter');
+  let i = 0;
+  wraps.forEach((w, n) => {
+    w.id = 'slide-' + (n + 1);
+    w.querySelectorAll('[data-slide-no]').forEach(el => { el.textContent = String(n + 1).padStart(2, '0'); });
+  });
+  const show = n => {
+    i = Math.max(0, Math.min(wraps.length - 1, n));
+    wraps.forEach((w, k) => w.classList.toggle('is-current', k === i));
+    counter.textContent = (i + 1) + ' / ' + wraps.length;
+    history.replaceState(null, '', '#' + (i + 1));
+  };
+  const start = () => {
+    const fromHash = parseInt(location.hash.slice(1), 10);
+    document.body.classList.add('presenting');
+    show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+    document.querySelector('.present-nav [data-action="next"]').focus();
+  };
+  const stop = () => {
+    document.body.classList.remove('presenting');
+    if (document.fullscreenElement) document.exitFullscreen();
+    wraps[i].scrollIntoView({ block: 'start' });
+  };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-action]');
+    if (!a) return;
+    const act = a.dataset.action;
+    if (act === 'present') start();
+    if (act === 'print') window.print();
+    if (act === 'prev') show(i - 1);
+    if (act === 'next') show(i + 1);
+    if (act === 'exit') stop();
+  });
+  document.addEventListener('keydown', e => {
+    if (!document.body.classList.contains('presenting')) return;
+    const k = e.key;
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(k) && !e.target.closest('button')) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowRight', 'PageDown'].includes(k)) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(k)) { e.preventDefault(); show(i - 1); }
+    else if (k === 'Home') show(0);
+    else if (k === 'End') show(wraps.length - 1);
+    else if (k === 'Escape') stop();
+    else if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.().catch(() => {});
+    }
+  });
+  let x0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (x0 === null || !document.body.classList.contains('presenting')) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+})();
+</script>
+</body>
+</html>

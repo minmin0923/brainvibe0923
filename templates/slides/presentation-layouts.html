@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>발표 레이아웃 모음</title>
+<meta name="description" content="16:9 발표 슬라이드 12종 레이아웃. 스크롤로 훑어보고, 발표 모드로 전환하고, PDF로 인쇄할 수 있습니다.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="../assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== 1. 토큰 (DESIGN.md 2~3장) ===== */
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local("Pretendard Variable"), url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations"), url("../assets/fonts/PretendardVariable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Geist Mono"), url("../assets/fonts/GeistMono.woff2") format("woff2");
+}
+:root {
+  --bg: #FFFFFF;
+  --surface: #F6F7F8;
+  --border: #E4E6E9;
+  --text: #111315;
+  --text-muted: #5D636B;
+  --accent: #0F6E5C;
+  --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  color-scheme: dark;
+}
+
+/* ===== 2. 페이지 ===== */
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--accent); color: var(--accent-contrast); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+.skip:focus-visible { top: 12px; text-decoration: none; }
+
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { width: 20px; height: 20px; flex: none; fill: currentColor; }
+
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.toolbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.toolbar h1 { font-size: 16px; font-weight: 600; line-height: 1.4; margin: 0; flex: 1 1 auto; min-width: 0; }
+.toolbar p { margin: 0; font-size: 14px; color: var(--text-muted); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 20px;
+  border-radius: 8px; border: 1px solid transparent;
+  font: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease);
+  touch-action: manipulation;
+}
+.btn-primary { background: var(--accent); color: var(--accent-contrast); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 88%, var(--text)); }
+.btn-primary:active { background: color-mix(in srgb, var(--accent) 78%, var(--text)); }
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface); }
+.btn-secondary:active { background: var(--border); }
+
+.deck { max-width: 1200px; margin: 0 auto; padding: 32px 20px 96px; display: grid; gap: 48px; }
+.slide-wrap { display: grid; gap: 12px; container-type: inline-size; }
+.slide-caption { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-muted); }
+
+/* ===== 3. 슬라이드 공통 =====
+   크기는 1280px 폭 기준의 '디자인 px'로 적고 var(--s)를 곱합니다.
+   슬라이드 폭이 바뀌면 전체가 같은 비율로 줄고 늘어납니다.
+   cqw는 바깥 .slide-wrap(컨테이너) 폭 기준입니다. */
+.slide {
+  --s: calc(100cqw / 1280);
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: calc(80 * var(--s)) calc(96 * var(--s));
+  display: flex; flex-direction: column;
+  font-size: calc(26 * var(--s));
+  line-height: 1.6;
+}
+.slide > * { min-width: 0; }
+.eyebrow {
+  font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s));
+  color: var(--accent); margin: 0 0 calc(24 * var(--s));
+}
+.s-display { font-size: calc(64 * var(--s)); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+.s-title { font-size: calc(44 * var(--s)); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 calc(40 * var(--s)); text-wrap: balance; }
+.s-sub { font-size: calc(28 * var(--s)); color: var(--text-muted); margin: calc(24 * var(--s)) 0 0; max-width: 40ch; }
+.s-lead { font-size: calc(30 * var(--s)); line-height: 1.5; margin: 0; max-width: 34ch; }
+.muted { color: var(--text-muted); }
+.slide p { margin: 0; }
+.slide-foot {
+  margin-top: auto; padding-top: calc(24 * var(--s));
+  display: flex; justify-content: space-between; gap: calc(24 * var(--s));
+  font-variant-numeric: tabular-nums; font-size: calc(16 * var(--s)); color: var(--text-muted);
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* 레이아웃별 */
+.l-cover { justify-content: flex-end; }
+.l-cover .s-display { max-width: 18ch; }
+.l-cover .meta { margin-top: calc(48 * var(--s)); display: flex; gap: calc(32 * var(--s)); font-size: calc(20 * var(--s)); color: var(--text-muted); flex-wrap: wrap; }
+
+.agenda { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 calc(64 * var(--s)); counter-reset: ag; }
+.agenda li { counter-increment: ag; display: grid; grid-template-columns: calc(64 * var(--s)) 1fr; align-items: baseline; padding: calc(20 * var(--s)) 0; border-top: 1px solid var(--border); }
+.agenda li::before { content: counter(ag, decimal-leading-zero); font-family: var(--mono); font-size: calc(18 * var(--s)); color: var(--accent); }
+.agenda b { font-weight: 600; display: block; }
+.agenda span { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.l-section { justify-content: center; background: var(--surface); }
+.l-section .big-no { font-family: var(--mono); font-size: calc(120 * var(--s)); line-height: 1; color: var(--accent); margin: 0 0 calc(32 * var(--s)); }
+
+.bullets { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(24 * var(--s)); max-width: 46ch; }
+.bullets li { padding-left: calc(32 * var(--s)); position: relative; }
+.bullets li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: calc(12 * var(--s)); height: 2px; background: var(--accent); }
+.bullets b { font-weight: 600; }
+.split { display: grid; grid-template-columns: 5fr 7fr; gap: calc(64 * var(--s)); align-items: start; }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: calc(32 * var(--s)); flex: 1; }
+.compare > div { border: 1px solid var(--border); border-radius: 12px; padding: calc(40 * var(--s)); }
+.compare > div.is-pick { border-color: var(--accent); }
+.compare h3 { font-size: calc(28 * var(--s)); font-weight: 600; margin: 0 0 calc(20 * var(--s)); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tag { font-size: calc(16 * var(--s)); font-weight: 600; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: calc(4 * var(--s)) calc(12 * var(--s)); }
+.compare ul { margin: 0; padding-left: 1.1em; display: grid; gap: calc(12 * var(--s)); font-size: calc(22 * var(--s)); }
+
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(32 * var(--s)); margin-top: auto; }
+.kpi { border-top: 2px solid var(--text); padding-top: calc(24 * var(--s)); }
+.kpi:first-child { border-color: var(--accent); }
+.kpi .label { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+.kpi .value { font-size: calc(88 * var(--s)); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: calc(8 * var(--s)) 0; }
+.kpi .value small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; margin-left: 0.15em; }
+.kpi .delta { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.chart-row { display: grid; grid-template-columns: 4fr 8fr; gap: calc(64 * var(--s)); flex: 1; align-items: end; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .bar { fill: var(--text-muted); opacity: 0.35; }
+.chart .bar.hl { fill: var(--accent); opacity: 1; }
+.chart .grid { stroke: var(--border); stroke-width: 1; }
+.chart text { fill: var(--text-muted); font-family: var(--font); font-size: 15px; }
+.chart text.val { fill: var(--text); font-family: var(--font); font-weight: 600; font-size: 16px; }
+
+.s-table { width: 100%; border-collapse: collapse; font-size: calc(21 * var(--s)); }
+.s-table th, .s-table td { text-align: left; padding: calc(16 * var(--s)) calc(16 * var(--s)); border-bottom: 1px solid var(--border); }
+.s-table th { font-weight: 600; color: var(--text-muted); font-size: calc(18 * var(--s)); }
+.s-table td.r, .s-table th.r { text-align: right; font-variant-numeric: tabular-nums; }
+.s-table tr.hl td { font-weight: 600; }
+.s-table tr.hl td:first-child { box-shadow: inset 3px 0 0 var(--accent); padding-left: calc(24 * var(--s)); }
+
+.timeline { list-style: none; margin: auto 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(24 * var(--s)); }
+.timeline li { border-top: 2px solid var(--border); padding-top: calc(24 * var(--s)); position: relative; }
+.timeline li.done { border-color: var(--accent); }
+.timeline li.now { border-image: linear-gradient(to right, var(--accent) 50%, var(--border) 50%) 1; }
+.timeline .when { font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s)); color: var(--text-muted); }
+.timeline b { display: block; font-weight: 600; margin: calc(8 * var(--s)) 0; }
+.timeline p { font-size: calc(20 * var(--s)); color: var(--text-muted); }
+
+.l-quote { justify-content: center; }
+.l-quote blockquote { margin: 0; font-size: calc(44 * var(--s)); font-weight: 600; line-height: 1.45; letter-spacing: -0.015em; max-width: 26ch; text-wrap: balance; }
+.l-quote blockquote::before { content: ""; display: block; width: calc(48 * var(--s)); height: 3px; background: var(--accent); margin-bottom: calc(40 * var(--s)); }
+.l-quote cite { display: block; margin-top: calc(40 * var(--s)); font-style: normal; font-size: calc(22 * var(--s)); color: var(--text-muted); }
+
+.media-row { display: grid; grid-template-columns: 7fr 5fr; gap: calc(56 * var(--s)); flex: 1; min-height: 0; }
+.media {
+  border-radius: 12px; background: var(--surface); border: 1px solid var(--border);
+  display: grid; place-items: center; color: var(--text-muted);
+  font-variant-numeric: tabular-nums; font-size: calc(18 * var(--s)); text-align: center; padding: 16px;
+}
+.media-row .s-title { margin-bottom: calc(24 * var(--s)); }
+.steps { margin: calc(32 * var(--s)) 0 0; padding: 0; list-style: none; display: grid; gap: calc(16 * var(--s)); counter-reset: st; font-size: calc(22 * var(--s)); }
+.steps li { counter-increment: st; display: grid; grid-template-columns: calc(40 * var(--s)) 1fr; }
+.steps li::before { content: counter(st); font-family: var(--mono); color: var(--accent); }
+
+.l-close { justify-content: space-between; }
+.contact { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: calc(16 * var(--s)) calc(64 * var(--s)); font-size: calc(22 * var(--s)); }
+.contact dt { font-size: calc(16 * var(--s)); font-variant-numeric: tabular-nums; color: var(--text-muted); }
+.contact dd { margin: 0; }
+
+/* ===== 4. 좁은 화면: 비율을 풀고 문서처럼 다시 흐르게 ===== */
+@media screen and (max-width: 899px) {
+  .deck { padding: 24px 16px 64px; gap: 40px; }
+  .slide { --s: 0.62px; aspect-ratio: auto; min-height: 0; padding: 32px 24px; }
+  .split, .compare, .chart-row, .media-row { grid-template-columns: 1fr; gap: 24px; }
+  .agenda, .kpis, .timeline { grid-template-columns: 1fr; }
+  .kpis, .timeline { margin-top: 32px; }
+  .contact { grid-template-columns: 1fr; }
+  .media { min-height: 160px; }
+  .l-cover .s-display { font-size: 36px; }
+  .s-title { font-size: 26px; margin-bottom: 24px; }
+  .slide { font-size: 16px; }
+  .s-table { font-size: 14px; }
+  .table-scroll { overflow-x: auto; }
+}
+
+/* ===== 5. 발표 모드 ===== */
+body.presenting { background: #000; overflow: hidden; }
+body.presenting .toolbar, body.presenting .slide-caption { display: none; }
+body.presenting .deck { position: fixed; inset: 0; max-width: none; padding: 0; display: grid; place-items: center; }
+body.presenting .slide-wrap { display: none; }
+body.presenting .slide-wrap.is-current { display: block; width: min(100vw, calc(100dvh * 16 / 9)); }
+body.presenting .slide {
+  border: 0; border-radius: 0;
+  --s: calc(100cqw / 1280); aspect-ratio: 16 / 9; padding: calc(80 * var(--s)) calc(96 * var(--s));
+}
+.present-nav { display: none; }
+body.presenting .present-nav {
+  position: fixed; right: 16px; bottom: 16px; z-index: 20;
+  display: flex; gap: 8px; align-items: center;
+  opacity: 0.2; transition: opacity 200ms var(--ease);
+}
+body.presenting .present-nav:hover, body.presenting .present-nav:focus-within { opacity: 1; }
+.present-nav .btn { height: 44px; width: 44px; padding: 0; background: var(--bg); }
+.present-nav output { font-family: var(--mono); font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; height: 44px; display: inline-flex; align-items: center; padding: 0 12px; font-variant-numeric: tabular-nums; }
+
+/* ===== 6. 인쇄 / PDF: 한 장에 슬라이드 하나 ===== */
+@page { size: 13.333in 7.5in; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .toolbar, .slide-caption, .present-nav { display: none !important; }
+  .deck { display: block; max-width: none; padding: 0; }
+  .slide-wrap { display: block !important; width: 13.333in; break-after: page; }
+  .slide { height: 7.5in; aspect-ratio: auto; border: 0; border-radius: 0; --s: calc(100cqw / 1280); padding: calc(80 * var(--s)) calc(96 * var(--s)); }
+  .l-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#deck">본문으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-present" viewBox="0 0 256 256"><path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-print" viewBox="0 0 256 256"><path d="M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></symbol>
+  <symbol id="i-next" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+</svg>
+
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <h1>발표 레이아웃 모음 <span class="muted" style="font-weight:400">· 12종</span></h1>
+    <button class="btn btn-secondary" type="button" data-action="print"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>PDF로 저장</button>
+    <button class="btn btn-primary" type="button" data-action="present"><svg class="icon" aria-hidden="true"><use href="#i-present"/></svg>발표 시작</button>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- 01 표지 -->
+  <div class="slide-wrap"><div class="slide-caption">01 · 표지</div>
+  <section class="slide l-cover" aria-label="표지">
+    <p class="eyebrow">2026 하반기 운영 계획</p>
+    <h2 class="s-display">문서 양식을 하나로 맞추면 보고 시간이 줄어듭니다</h2>
+    <p class="s-sub">팀별로 흩어진 보고서, 회의록, 발표 자료를 공통 양식 12종으로 정리한 결과와 다음 단계</p>
+    <div class="meta"><span>경영지원팀 문서표준 TF</span><span class="num">2026. 10. 13</span></div>
+  </section></div>
+
+  <!-- 02 목차 -->
+  <div class="slide-wrap"><div class="slide-caption">02 · 목차</div>
+  <section class="slide" aria-label="목차">
+    <p class="eyebrow">목차</p>
+    <h2 class="s-title">오늘 다룰 내용</h2>
+    <ol class="agenda">
+      <li><div><b>지금 문서 작성 방식</b><span>팀별 양식 현황과 걸리는 시간</span></div></li>
+      <li><div><b>공통 양식 12종</b><span>보고서, 회의록, 발표, 대시보드</span></div></li>
+      <li><div><b>시범 운영 결과</b><span>3개 팀, 6주간 측정한 수치</span></div></li>
+      <li><div><b>전사 적용 일정</b><span>11월부터 단계적으로 전환</span></div></li>
+    </ol>
+    <div class="slide-foot"><span>문서표준 TF</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 03 구역 구분 -->
+  <div class="slide-wrap"><div class="slide-caption">03 · 구역 구분</div>
+  <section class="slide l-section" aria-label="구역 구분">
+    <p class="big-no">01</p>
+    <h2 class="s-display">지금 문서 작성 방식</h2>
+    <p class="s-sub">같은 내용을 팀마다 다른 모양으로 만들고 있습니다</p>
+  </section></div>
+
+  <!-- 04 핵심 메시지 + 요점 -->
+  <div class="slide-wrap"><div class="slide-caption">04 · 핵심 메시지와 요점</div>
+  <section class="slide" aria-label="핵심 메시지와 요점">
+    <p class="eyebrow">현황</p>
+    <div class="split">
+      <h2 class="s-title">양식을 고르는 데만 보고서 한 건당 40분을 씁니다</h2>
+      <ul class="bullets">
+        <li><b>양식 27종</b>이 공유 드라이브에 흩어져 있고, 최신본을 찾기 어렵습니다.</li>
+        <li>같은 주간 보고라도 <b>팀마다 항목 순서가 달라</b> 취합에 시간이 듭니다.</li>
+        <li>발표 자료는 매번 새로 만들어 <b>글꼴과 색이 제각각</b>입니다.</li>
+      </ul>
+    </div>
+    <div class="slide-foot"><span>출처: 9월 사내 설문 (응답 212명)</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 05 2단 비교 -->
+  <div class="slide-wrap"><div class="slide-caption">05 · 2단 비교</div>
+  <section class="slide" aria-label="2단 비교">
+    <p class="eyebrow">선택지</p>
+    <h2 class="s-title">두 가지 방법을 검토했습니다</h2>
+    <div class="compare">
+      <div>
+        <h3>A. 외부 양식 구매</h3>
+        <ul>
+          <li>바로 쓸 수 있지만 연 480만 원이 듭니다</li>
+          <li>사내 용어와 결재 항목을 따로 고쳐야 합니다</li>
+          <li>글꼴 라이선스를 별도로 확인해야 합니다</li>
+        </ul>
+      </div>
+      <div class="is-pick">
+        <h3>B. 공통 양식 직접 제작 <span class="tag">추천</span></h3>
+        <ul>
+          <li>추가 비용 없이 기존 디자인 기준을 따릅니다</li>
+          <li>HTML 하나로 화면, 발표, PDF를 모두 만듭니다</li>
+          <li>필요한 양식을 팀이 직접 늘릴 수 있습니다</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-foot"><span>문서표준 TF</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 06 큰 숫자 -->
+  <div class="slide-wrap"><div class="slide-caption">06 · 큰 숫자 (KPI 3개)</div>
+  <section class="slide" aria-label="큰 숫자">
+    <p class="eyebrow">시범 운영 결과 · 6주</p>
+    <h2 class="s-title">세 팀 모두 작성 시간이 줄었습니다</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="label">보고서 작성 시간</div><div class="value">-38<small>%</small></div><div class="delta">평균 2시간 10분 → 1시간 21분</div></div>
+      <div class="kpi"><div class="label">취합 단계 수정 요청</div><div class="value">-61<small>%</small></div><div class="delta">주당 18건 → 7건</div></div>
+      <div class="kpi"><div class="label">양식 재사용률</div><div class="value">92<small>%</small></div><div class="delta">새 문서 중 공통 양식 사용 비율</div></div>
+    </div>
+    <div class="slide-foot"><span>측정 기간 8.25 ~ 10.3</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 07 차트 -->
+  <div class="slide-wrap"><div class="slide-caption">07 · 차트와 해설</div>
+  <section class="slide" aria-label="차트와 해설">
+    <p class="eyebrow">팀별 비교</p>
+    <div class="chart-row">
+      <div>
+        <h2 class="s-title">영업팀의 절감 폭이 가장 컸습니다</h2>
+        <p class="muted">주간 보고에 표와 그래프가 많아, 양식에 미리 들어 있는 차트 틀을 그대로 쓴 효과가 컸습니다.</p>
+      </div>
+      <figure class="chart" style="margin:0">
+        <svg viewBox="0 0 640 320" role="img" aria-labelledby="c1t">
+          <title id="c1t">팀별 보고서 작성 시간 절감률: 영업 52%, 운영 37%, 재무 29%, 인사 21%, 개발 14%</title>
+          <line class="grid" x1="120" x2="600" y1="300" y2="300"/>
+          <g>
+            <text x="108" y="44" text-anchor="end">영업</text><path class="bar hl" d="M120 26h424a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-424z"><title>영업 52%</title></path><text class="val" x="560" y="44">52%</text>
+            <text x="108" y="104" text-anchor="end">운영</text><path class="bar" d="M120 86h298a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-298z"><title>운영 37%</title></path><text class="val" x="434" y="104">37%</text>
+            <text x="108" y="164" text-anchor="end">재무</text><path class="bar" d="M120 146h232a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-232z"><title>재무 29%</title></path><text class="val" x="368" y="164">29%</text>
+            <text x="108" y="224" text-anchor="end">인사</text><path class="bar" d="M120 206h167a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-167z"><title>인사 21%</title></path><text class="val" x="303" y="224">21%</text>
+            <text x="108" y="284" text-anchor="end">개발</text><path class="bar" d="M120 266h110a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4h-110z"><title>개발 14%</title></path><text class="val" x="246" y="284">14%</text>
+          </g>
+        </svg>
+      </figure>
+    </div>
+    <div class="slide-foot"><span>작성 시간 절감률, 시범 전 4주 평균 대비</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 08 표 -->
+  <div class="slide-wrap"><div class="slide-caption">08 · 표</div>
+  <section class="slide" aria-label="표">
+    <p class="eyebrow">양식 구성</p>
+    <h2 class="s-title">먼저 다섯 가지 양식을 배포합니다</h2>
+    <div class="table-scroll">
+    <table class="s-table">
+      <thead><tr><th>양식</th><th>주 사용처</th><th class="r">월 사용 예상</th><th>형식</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>주간 업무 보고</td><td>전 부서</td><td class="r">640</td><td>문서, 마크다운</td></tr>
+        <tr><td>회의록</td><td>전 부서</td><td class="r">410</td><td>문서, 마크다운</td></tr>
+        <tr><td>기획·제안서</td><td>기획, 영업</td><td class="r">85</td><td>문서</td></tr>
+        <tr><td>발표 자료</td><td>전 부서</td><td class="r">120</td><td>슬라이드, PPTX</td></tr>
+        <tr><td>성과 대시보드</td><td>경영, 영업</td><td class="r">30</td><td>대시보드</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="slide-foot"><span>월 사용 예상은 9월 실제 문서 수 기준</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 09 타임라인 -->
+  <div class="slide-wrap"><div class="slide-caption">09 · 일정 (타임라인)</div>
+  <section class="slide" aria-label="일정">
+    <p class="eyebrow">적용 일정</p>
+    <h2 class="s-title">11월부터 네 단계로 전환합니다</h2>
+    <ol class="timeline">
+      <li class="done"><span class="when">10월 1주</span><b>양식 확정</b><p>시범 팀 의견 반영 완료</p></li>
+      <li class="now"><span class="when">10월 4주</span><b>사내 공지</b><p>사용 안내서와 교육 영상 배포</p></li>
+      <li><span class="when">11월</span><b>전 부서 적용</b><p>기존 양식은 읽기 전용으로 보관</p></li>
+      <li><span class="when">12월</span><b>효과 측정</b><p>작성 시간, 수정 요청 재측정</p></li>
+    </ol>
+    <div class="slide-foot"><span>문서표준 TF</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 10 인용 -->
+  <div class="slide-wrap"><div class="slide-caption">10 · 인용</div>
+  <section class="slide l-quote" aria-label="인용">
+    <blockquote>표 틀이 이미 있으니 숫자만 채우면 됩니다. 금요일 오후가 한 시간 비었습니다.</blockquote>
+    <cite>시범 운영 참여자, 영업2팀 과장</cite>
+  </section></div>
+
+  <!-- 11 이미지 + 설명 -->
+  <div class="slide-wrap"><div class="slide-caption">11 · 이미지와 설명</div>
+  <section class="slide" aria-label="이미지와 설명">
+    <p class="eyebrow">사용 방법</p>
+    <div class="media-row">
+      <div class="media">화면 캡처 자리<br>16:10 비율 권장</div>
+      <div>
+        <h2 class="s-title">양식 모음에서 고르고 내용만 바꿉니다</h2>
+        <ol class="steps">
+          <li>양식 모음 페이지에서 상황에 맞는 양식을 엽니다</li>
+          <li>파일을 복사해 제목과 본문을 바꿉니다</li>
+          <li>화면으로 공유하거나 PDF로 저장합니다</li>
+        </ol>
+      </div>
+    </div>
+    <div class="slide-foot"><span>문서표준 TF</span><span class="num" data-slide-no></span></div>
+  </section></div>
+
+  <!-- 12 마무리 -->
+  <div class="slide-wrap"><div class="slide-caption">12 · 마무리 (요청 사항, 연락처)</div>
+  <section class="slide l-close" aria-label="마무리">
+    <div>
+      <p class="eyebrow">요청 사항</p>
+      <h2 class="s-display" style="max-width:20ch">10월 24일까지 팀별 담당자 한 명을 정해 주세요</h2>
+    </div>
+    <dl class="contact">
+      <div><dt>담당</dt><dd>문서표준 TF 김서연</dd></div>
+      <div><dt>메일</dt><dd>docs-tf@company.example</dd></div>
+      <div><dt>문의 채널</dt><dd>#문서표준</dd></div>
+    </dl>
+  </section></div>
+
+</main>
+
+<nav class="present-nav" aria-label="발표 이동">
+  <button class="btn btn-secondary" type="button" data-action="prev" aria-label="이전 슬라이드"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg></button>
+  <output id="counter" aria-live="polite">1 / 12</output>
+  <button class="btn btn-secondary" type="button" data-action="next" aria-label="다음 슬라이드"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
+  <button class="btn btn-secondary" type="button" data-action="exit" aria-label="발표 끝내기"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+</nav>
+
+<script>
+/* 발표 모드: → Space PageDown 다음 / ← PageUp 이전 / Home End / Esc 끝내기 / F 전체 화면 */
+(() => {
+  const wraps = [...document.querySelectorAll('.slide-wrap')];
+  const counter = document.getElementById('counter');
+  let i = 0;
+  wraps.forEach((w, n) => {
+    w.id = 'slide-' + (n + 1);
+    w.querySelectorAll('[data-slide-no]').forEach(el => { el.textContent = String(n + 1).padStart(2, '0'); });
+  });
+  const show = n => {
+    i = Math.max(0, Math.min(wraps.length - 1, n));
+    wraps.forEach((w, k) => w.classList.toggle('is-current', k === i));
+    counter.textContent = (i + 1) + ' / ' + wraps.length;
+    history.replaceState(null, '', '#' + (i + 1));
+  };
+  const start = () => {
+    const fromHash = parseInt(location.hash.slice(1), 10);
+    document.body.classList.add('presenting');
+    show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+    document.querySelector('.present-nav [data-action="next"]').focus();
+  };
+  const stop = () => {
+    document.body.classList.remove('presenting');
+    if (document.fullscreenElement) document.exitFullscreen();
+    wraps[i].scrollIntoView({ block: 'start' });
+  };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-action]');
+    if (!a) return;
+    const act = a.dataset.action;
+    if (act === 'present') start();
+    if (act === 'print') window.print();
+    if (act === 'prev') show(i - 1);
+    if (act === 'next') show(i + 1);
+    if (act === 'exit') stop();
+  });
+  document.addEventListener('keydown', e => {
+    if (!document.body.classList.contains('presenting')) return;
+    const k = e.key;
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(k) && !e.target.closest('button')) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowRight', 'PageDown'].includes(k)) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(k)) { e.preventDefault(); show(i - 1); }
+    else if (k === 'Home') show(0);
+    else if (k === 'End') show(wraps.length - 1);
+    else if (k === 'Escape') stop();
+    else if (k === 'f' || k === 'F') {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.().catch(() => {});
+    }
+  });
+  let x0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (x0 === null || !document.body.classList.contains('presenting')) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+})();
+</script>
+</body>
+</html>
