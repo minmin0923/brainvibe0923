@@ -87,6 +87,6 @@ npx @marp-team/marp-cli templates/slides/marp-deck.md --pdf    # PDF
 ## 양식을 추가할 때
 
 - 새 양식도 DESIGN.md를 따르고, 기존 양식의 `:root` 토큰 블록을 그대로 복사해 씁니다.
-- 상태 색이 필요하면 대시보드 양식의 `--negative`(빨강 계열), `--caution`(황토 계열)을 씁니다. 둘 다 채도를 낮춘 색이며, 색만으로 뜻을 전하지 않도록 아이콘과 글자를 함께 둡니다.
+- 상태 색은 DESIGN.md 2장의 `--negative`, `--caution`을 씁니다. 색만으로 뜻을 전하지 않도록 아이콘과 글자를 함께 둡니다.
 - 만든 뒤 `index.html`과 이 README의 표에 한 줄씩 추가합니다.
 - 외부 양식을 더 받아 오면 `vendor/`에 라이선스 파일과 함께 넣고 `vendor/SOURCES.md`에 출처를 적습니다.
