@@ -15,6 +15,14 @@
 4. **점검:** `web-design-guidelines` 스킬로 바뀐 파일을 점검하고, 나온 문제를 고친 뒤 3단계를 다시 한다.
 5. **완료 보고:** `DESIGN.md` 10장의 점검표를 채워서 보고한다. 확인하지 못한 항목은 그렇다고 적는다.
 
+## 문서, 발표, 대시보드 양식
+
+보고서, 회의록, 기획서, 발표 자료, 대시보드를 만들 때는 먼저 `templates/README.md`의 "상황별로 고르기" 표에서 맞는 양식을 찾아 그 구조와 스타일에서 시작한다.
+
+- 바로 쓰는 양식(`templates/slides`, `templates/documents`, `templates/dashboards`)은 DESIGN.md를 따른다. 파일을 복사해 내용만 바꾼다.
+- `templates/vendor`는 GitHub에서 받은 원본이다. 구성과 항목만 참고하고, 색과 글꼴은 DESIGN.md로 바꿔서 쓴다.
+- 새 양식을 만들면 `templates/index.html`과 `templates/README.md`에 추가한다.
+
 ## 환경
 
 - 클라우드 세션에서는 `.claude/hooks/session-start.sh`가 `agent-browser`를 설치하고, 미리 설치된 Chromium 경로를 `AGENT_BROWSER_EXECUTABLE_PATH`로 잡아 준다.
