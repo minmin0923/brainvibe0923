@@ -5,6 +5,16 @@
 - **바로 쓰는 양식:** DESIGN.md의 색, 글꼴, 여백을 따릅니다. 내용만 바꿔 쓰면 됩니다.
 - **원본 참고(`vendor/`):** GitHub에서 받은 공개 양식입니다. 구성과 항목을 참고하는 용도이며, 그대로 쓰면 DESIGN.md와 모양이 다릅니다.
 
+## claude.ai에서 고르고 바로 채우기: 문서 양식함
+
+[`picker.html`](picker.html)은 claude.ai 아티팩트로 올려 둔 **문서 양식함**의 원본입니다. 사이드바에 고정해 두었습니다.
+
+- 왼쪽 목록에서 양식을 고르면 오른쪽에 실제 모양이 보입니다. 넓은 화면과 휴대폰 폭으로 바꿔 볼 수 있습니다.
+- 주제와 메모를 넣고 "Claude로 채우기"를 누르면, 양식의 구조와 디자인은 그대로 두고 내용만 채운 결과가 미리보기에 뜹니다. "결과 받기"로 .html 또는 .md 파일을 저장합니다.
+- 바로 채울 수 없는 환경이면 "요청문 복사"로 Claude 대화창에 붙여 넣어 요청합니다.
+
+양식을 고치거나 추가한 뒤 아티팩트를 다시 올리려면, Claude Code에서 "문서 양식함 다시 올려줘"라고 요청하면 됩니다. PPTX는 아티팩트가 직접 내려줄 수 없어서 base64 글자 파일(`slides/design-template.pptx.b64.txt`, `base64 -w0`로 생성)로 함께 올립니다.
+
 ## 상황별로 고르기
 
 | 이런 걸 만들 때 | 쓸 양식 | 형식 |
@@ -33,7 +43,9 @@
 
 ```text
 templates/
-├── index.html                 전체 양식 갤러리
+├── index.html                 전체 양식 갤러리 (저장소에서 보기)
+├── picker.html                문서 양식함 (claude.ai 아티팩트 원본)
+├── assets/previews/           PPTX, Marp 미리보기 이미지
 ├── assets/fonts/              Pretendard, Geist Mono (SIL OFL)
 ├── slides/
 │   ├── presentation-layouts.html   레이아웃 12종
