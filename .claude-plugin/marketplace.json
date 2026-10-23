@@ -1,0 +1,11 @@
+{
+  "name": "brainvibe",
+  "owner": { "name": "minmin0923" },
+  "plugins": [
+    {
+      "name": "session-dashboard",
+      "source": "./plugins/session-dashboard",
+      "description": "A dashboard pane of this session: prompts, tool calls, errors, files, context and cost"
+    }
+  ]
+}

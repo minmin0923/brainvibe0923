@@ -1,0 +1,1 @@
+{ "name": "session-dashboard", "version": "0.1.0", "description": "A dashboard pane of this session: prompts, tool calls, errors, files, context and cost", "types": "./types/index.d.ts" }

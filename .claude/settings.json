@@ -10,5 +10,16 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "brainvibe": {
+      "source": {
+        "source": "directory",
+        "path": "/home/user/brainvibe0923"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "session-dashboard@brainvibe": true
   }
 }
