@@ -3,3 +3,5 @@ out/*.mp4
 out/frames/
 music/sf2/
 *.log
+music/stems/
+out/soundtrack_preview.mp3

@@ -1,0 +1,9 @@
+# pip install -r music/requirements.txt
+# tinysoundfont는 실시간 재생용 pyaudio를 요구하지만 오프라인 렌더에는 필요 없다:
+#   pip install --no-deps tinysoundfont
+numpy
+scipy
+soundfile
+pedalboard
+pyloudnorm
+Pillow

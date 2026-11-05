@@ -1,0 +1,97 @@
+{
+  "integrated_lufs": -14.09,
+  "true_peak_dbtp": -1.15,
+  "sample_peak_dbfs": -2.72,
+  "clipped_samples": 0,
+  "duration_s": 60.0,
+  "sections": [
+    {
+      "name": "마디1 크레용만",
+      "from": 0.0,
+      "to": 3.33,
+      "target_rms_db": -30,
+      "rms_db": -29.2
+    },
+    {
+      "name": "마디2–5 피아노 단음→아르페지오",
+      "from": 3.33,
+      "to": 16.67,
+      "target_rms_db": -24,
+      "rms_db": -24.2
+    },
+    {
+      "name": "마디6–7 주제 선율",
+      "from": 16.67,
+      "to": 23.33,
+      "target_rms_db": -20,
+      "rms_db": -19.6
+    },
+    {
+      "name": "마디8–9 현악·첼로 진입",
+      "from": 23.33,
+      "to": 30.0,
+      "target_rms_db": -17,
+      "rms_db": -16.2
+    },
+    {
+      "name": "마디10–11 점점 크게",
+      "from": 30.0,
+      "to": 36.67,
+      "target_rms_db": -15,
+      "rms_db": -14.9
+    },
+    {
+      "name": "36.7–38.5 현악 빠짐",
+      "from": 36.67,
+      "to": 38.5,
+      "target_rms_db": -22,
+      "rms_db": -21.8
+    },
+    {
+      "name": "38.5–40.0 완전 정적",
+      "from": 38.5,
+      "to": 40.0,
+      "target_rms_db": -40,
+      "rms_db": -41.2
+    },
+    {
+      "name": "40.0–46.7 하린 발언",
+      "from": 40.0,
+      "to": 46.67,
+      "target_rms_db": -26,
+      "rms_db": -25.2
+    },
+    {
+      "name": "46.7–53.3 클라이맥스",
+      "from": 46.67,
+      "to": 53.33,
+      "target_rms_db": -12,
+      "rms_db": -11.4
+    },
+    {
+      "name": "53.3–56.7 엔진→피아노",
+      "from": 53.33,
+      "to": 56.67,
+      "target_rms_db": -26,
+      "rms_db": -25.1
+    },
+    {
+      "name": "56.7–60.0 엔딩",
+      "from": 56.67,
+      "to": 60.0,
+      "target_rms_db": -18,
+      "rms_db": -17.4
+    }
+  ],
+  "cut_check": {
+    "rms_before_50ms_db": -11.3,
+    "rms_after_cut_first_10ms_db": -59.4
+  },
+  "celesta_s": [
+    18.87,
+    28.27,
+    40.0,
+    56.93
+  ],
+  "voice_used": false
+}
