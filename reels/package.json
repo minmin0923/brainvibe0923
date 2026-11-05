@@ -1,0 +1,25 @@
+{
+  "name": "reels-uijeongbu-line8",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "stills": "node scripts/stills.mjs",
+    "render": "remotion render src/index.ts Reels out/video_muted.mp4 --muted --codec=h264 --crf=20 --pixel-format=yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.541",
+    "@remotion/fonts": "^4.0.541",
+    "@remotion/google-fonts": "^4.0.541",
+    "@remotion/noise": "^4.0.541",
+    "@remotion/renderer": "^4.0.541",
+    "@remotion/transitions": "^4.0.541",
+    "@types/react": "^19.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.541",
+    "roughjs": "^4.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
