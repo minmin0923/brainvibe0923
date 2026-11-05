@@ -16,7 +16,7 @@ const main = async () => {
   for (const f of frames.map(Number)) {
     const s = (f / 30).toFixed(1).padStart(4, '0');
     const output = path.join(outDir, `${compId}_f${String(f).padStart(4, '0')}_${s}s.png`);
-    await renderStill({serveUrl, composition, frame: f, output, browserExecutable, chromiumOptions: {gl: 'swangle'}, timeoutInMilliseconds: 120000});
+    await renderStill({serveUrl, composition, frame: f, output, browserExecutable, chromiumOptions: {gl: 'angle'}, timeoutInMilliseconds: 120000});
     console.log(output);
   }
 };

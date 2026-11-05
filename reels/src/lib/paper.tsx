@@ -13,7 +13,7 @@ export const GlobalDefs: React.FC = () => (
       <filter id="crayon-line" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves={2} seed={4} result="warp" />
         <feDisplacementMap in="SourceGraphic" in2="warp" scale={3} xChannelSelector="R" yChannelSelector="G" result="d" />
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={1} seed={11} result="grain" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={11} result="grain" />
         <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -3.2 2.6" result="mask" />
         <feComposite in="d" in2="mask" operator="in" />
       </filter>
@@ -50,32 +50,38 @@ export const Paper: React.FC<{color?: string}> = ({color = PAPER}) => (
 
 export type Blob = {x: number; y: number; r: number; color: string; o?: number};
 
-/** 수채 번짐: 블러 처리한 큰 원을 multiply로 겹친다 */
+/**
+ * 수채 번짐: 가장자리가 흐린 큰 원을 multiply(또는 screen)로 겹친다.
+ * CSS blur 대신 방사형 그라디언트로 같은 모양을 만들어 렌더가 빠르다. blur 값만큼 가장자리를 더 퍼뜨린다.
+ */
+let washId = 0;
 export const Wash: React.FC<{blobs: Blob[]; blur?: number; blend?: React.CSSProperties['mixBlendMode']}> = ({
   blobs,
   blur = 60,
   blend = 'multiply',
-}) => (
-  <AbsoluteFill style={{pointerEvents: 'none'}}>
-    {blobs.map((b, i) => (
-      <div
-        key={i}
-        style={{
-          position: 'absolute',
-          left: b.x - b.r,
-          top: b.y - b.r,
-          width: b.r * 2,
-          height: b.r * 2,
-          borderRadius: '50%',
-          background: b.color,
-          opacity: b.o ?? 0.5,
-          filter: `blur(${blur}px)`,
-          mixBlendMode: blend,
-        }}
-      />
-    ))}
-  </AbsoluteFill>
-);
+}) => {
+  const id = React.useMemo(() => `wash${washId++}`, []);
+  return (
+    <svg
+      width={WIDTH}
+      height={HEIGHT}
+      style={{position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none', mixBlendMode: blend}}
+    >
+      <defs>
+        {blobs.map((b, i) => (
+          <radialGradient key={i} id={`${id}-${i}`}>
+            <stop offset="0%" stopColor={b.color} stopOpacity={b.o ?? 0.5} />
+            <stop offset={`${Math.round((b.r / (b.r + blur * 1.6)) * 70)}%`} stopColor={b.color} stopOpacity={(b.o ?? 0.5) * 0.85} />
+            <stop offset="100%" stopColor={b.color} stopOpacity={0} />
+          </radialGradient>
+        ))}
+      </defs>
+      {blobs.map((b, i) => (
+        <circle key={i} cx={b.x} cy={b.y} r={b.r + blur * 1.6} fill={`url(#${id}-${i})`} />
+      ))}
+    </svg>
+  );
+};
 
 /** 장면 전체 SVG 캔버스(1080×1920 좌표) */
 export const Stage: React.FC<{children: React.ReactNode; style?: React.CSSProperties}> = ({children, style}) => (
@@ -139,7 +145,7 @@ export const TextureOverlay: React.FC<{vignette?: number; paper?: number}> = ({v
       {/* 필름 그레인 (매 프레임 바뀜) */}
       <svg width={WIDTH} height={HEIGHT} style={{position: 'absolute', inset: 0, opacity: 0.06, mixBlendMode: 'overlay'}}>
         <filter id={`film-${frame % 6}`}>
-          <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves={1} seed={frame % 97} />
+          <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves={2} seed={frame % 97} />
           <feColorMatrix type="saturate" values="0" />
         </filter>
         <rect width={WIDTH} height={HEIGHT} filter={`url(#film-${frame % 6})`} />

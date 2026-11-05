@@ -76,6 +76,19 @@ const draw = (s: Shape, o: Options) => {
 
 const shapeKey = (s: Shape) => JSON.stringify(s);
 
+/** 라인 보일은 4가지 변형을 순환하므로, 한 번 만든 경로를 전역 캐시에 두고 재사용한다(렌더 속도) */
+type PathInfo = ReturnType<typeof gen.toPaths>;
+const CACHE = new Map<string, PathInfo>();
+const cached = (key: string, make: () => PathInfo) => {
+  let v = CACHE.get(key);
+  if (!v) {
+    if (CACHE.size > 3000) CACHE.clear();
+    v = make();
+    CACHE.set(key, v);
+  }
+  return v;
+};
+
 export type RoughProps = {
   shape: Shape;
   seed: number;
@@ -107,18 +120,19 @@ export const Rough: React.FC<RoughProps> = ({
 }) => {
   const s = useBoilSeed(seed, boil);
   const key = shapeKey(shape);
-  const paths = useMemo(() => {
-    const opts: Options = {...BASE, ...o, seed: s};
-    return gen.toPaths(draw(shape, opts));
+  const oKey = JSON.stringify(o ?? {});
+  const paths = useMemo(
+    () => cached(`${key}|${oKey}|${s}`, () => gen.toPaths(draw(shape, {...BASE, ...o, seed: s}))),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, s, JSON.stringify(o)]);
+    [key, s, oKey],
+  );
   const solidPaths = useMemo(() => {
     if (!solid) return null;
-    return gen.toPaths(
-      draw(shape, {...BASE, ...o, seed: s + 7, fill: solid, fillStyle: 'solid', stroke: 'none', roughness: 0.6}),
+    return cached(`${key}|${oKey}|${s}|solid|${solid}`, () =>
+      gen.toPaths(draw(shape, {...BASE, ...o, seed: s + 7, fill: solid, fillStyle: 'solid', stroke: 'none', roughness: 0.6})),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, s, solid, JSON.stringify(o)]);
+  }, [key, s, solid, oKey]);
 
   const dash = drawn === undefined ? undefined : {strokeDasharray: 1, strokeDashoffset: 1 - drawn};
   return (

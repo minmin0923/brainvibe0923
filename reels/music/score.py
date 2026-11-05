@@ -597,8 +597,8 @@ def main():
     # 클라이맥스는 리미터에 더 세게 넣는다(CLIMAX_DRIVE dB). 통합 음량이 주로 클라이맥스에서 정해지므로
     # −14 LUFS로 맞출 때 나머지 구간이 지시서 목표치에 더 가깝게 남는다.
     CLIMAX_DRIVE = float(os.environ.get("CLIMAX_DRIVE", "8.3"))
-    # 보정: 정적은 '−40 이하'를 확실히(−42로 성형), 엔딩은 리미터가 깎는 만큼(+2) 미리 올린다
-    adj = {"클라이맥스": CLIMAX_DRIVE, "완전 정적": -2.0, "엔딩": 1.0}
+    # 보정: 정적은 영상 전체에서 가장 조용하도록 −50 dB 안팎(바람만), 엔딩은 리미터가 깎는 만큼(+1) 미리 올린다
+    adj = {"클라이맥스": CLIMAX_DRIVE, "완전 정적": -12.0, "엔딩": 1.0}
     shape = [t + next((v for k, v in adj.items() if n.endswith(k)), 0.0) for (n, _, _, t) in SECTIONS]
     gains = [1.0] * len(SECTIONS)
     mix = raw
@@ -613,6 +613,8 @@ def main():
     # pedalboard Limiter(JUCE)는 출력 최대치를 0 dBFS로 맞추므로,
     # 앞단 드라이브(offset)로 얼마나 누를지 정하고, 뒤에서 4배 오버샘플 트루피크가 −1.15 dBTP가 되도록 출력 레벨을 정한다.
     # 그다음 통합 음량을 재서 드라이브를 조정 — 이를 수렴할 때까지 반복.
+    # AAC 인코딩에서 피크가 0.4dB 안팎 올라가므로 WAV는 −1.7 dBTP로 여유를 둔다
+    TP_TARGET = -1.7
     meter = pyln.Meter(SR)
     limiter = Pedalboard([Limiter(threshold_db=-1.0, release_ms=120)])
     peak0 = 20 * np.log10(np.max(np.abs(mix)) + 1e-20)
@@ -620,7 +622,7 @@ def main():
     out = mix
     for _ in range(20):
         lim = limiter((mix * 10 ** (offset / 20)).T.astype(np.float32), SR).T.astype(np.float64)
-        out = lim * 10 ** ((-1.15 - true_peak_db(lim)) / 20)
+        out = lim * 10 ** ((TP_TARGET - true_peak_db(lim)) / 20)
         lufs = meter.integrated_loudness(out)
         if abs(lufs + 14.0) < 0.05:
             break
