@@ -1,11 +1,13 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, interpolate, Sequence, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Camera, Paper, Stage, Wash} from '../lib/paper';
-import {FreezeBoil, Rough, path, rect} from '../lib/rough';
-import {DAY, HOME, INK, PAPER, PINK} from '../lib/palette';
+import {FreezeBoil, Rough, ellipse, line, path, rect, useTwos} from '../lib/rough';
+import {COAT, DAWN, DAY, HOME, INK, JUMPER, PAPER, PINK, SKIN, WHITE} from '../lib/palette';
+import {DadHead} from '../chars/Dad';
+import {HarinHead} from '../chars/Harin';
 import {HarinDrawing, TRAIN_STOP_X} from '../lib/HarinDrawing';
-import {GOWUN} from '../lib/Caption';
-import {EVENTS, SUB, TOTAL} from '../timeline';
+import {GOWUN, Narration} from '../lib/Caption';
+import {EVENTS, SCENES, SUB, TOTAL} from '../timeline';
 
 const B_DUR = TOTAL - SUB.S14B; // 100
 const TITLE_AT = EVENTS.endTitle - SUB.S14B; // 25
@@ -123,3 +125,80 @@ export const S14B: React.FC = () => {
 };
 
 export const S14B_DUR = B_DUR;
+
+const A_DUR = SUB.S14B - SCENES.S14.from; // 100
+
+/** S14-A. 어두운 귀가 버스 — 아빠 품에 잠든 하린, 구겨진 발언문. 창밖으로 '의정부시' 표지판이 지나간다. */
+export const S14A: React.FC = () => {
+  const frame = useCurrentFrame();
+  const t2 = useTwos();
+  const signX = interpolate(frame, [10, 90], [1300, -500], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const sweep = ((frame * 22) % 1600) - 300; // 가로등 빛이 지나감
+  const breathe = Math.sin(t2 * 0.12) * 4;
+  const bump = frame % 50 < 3 ? -2 : 0;
+  return (
+    <AbsoluteFill style={{transform: `translateY(${bump}px)`}}>
+      <Paper color={HOME.night} />
+      <Camera dur={A_DUR} from={{s: 1.0}} to={{s: 1.05}} origin={[520, 1250]}>
+        <Stage>
+          {/* 창 + 바깥 */}
+          <Rough boil="bg" shape={rect(60, 420, 960, 520)} seed={1} solid={HOME.night} o={{fill: HOME.slate, hachureGap: 16, strokeWidth: 7}} />
+          <defs>
+            <clipPath id="s14a-win">
+              <rect x={64} y={424} width={952} height={512} />
+            </clipPath>
+          </defs>
+          <g clipPath="url(#s14a-win)">
+            <g transform={`translate(${signX} 0)`}>
+              <Rough boil="bg" shape={line(-100, 700, -100, 960)} seed={3} o={{strokeWidth: 9, stroke: INK}} />
+              <Rough boil="bg" shape={line(160, 700, 160, 960)} seed={4} o={{strokeWidth: 9, stroke: INK}} />
+              <Rough boil="char" shape={rect(-200, 520, 460, 190)} seed={5} solid={DAWN.mid} o={{fill: DAWN.mid, stroke: WHITE, strokeWidth: 5}} />
+              <text x={30} y={648} textAnchor="middle" fontFamily={GOWUN} fontSize={84} fill={WHITE}>
+                의정부시
+              </text>
+            </g>
+            <rect x={sweep} y={424} width={200} height={512} fill={HOME.phone} opacity={0.18} />
+          </g>
+          <Rough boil="bg" shape={line(540, 420, 540, 940)} seed={6} o={{strokeWidth: 6}} />
+        </Stage>
+        <Wash blobs={[{x: sweep + 100, y: 1300, r: 300, color: HOME.phone, o: 0.18}]} blur={80} blend="screen" />
+        <Stage>
+          {/* 좌석 등받이 */}
+          <Rough boil="bg" shape={rect(160, 980, 760, 1000)} seed={10} solid={HOME.slate} o={{fill: HOME.night, hachureGap: 12}} />
+          {/* 아빠 상체(앉아서) */}
+          <Rough shape={path('M 110 1980 Q 130 1200 600 1130 Q 1010 1200 1030 1980 Z')} seed={20} solid={COAT} o={{fill: COAT}} />
+          <Rough shape={path('M 530 1140 L 680 1140 L 630 1360 L 590 1360 Z')} seed={21} solid={PAPER} />
+          <g transform="translate(610 930) scale(2.0) rotate(10)">
+            <DadHead cx={0} cy={0} eyes="closed" mouth="smile" seed={580} />
+          </g>
+          {/* 품에 잠든 하린 */}
+          <g transform={`translate(0 ${breathe})`}>
+            <Rough shape={path('M 250 1980 Q 270 1600 450 1540 Q 650 1560 690 1980 Z')} seed={30} solid={JUMPER} o={{fill: JUMPER}} />
+            <g transform="translate(450 1400) scale(1.65) rotate(-20)">
+              <HarinHead cx={0} cy={0} eyes="closed" mouth="o" seed={190} />
+            </g>
+            {/* 구겨진 발언문을 꼭 쥔 손 */}
+            <Rough shape={path('M 560 1700 L 650 1668 L 716 1720 L 676 1774 L 610 1792 L 578 1750 Z')} seed={40} solid={PAPER} o={{strokeWidth: 4}} />
+            <Rough shape={ellipse(612, 1752, 96, 80)} seed={41} solid={SKIN} />
+          </g>
+          {/* 아빠 팔이 하린을 감싼다 */}
+          <Rough shape={path('M 970 1450 Q 880 1780 580 1830 L 560 1910 Q 900 1890 1020 1560 Z')} seed={50} solid={COAT} o={{fill: COAT}} />
+          <Rough shape={ellipse(560, 1866, 120, 86)} seed={51} solid={SKIN} />
+        </Stage>
+      </Camera>
+      <Narration lines={['이제, 이루어지기를.']} y={300} from={20} to={A_DUR} />
+    </AbsoluteFill>
+  );
+};
+
+/** S14 전체: A(귀가 버스) → B(그림이 달린다) */
+export const S14: React.FC = () => (
+  <AbsoluteFill>
+    <Sequence durationInFrames={A_DUR}>
+      <S14A />
+    </Sequence>
+    <Sequence from={A_DUR}>
+      <S14B />
+    </Sequence>
+  </AbsoluteFill>
+);

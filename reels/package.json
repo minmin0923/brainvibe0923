@@ -8,6 +8,7 @@
     "render": "remotion render src/index.ts Reels out/video_muted.mp4 --muted --codec=h264 --crf=20 --pixel-format=yuv420p"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.541",
     "@remotion/cli": "^4.0.541",
     "@remotion/fonts": "^4.0.541",
     "@remotion/google-fonts": "^4.0.541",

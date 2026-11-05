@@ -1,0 +1,117 @@
+{
+  "fps": 30,
+  "total": 1800,
+  "beat": 25,
+  "bar": 100,
+  "bpm": 72,
+  "scenes": {
+    "S01": {
+      "from": 0,
+      "to": 100
+    },
+    "S02": {
+      "from": 100,
+      "to": 200
+    },
+    "S03": {
+      "from": 200,
+      "to": 300
+    },
+    "S04": {
+      "from": 300,
+      "to": 500
+    },
+    "S05": {
+      "from": 500,
+      "to": 600
+    },
+    "S06": {
+      "from": 600,
+      "to": 700
+    },
+    "S07": {
+      "from": 700,
+      "to": 800
+    },
+    "S08": {
+      "from": 800,
+      "to": 900
+    },
+    "S09": {
+      "from": 900,
+      "to": 1000
+    },
+    "S10": {
+      "from": 1000,
+      "to": 1155
+    },
+    "S11": {
+      "from": 1155,
+      "to": 1200
+    },
+    "S12": {
+      "from": 1200,
+      "to": 1400
+    },
+    "S13": {
+      "from": 1400,
+      "to": 1600
+    },
+    "S14": {
+      "from": 1600,
+      "to": 1800
+    }
+  },
+  "sub": {
+    "S04B": 400,
+    "S13B": 1500,
+    "S14B": 1700
+  },
+  "dissolve": 30,
+  "dissolves": [
+    500,
+    1000
+  ],
+  "events": {
+    "hookCaption": 0,
+    "harinLine": 45,
+    "phoneBuzz": [
+      108,
+      126
+    ],
+    "pianoFirstNote": 100,
+    "doorClunk": 294,
+    "subwayDoor": 300,
+    "arpeggioStart": 400,
+    "themeIn": 500,
+    "celesta": [
+      566,
+      848,
+      1200,
+      1708
+    ],
+    "stringsIn": 700,
+    "glassTap": 848,
+    "candleSpread": 1010,
+    "stringsFadeOut": 1100,
+    "silenceFrom": 1155,
+    "silenceTo": 1200,
+    "speech": [
+      1209,
+      1260,
+      1314,
+      1356
+    ],
+    "dadInsert": [
+      1320,
+      1335
+    ],
+    "applause": 1400,
+    "climaxCut": 1600,
+    "trainArrive": 1720,
+    "trainStop": 1762,
+    "endTitle": 1725,
+    "endSub": 1758,
+    "holdFrom": 1782
+  }
+}
