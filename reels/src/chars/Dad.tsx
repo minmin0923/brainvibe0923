@@ -101,7 +101,7 @@ export const Dad: React.FC<{x: number; y: number; scale?: number; flip?: boolean
       {/* 목 + 머리 */}
       <g transform={`translate(0 ${drop}) rotate(${headTilt} 0 -630)`}>
         <Rough shape={rect(-22, -650, 44, 40)} seed={seed + 21} solid={SKIN} o={{strokeWidth: 4}} />
-        <DadHead cx={0} cy={-730} eyes={eyes} look={look} mouth={mouth} seed={seed + 30} />
+        <DadHead cx={0} cy={-718} eyes={eyes} look={look} mouth={mouth} seed={seed + 30} />
       </g>
     </g>
   );
@@ -129,9 +129,9 @@ export const DadHead: React.FC<{
     />
     <DotEyes x={cx} y={cy + 8} gap={62} closed={eyes === 'closed'} look={look} r={7} />
     {/* 눈 밑 연한 그늘 선 */}
-    <g stroke={INK} strokeWidth={3} fill="none" strokeLinecap="round" opacity={0.35}>
-      <path d={`M ${cx - 40} ${cy + 22} q 9 5 18 0`} />
-      <path d={`M ${cx + 22} ${cy + 22} q 9 5 18 0`} />
+    <g stroke={INK} strokeWidth={2.5} fill="none" strokeLinecap="round" opacity={0.28}>
+      <path d={`M ${cx - 42} ${cy + 30} q 11 4 22 0`} />
+      <path d={`M ${cx + 20} ${cy + 30} q 11 4 22 0`} />
     </g>
     <Cheeks x={cx} y={cy + 40} gap={104} color={BLUSH_OTHER} o={0.45} />
     <MouthShape x={cx} y={cy + 50} kind={mouth} />
