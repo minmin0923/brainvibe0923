@@ -16,6 +16,12 @@ export const FreezeBoil: React.FC<{at: number; children: React.ReactNode}> = ({a
   <FrozenFrame.Provider value={at}>{children}</FrozenFrame.Provider>
 );
 
+/** 크레용 틈 사이로 비치는 바탕색(기본 종이색). 2탄 바깥 장면은 차가운 회색으로 바꾼다 */
+const BaseColor = createContext<string>(PAPER);
+export const RoughBase: React.FC<{color: string; children: React.ReactNode}> = ({color, children}) => (
+  <BaseColor.Provider value={color}>{children}</BaseColor.Provider>
+);
+
 export const useBoilSeed = (seed: number, boil: Boil) => {
   const frame = useCurrentFrame();
   const frozen = useContext(FrozenFrame);
@@ -119,6 +125,7 @@ export const Rough: React.FC<RoughProps> = ({
   base,
 }) => {
   const s = useBoilSeed(seed, boil);
+  const baseColor = useContext(BaseColor);
   const key = shapeKey(shape);
   const oKey = JSON.stringify(o ?? {});
   const paths = useMemo(
@@ -137,10 +144,10 @@ export const Rough: React.FC<RoughProps> = ({
   const dash = drawn === undefined ? undefined : {strokeDasharray: 1, strokeDashoffset: 1 - drawn};
   return (
     <g opacity={opacity} style={style}>
-      {solidPaths && (base ?? (boil === 'char' ? PAPER : null)) && (
+      {solidPaths && (base ?? (boil === 'char' ? baseColor : null)) && (
         <g opacity={solidOpacity}>
           {solidPaths.map((p, i) => (
-            <path key={i} d={p.d} fill={(base ?? PAPER) as string} stroke="none" />
+            <path key={i} d={p.d} fill={(base ?? baseColor) as string} stroke="none" />
           ))}
         </g>
       )}

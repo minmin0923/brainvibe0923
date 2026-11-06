@@ -9,7 +9,8 @@ import pyloudnorm as pyln
 from scipy import signal
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MP4 = os.path.join(ROOT, "out", "reels_60s.mp4")
+PREFIX = sys.argv[1] if len(sys.argv) > 1 else ""
+MP4 = os.path.join(ROOT, "out", f"{PREFIX}reels_60s.mp4")
 SR = 48000
 
 
@@ -69,12 +70,13 @@ def main():
         "sections_rms_db": {k: round(v, 1) for k, v in sections.items()},
         "quietest_1.5s_window": {"start": quietest[0], "rms_db": round(quietest[1], 1)},
         "loudest_1.5s_window": {"start": loudest[0], "rms_db": round(loudest[1], 1)},
-        "cut_53.3": {
+    }
+    if not PREFIX:
+        rep["cut_53.3"] = {
             "before_db": round(rms_db(y[t(53.25) : t(53.30)]), 1),
             "after_first_20ms_db": round(rms_db(y[t(53.334) : t(53.354)]), 1),
-        },
-    }
-    json.dump(rep, open(os.path.join(ROOT, "out", "verify.json"), "w"), ensure_ascii=False, indent=2)
+        }
+    json.dump(rep, open(os.path.join(ROOT, "out", f"{PREFIX}verify.json"), "w"), ensure_ascii=False, indent=2)
     print(json.dumps(rep, ensure_ascii=False, indent=2))
 
 

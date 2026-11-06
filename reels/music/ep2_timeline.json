@@ -1,0 +1,209 @@
+{
+  "fps": 30,
+  "total": 1800,
+  "beat": 25,
+  "bar": 100,
+  "bpm": 72,
+  "scenes": {
+    "S01": {
+      "from": 0,
+      "to": 100
+    },
+    "S02": {
+      "from": 100,
+      "to": 200
+    },
+    "S03": {
+      "from": 200,
+      "to": 300
+    },
+    "S04": {
+      "from": 300,
+      "to": 400
+    },
+    "S05": {
+      "from": 400,
+      "to": 500
+    },
+    "S06": {
+      "from": 500,
+      "to": 600
+    },
+    "S07": {
+      "from": 600,
+      "to": 700
+    },
+    "S08": {
+      "from": 700,
+      "to": 800
+    },
+    "S09": {
+      "from": 800,
+      "to": 900
+    },
+    "S10": {
+      "from": 900,
+      "to": 1000
+    },
+    "S11": {
+      "from": 1000,
+      "to": 1100
+    },
+    "S12": {
+      "from": 1100,
+      "to": 1200
+    },
+    "S13": {
+      "from": 1200,
+      "to": 1400
+    },
+    "S14": {
+      "from": 1400,
+      "to": 1600
+    },
+    "S15": {
+      "from": 1600,
+      "to": 1800
+    }
+  },
+  "sub": {
+    "S05B": 459,
+    "S06B": 561,
+    "S09B": 835,
+    "S12B": 1155,
+    "S13B": 1251,
+    "S13C": 1299,
+    "S13D": 1350,
+    "S14B": 1500,
+    "S15B": 1700
+  },
+  "dissolves": [
+    1100,
+    1600
+  ],
+  "timer": {
+    "morning": [
+      [
+        190,
+        0
+      ],
+      [
+        300,
+        18
+      ],
+      [
+        400,
+        65
+      ],
+      [
+        470,
+        92
+      ]
+    ],
+    "evening": [
+      [
+        600,
+        0
+      ],
+      [
+        700,
+        41
+      ],
+      [
+        800,
+        41
+      ],
+      [
+        900,
+        72
+      ],
+      [
+        1000,
+        90
+      ],
+      [
+        1100,
+        90
+      ],
+      [
+        1118,
+        108
+      ]
+    ],
+    "morningStop": 470,
+    "eveningStop": 1118,
+    "merge": 1125,
+    "hide": 1185
+  },
+  "events": {
+    "phoneBuzz": [
+      8,
+      26
+    ],
+    "swipe": 56,
+    "screenOff": 70,
+    "dadMotif": [
+      110,
+      850,
+      1271
+    ],
+    "doorClunk": 190,
+    "busArrive": 230,
+    "busDoor": 276,
+    "railFrom": 300,
+    "wakeJolt": 362,
+    "gateBeep": 470,
+    "msgIn": 565,
+    "msgSend": 593,
+    "harinVideoNote": 612,
+    "trainHalt": 669,
+    "bowls": [
+      718,
+      738,
+      758
+    ],
+    "busLeaves": 841,
+    "breathPuffs": [
+      851,
+      869,
+      887
+    ],
+    "stoveIgnite": 924,
+    "dadSend": 974,
+    "momBuzz": 978,
+    "celesta": [
+      1010,
+      1305,
+      1708
+    ],
+    "tvOff": 1052,
+    "elevatorDing": 1102,
+    "silenceFrom": 1155,
+    "silenceTo": 1200,
+    "lockBeeps": [
+      1161,
+      1168,
+      1175,
+      1182
+    ],
+    "doorOpen": 1188,
+    "momWake": 1212,
+    "dadSays": 1261,
+    "pencil": [
+      1406,
+      1470
+    ],
+    "climaxFadeFrom": 1600,
+    "trainMoveFrom": 1706,
+    "trainArrive": 1720,
+    "trainStop": 1762,
+    "dollOut": 1764,
+    "dollIn": 1774,
+    "windowOn": 1775,
+    "seatFill": 1778,
+    "endTitle": 1710,
+    "endEp1": 1746,
+    "endSub": 1764,
+    "holdFrom": 1782
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "integrated_lufs": -14.11,
+  "true_peak_dbtp": -1.7,
+  "clipped_samples": 0,
+  "sections": [
+    {
+      "name": "마디1 진동+초침",
+      "from": 0.0,
+      "to": 3.33,
+      "target_rms_db": -32,
+      "rms_db": -27.7
+    },
+    {
+      "name": "마디2 단음+아빠 모티프①",
+      "from": 3.33,
+      "to": 6.67,
+      "target_rms_db": -26,
+      "rms_db": -21.8
+    },
+    {
+      "name": "마디3–5 시계 오스티나토",
+      "from": 6.67,
+      "to": 16.67,
+      "target_rms_db": -20,
+      "rms_db": -16.5
+    },
+    {
+      "name": "마디6 잠깐의 희망",
+      "from": 16.67,
+      "to": 20.0,
+      "target_rms_db": -21,
+      "rms_db": -16.8
+    },
+    {
+      "name": "마디7 16분음→끼익",
+      "from": 20.0,
+      "to": 23.33,
+      "target_rms_db": -19,
+      "rms_db": -16.7
+    },
+    {
+      "name": "마디8 집의 선율",
+      "from": 23.33,
+      "to": 26.67,
+      "target_rms_db": -22,
+      "rms_db": -18.2
+    },
+    {
+      "name": "마디9 하드 스톱+모티프②",
+      "from": 26.67,
+      "to": 30.0,
+      "target_rms_db": -27,
+      "rms_db": -22.7
+    },
+    {
+      "name": "마디10 초침·피아노 단음",
+      "from": 30.0,
+      "to": 33.33,
+      "target_rms_db": -25,
+      "rms_db": -21.1
+    },
+    {
+      "name": "마디11 하린 모티프①",
+      "from": 33.33,
+      "to": 36.67,
+      "target_rms_db": -26,
+      "rms_db": -21.7
+    },
+    {
+      "name": "36.7–38.5 페이드아웃",
+      "from": 36.67,
+      "to": 38.5,
+      "target_rms_db": -30,
+      "rms_db": -25.7
+    },
+    {
+      "name": "38.5–40.0 완전 정적",
+      "from": 38.5,
+      "to": 40.0,
+      "target_rms_db": -42,
+      "rms_db": -51.7
+    },
+    {
+      "name": "40.0–43.3 현악이 부풀어 오름",
+      "from": 40.0,
+      "to": 43.33,
+      "target_rms_db": -20,
+      "rms_db": -15.7
+    },
+    {
+      "name": "43.3–46.7 모티프③·첼레스타②",
+      "from": 43.33,
+      "to": 46.67,
+      "target_rms_db": -16,
+      "rms_db": -14.5
+    },
+    {
+      "name": "46.7–53.3 2탄 절정",
+      "from": 46.67,
+      "to": 53.33,
+      "target_rms_db": -13,
+      "rms_db": -11.9
+    },
+    {
+      "name": "53.3–56.7 피아노 주제만",
+      "from": 53.33,
+      "to": 56.67,
+      "target_rms_db": -22,
+      "rms_db": -18.8
+    },
+    {
+      "name": "56.7–60.0 시리즈 시그니처",
+      "from": 56.67,
+      "to": 60.0,
+      "target_rms_db": -18,
+      "rms_db": -17.8
+    }
+  ],
+  "bus_hard_stop": {
+    "before_db": -21.2,
+    "after_db": -23.1
+  },
+  "celesta_s": [
+    33.67,
+    43.5,
+    56.93
+  ],
+  "dad_motif_s": [
+    3.67,
+    28.33,
+    42.37
+  ],
+  "voice_used": []
+}

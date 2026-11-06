@@ -19,3 +19,22 @@ export const COAT = DAWN.mid; // 아빠 남색 코트
 export const COAT_DARK = DAWN.deep;
 export const CARDIGAN = DAY.amber; // 할머니 연갈색 카디건
 export const SILVER = DAWN.pale; // 은발
+
+// ---- 2탄 「다녀올게, 다녀왔어」 색 흐름: 바깥은 차갑게, 따뜻한 색은 집에만
+export const EP2 = {
+  night: '#1E2A44', // 새벽·밤 바깥
+  night2: '#2D3850',
+  night3: '#3B4A6B',
+  subway: '#5B6478', // 지하철 형광등의 창백함
+  subwayPale: '#8A93A6',
+  phone: '#A9C1FF', // 휴대폰 빛
+  office: '#C9CED6', // 낮 사무실
+  officeNight: '#3E4560', // 저녁 사무실
+  homeCream: '#F7EBD7', // 집
+  homeSand: '#F4D9B0',
+  homeAmber: '#E9A86B',
+  bulb: '#FFD08A', // 백열등
+  sage: '#9DB89A', // 엄마 니트
+};
+/** 바깥에 있는 아빠의 피부: 형광등·가로등 아래 창백한 톤(따뜻한 색 금지 규칙) */
+export const COLD_SKIN = EP2.office;

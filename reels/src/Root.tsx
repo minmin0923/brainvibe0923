@@ -18,6 +18,8 @@ import {S12} from './scenes/S12';
 import {S13} from './scenes/S13';
 import {S14, S14B} from './scenes/S14';
 import {CharacterSheet} from './sheets/CharacterSheet';
+import {Reels2} from './ep2/Reels2';
+import {CharacterSheet2} from './ep2/CharacterSheet2';
 
 /** 장면 하나를 공통 질감 레이어와 함께 미리 보기 위한 래퍼 */
 const Frame: React.FC<{children: React.ReactNode; vignette?: number}> = ({children, vignette}) => (
@@ -34,6 +36,9 @@ const common = {fps: FPS, width: WIDTH, height: HEIGHT};
 
 export const Root: React.FC = () => (
   <>
+    {/* 2탄 「다녀올게, 다녀왔어」 */}
+    <Composition id="EP2" component={Reels2} durationInFrames={TOTAL} {...common} />
+    <Composition id="EP2Sheet" component={() => <Frame vignette={0.12}><CharacterSheet2 /></Frame>} durationInFrames={30} {...common} />
     {/* 본편 60초 */}
     <Composition id="Reels" component={Reels} durationInFrames={TOTAL} {...common} />
     {/* 장면별 미리보기 */}

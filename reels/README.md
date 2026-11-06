@@ -36,3 +36,31 @@ bash scripts/finish.sh                # 음악 합치기 → out/reels_60s.mp4, 
 - `music/score.py` — 작곡·렌더·효과음 합성·믹스·음량
 
 목소리 파일 `assets/voice_harin.wav`를 넣고 `python3 music/score.py`를 다시 실행하면 0:40–0:46.7에 들어가고 음악은 −8dB 덕킹된다.
+
+---
+
+# 2탄 「다녀올게, 다녀왔어」
+
+1탄과 같은 세계·가족·화풍으로, 하린이 아빠의 하루(새벽 5:40 → 밤 9:46)를 따라가는 60초 릴스.
+
+| 파일 | 내용 |
+| --- | --- |
+| `out/ep2_reels_60s.mp4` | 최종 영상(1탄과 같은 사양) |
+| `out/ep2_cover.jpg` | 썸네일(마지막 정지 프레임) |
+| `out/ep2_soundtrack.wav` | 사운드트랙(−14 LUFS, 마지막 3초는 1탄 엔딩과 같은 소리) |
+| `out/ep2_style/` | 스타일 프레임 4장, 1탄 비교 이미지, 캐릭터 시트 |
+| `music/ep2_report.json`, `out/ep2_verify.json` | 음량·사양 점검 결과 |
+
+```bash
+npx tsx scripts/fetch-fonts.ts
+npx tsx scripts/export-timeline-ep2.ts          # src/ep2/timeline.ts → music/ep2_timeline.json
+python3 music/ep2_score.py                       # out/ep2_soundtrack.wav (1탄 out/soundtrack.wav가 먼저 있어야 엔딩이 같아짐)
+bash scripts/render_chunks.sh EP2 out/ep2_video_muted.mp4
+bash scripts/finish.sh ep2_                      # → out/ep2_reels_60s.mp4, out/ep2_cover.jpg
+python3 scripts/verify.py ep2_ && python3 scripts/warm_check.py out/ep2_reels_60s.mp4
+```
+
+구조: `src/ep2/timeline.ts`(TC·타이머·이벤트), `src/ep2/scenes/`(S1–S15), `src/ep2/lib/`(CommuteTimer 길 위의 시간, WallClock 손그림 벽시계,
+ChatBubble 손그림 말풍선, SplitScreen 분할 화면, DrawingEP2 = 1탄 그림 + 오른쪽 아래 레이어, Props), `src/chars/Mom.tsx`(엄마),
+`src/chars/Dad.tsx`의 `version`(출근 out / 퇴근 home)·`tone`(바깥 cold / 집 warm). 1탄의 rough·paper·Caption·캐릭터·그림을 그대로 import한다.
+목소리: `assets/voice_dad.wav`("다녀올게"·"다녀왔어"), `assets/voice_mom.wav`("왔어?")가 있으면 `music/ep2_score.py`가 해당 컷에 넣고 음악을 −8dB 덕킹한다.

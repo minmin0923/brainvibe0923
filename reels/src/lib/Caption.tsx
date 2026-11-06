@@ -38,7 +38,7 @@ const box = (y: number, align: 'center' | 'left'): React.CSSProperties => ({
 });
 
 /** 내레이션 자막 (Gowun Dodum 56px) */
-export const Narration: React.FC<Common & {lines: string[]; size?: number}> = ({
+export const Narration: React.FC<Common & {lines: string[]; size?: number; backdrop?: boolean}> = ({
   lines,
   from = 0,
   to,
@@ -47,6 +47,7 @@ export const Narration: React.FC<Common & {lines: string[]; size?: number}> = ({
   align = 'center',
   fade = 8,
   size = 56,
+  backdrop = false,
 }) => {
   const o = useFade(from, to, fade);
   const dark = color !== WHITE;
@@ -63,9 +64,17 @@ export const Narration: React.FC<Common & {lines: string[]; size?: number}> = ({
         textShadow: dark ? '0 0 18px rgba(251,246,236,0.9)' : '0 2px 14px rgba(30,42,68,0.75), 0 0 3px rgba(30,42,68,0.6)',
       }}
     >
-      {lines.map((l, i) => (
+      <span
+        style={
+          backdrop
+            ? {display: 'inline-block', padding: '10px 34px', borderRadius: 28, background: 'rgba(30,42,68,0.5)'}
+            : {display: 'inline-block'}
+        }
+      >
+        {lines.map((l, i) => (
         <div key={i}>{l}</div>
       ))}
+      </span>
     </div>
   );
 };
