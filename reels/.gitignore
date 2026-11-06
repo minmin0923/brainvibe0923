@@ -6,3 +6,4 @@ music/sf2/
 music/stems/
 out/soundtrack_preview.mp3
 out/chunks/
+__pycache__/
