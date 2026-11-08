@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const groove = fs.readFileSync(path.join(dir, 'groove.js'), 'utf8');
 const def = fs.readFileSync(path.join(dir, 'score-def.js'), 'utf8');
-const browser = await chromium.launch();
+// 브라우저 경로를 직접 줄 수 있다(클라우드 세션: 미리 설치된 Chromium)
+const browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
 const page = await browser.newPage();
 await page.setContent('<html><body></body></html>');
 await page.addScriptTag({ content: groove + '\nwindow.buildGroove = buildGroove;\n' + def });

@@ -63,23 +63,23 @@ const EL_BASE: El[] = [
   ) },
   { key: 'pill-food', cx: 420, cy: 270, w: 270, h: 84, dx: -120, dy: -480, rot: -4, radius: 999, node: pill(1, '음식점') },
 ];
-const EL_LIST = EL_BASE.map((e, i) => ({ ...e, cue: 4 + i * 3 }));
+const EL_LIST = EL_BASE.map((e, i) => ({ ...e, cue: i * 3 }));
 
-const DUST = Array.from({ length: 20 }, (_, i) => ({
-  x: (i * 439 + 137) % 1080, y0: (i * 613 + 271) % 1920, rise: 0.3 + (i % 5) * 0.11, swayAmp: 9 + (i % 4) * 5,
-  swayFreq: 0.022 + (i % 3) * 0.008, phase: (i * 0.83) % (Math.PI * 2), size: 3 + (i % 3) * 1.1, opacity: 0.35 + ((i * 7) % 5) * 0.09,
+const DUST = Array.from({ length: 36 }, (_, i) => ({
+  x: (i * 263 + 137) % 1080, y0: (i * 613 + 271) % 1920, rise: 0.3 + (i % 5) * 0.11, swayAmp: 9 + (i % 4) * 5,
+  swayFreq: 0.022 + (i % 3) * 0.008, phase: (i * 0.83) % (Math.PI * 2), size: 5 + (i % 3) * 2, opacity: 0.5 + ((i * 7) % 5) * 0.1,
 }));
 
 export const S7Outro: React.FC = () => {
   const frame = useCurrentFrame();
   const craneT = interpolate(frame, [0, 40], [0, 1], { ...clamp, easing: CRANE_EASE });
   const pushT = ramp(frame, 36, 144, EASE.smooth);
-  const camScale = 1.06 - 0.06 * craneT + 0.035 * pushT;
-  const camTilt = 4 * (1 - craneT);
+  const camScale = 1.1 - 0.1 * craneT + 0.035 * pushT;
+  const camTilt = 8 * (1 - craneT); // 카드 4°보다 한 단계 올림: 이 영상의 최고 에너지 지점
   const recede = interpolate(frame, [42, 50], [0, 1], clamp);
   const sweepX = interpolate(frame, [2, 14], [-500, 1580], { ...clamp, easing: Easing.bezier(0.4, 0, 0.6, 1) });
   const sweepOp = interpolate(frame, [2, 5, 11, 14], [0, 0.18, 0.18, 0], clamp);
-  const stageLight = interpolate(frame, [42, 50, 58], [0, 0.6, 0.38], clamp);
+  const stageLight = interpolate(frame, [36, 46, 60], [0, 0.95, 0.6], clamp);
   const rule = interpolate(frame, [58, 70], [0, 1], { ...clamp, easing: Easing.bezier(0.3, 0, 0.2, 1) });
   const ruleExt = interpolate(frame, [58, 66], [0, 1], { ...clamp, easing: Easing.bezier(0.3, 0, 0.2, 1) });
   const ruleExtFade = interpolate(frame, [66, 72], [1, 0], clamp);

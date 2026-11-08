@@ -20,7 +20,7 @@
 
 ```bash
 npm install
-node score/render-score.mjs        # public/audio/score.wav, sfx-only.wav
+node score/render-score.mjs        # public/audio/score.wav, sfx-only.wav (CHROME=브라우저경로 로 지정 가능)
 npx remotion render src/index.ts BenefitMapPromo out/promo.mp4
 npx remotion render src/index.ts BenefitMapPromo out/promo-nobgm.mp4 --props='{"bgm":false,"audio":true}'
 node ../.claude/skills/soundtrack/scripts/sync-check.mjs out/promo.mp4 --cues-file out/promo.cues.json

@@ -27,6 +27,7 @@ export const Main: React.FC<PromoProps> = ({ bgm, audio }) => (
       ))}
     </FontGate>
     {/* 음악과 효과음은 score/ 에서 같은 시간표로 합성한 WAV. bgm=false 면 효과음만 있는 판 */}
-    {audio && <Audio src={staticFile(bgm ? 'audio/score.wav' : 'audio/sfx-only.wav')} />}
+    {/* trimBefore 1f: 실측한 출력 음향 지연(+50ms, AAC 앞 여백 포함)을 한 곳에서 보정 (aesthetic-rules S5) */}
+    {audio && <Audio src={staticFile(bgm ? 'audio/score.wav' : 'audio/sfx-only.wav')} trimBefore={1} />}
   </AbsoluteFill>
 );

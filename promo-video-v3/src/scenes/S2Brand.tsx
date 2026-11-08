@@ -18,7 +18,6 @@ export const S2Brand: React.FC = () => {
   const frame = useCurrentFrame();
   const vDraw = interpolate(frame, [0, 9], [100, 0], { ...clamp, easing: Easing.bezier(0.3, 0, 0.2, 1) });
   const hDraw = interpolate(frame, [8, 18], [100, 0], { ...clamp, easing: Easing.linear });
-  const ring = interpolate(frame, [4, 20], [100, 0], { ...clamp, easing: Easing.bezier(0.3, 0, 0.2, 1) });
   const crossFade = interpolate(frame, [24, 34], [1, 0], clamp);
 
   const perChar = 0.7;
@@ -33,7 +32,6 @@ export const S2Brand: React.FC = () => {
     <AbsoluteFill style={{ backgroundColor: C.bg, justifyContent: 'center', alignItems: 'center', fontFamily: FONT }}>
       <div style={{ textAlign: 'center', opacity: 1 - out, transform: `translateY(${-out * 40}px) scale(${1 - out * 0.12})` }}>
         <svg width={120} height={120} viewBox="0 0 120 120" style={{ display: 'block', margin: '0 auto 48px', opacity: crossFade }}>
-          <circle cx={60} cy={60} r={34} fill="none" stroke={C.green} strokeWidth={6} pathLength={100} strokeDasharray={100} strokeDashoffset={ring} transform="rotate(-90 60 60)" />
           <line x1={60} y1={4} x2={60} y2={116} stroke={C.green} strokeWidth={7} strokeLinecap="round" pathLength={100} strokeDasharray={100} strokeDashoffset={vDraw} />
           <line x1={4} y1={60} x2={116} y2={60} stroke={C.green} strokeWidth={7} strokeLinecap="round" pathLength={100} strokeDasharray={100} strokeDashoffset={hDraw} />
         </svg>

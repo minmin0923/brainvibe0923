@@ -54,7 +54,7 @@ export const S4Everyone: React.FC = () => {
         </div>
       </div>
       <div style={{ position: 'absolute', left: 96, right: 96, top: 1530, color: '#FFFFFF', opacity: sub, transform: `translateY(${(1 - sub) * 24}px)` }}>
-        <div style={{ fontSize: 60, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.35 }}>복잡한 조건 없이,<br />가입 한 번이면 끝.</div>
+        <div style={{ fontSize: 60, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.35 }}>복잡한 조건 없이,<br /><span style={{ color: C.yellow }}>가입만 해도 가맹점 할인.</span></div>
       </div>
       <Grain opacity={0.06} blend="soft-light" />
     </AbsoluteFill>

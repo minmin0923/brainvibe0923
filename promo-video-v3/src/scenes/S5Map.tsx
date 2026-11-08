@@ -20,9 +20,9 @@ const PILLS = [
 ];
 const STEM = '지도에서 찾는';
 const FINAL = '내 주변 가맹점.';
-const BEAT = 21, INTRO = 12, SWAP = 8, FIN = 14;
+const BEAT = 20, INTRO = 8, SWAP = 8, FIN = 14; // 결론 문구 정지 48f(카드 기준 ≥45f)
 const CYCLES = PILLS.length;
-const CYCLE_END = INTRO + CYCLES * BEAT; // 96
+const CYCLE_END = INTRO + CYCLES * BEAT; // 88
 const LEFT = 96;
 const clamp = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 

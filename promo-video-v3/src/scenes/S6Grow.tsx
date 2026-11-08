@@ -16,22 +16,23 @@ import { C, FONT, alpha } from '../theme';
 import { SHAPES } from './S3Unlock';
 
 const HOLD = 14;
-const MOVE_END = 94;
-const BLUR_END = 44;
-const FLIP = 98;
+const MOVE_END = 76;
+const BLUR_END = 36;
+const FLIP = 80;
 const crane = bezier(0.2, 0, 0.25, 1);
 
 const PLATE = { x: 48, y: 600, w: 984, h: 1240 };
-const CARD = { x: 560, y: 1290, w: 400, h: 132 }; // 추적 대상: 새로 합류한 가게
+const CARD = { x: 500, y: 1270, w: 480, h: 160 }; // 추적 대상: 새로 합류한 가게
 const F0 = { x: CARD.x + CARD.w / 2, y: CARD.y + CARD.h / 2 };
-const F1 = { x: 540, y: 960 };
+const F1 = { x: 600, y: 1130 };
 const S0 = 3.0;
+const S1 = 1.3; // 크레인 끝 배율: 카드 글자가 휴대폰에서도 읽히도록 1.0까지 빼지 않음
 
 const camAt = (frame: number) => {
   const breath = ramp(frame, 0, HOLD, EASE.smooth);
   const e = crane(Math.min(1, Math.max(0, (frame - HOLD) / (MOVE_END - HOLD))));
   const s0 = S0 * (1 + 0.015 * breath);
-  const s = mix(s0, 1, e);
+  const s = mix(s0, S1, e);
   const fx = mix(F0.x, F1.x, e);
   const fy = mix(F0.y, F1.y, e);
   return { s, e, tx: 540 - fx * s, ty: 960 - fy * s, fx, fy };
@@ -98,18 +99,18 @@ const World: React.FC<{ frame: number }> = ({ frame }) => {
       })}
       {/* 추적 대상 카드 */}
       <div style={{ position: 'absolute', left: CARD.x, top: CARD.y, width: CARD.w, height: CARD.h, borderRadius: 28, background: C.card, border: `2px solid ${C.line}`, boxShadow: softShadow(mix(18, 8, cam.e), { color: '#0e1a14' }), display: 'flex', alignItems: 'center', gap: 18, padding: '0 22px', fontFamily: FONT }}>
-        <div style={{ width: 84, height: 84, borderRadius: 22, background: C.green, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-          <Glyph shape={4} size={50} color="#FFFFFF" knock={C.green} />
+        <div style={{ width: 104, height: 104, borderRadius: 26, background: C.green, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+          <Glyph shape={4} size={62} color="#FFFFFF" knock={C.green} />
         </div>
         <div>
-          <div style={{ fontSize: 34, fontWeight: 800, color: C.ink, letterSpacing: '-0.02em', lineHeight: 1.15 }}>새 가맹점</div>
-          <div style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 8, height: 38, padding: '0 14px', borderRadius: 19, background: done ? alpha(C.green, 0.14) : alpha(C.yellow, 0.35), transform: `scale(${frame >= FLIP ? 0.86 + 0.14 * flip : 1})`, transformOrigin: '0 50%' }}>
+          <div style={{ fontSize: 46, fontWeight: 800, color: C.ink, letterSpacing: '-0.02em', lineHeight: 1.15 }}>새 가맹점</div>
+          <div style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 8, height: 50, padding: '0 18px', borderRadius: 25, background: done ? alpha(C.green, 0.14) : alpha(C.yellow, 0.35), transform: `scale(${frame >= FLIP ? 0.86 + 0.14 * flip : 1})`, transformOrigin: '0 50%' }}>
             {done ? (
-              <svg width={22} height={22} viewBox="0 0 14 14"><path d="M2.5 7.4 L5.6 10.2 L11.5 3.8" fill="none" stroke={C.greenInk} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - check} /></svg>
+              <svg width={30} height={30} viewBox="0 0 14 14"><path d="M2.5 7.4 L5.6 10.2 L11.5 3.8" fill="none" stroke={C.greenInk} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - check} /></svg>
             ) : (
               <div style={{ width: 12, height: 12, borderRadius: 6, background: '#9A7A00' }} />
             )}
-            <span style={{ fontSize: 26, fontWeight: 700, color: done ? C.greenInk : '#6B5500' }}>{done ? '합류 완료' : '합류 예정'}</span>
+            <span style={{ fontSize: 36, fontWeight: 800, color: done ? C.greenInk : '#6B5500' }}>{done ? '합류 완료' : '합류 예정'}</span>
           </div>
         </div>
       </div>
