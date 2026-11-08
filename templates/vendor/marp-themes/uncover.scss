@@ -1,0 +1,339 @@
+@use 'sass:color';
+@use 'sass:meta';
+
+/*!
+ * Marp / Marpit Uncover theme
+ *
+ * @theme uncover
+ * @author Yuki Hattori
+ *
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+ */
+
+section {
+  --color-background: light-dark(#fdfcff, #202228);
+  --color-background-code: light-dark(
+    #{color.mix(#fdfcff, #202228, 95%)},
+    #{color.mix(#202228, #fff, 95%)}
+  );
+  --color-background-paginate: light-dark(
+    #{rgba(#202228, 0.05)},
+    #{rgba(#fff, 0.05)}
+  );
+  --color-foreground: light-dark(#202228, #fff);
+  --color-highlight: #009dd5;
+  --color-highlight-hover: light-dark(
+    #{color.mix(#202228, #009dd5, 25%)},
+    #{color.mix(#fff, #009dd5, 25%)}
+  );
+  --color-highlight-heading: #{color.mix(#fff, #009dd5, 20%)};
+  --color-header: light-dark(#{rgba(#202228, 0.4)}, #{rgba(#fff, 0.4)});
+  --color-header-shadow: light-dark(
+    #{rgba(#fdfcff, 0.8)},
+    #{rgba(#202228, 0.8)}
+  );
+
+  /* Colors for Shiki highlighter */
+  --marp-shiki-foreground: var(--color-foreground);
+  --marp-shiki-background: var(--color-background-code);
+  --marp-shiki-line-highlight: color-mix(
+    in srgb,
+    var(--color-highlight) 20%,
+    var(--marp-shiki-background)
+  );
+  --marp-shiki-token-link: light-dark(#31a354, #ab875d);
+  --marp-shiki-token-string: light-dark(#756bb1, #8f9c6c);
+  --marp-shiki-token-comment: light-dark(#636363, #777);
+  --marp-shiki-token-constant: light-dark(#31a354, #ab875d);
+  --marp-shiki-token-keyword: light-dark(#3182bd, #8f9c6c);
+  --marp-shiki-token-parameter: light-dark(currentcolor, #ab875d);
+  --marp-shiki-token-function: light-dark(#3182bd, #9b869b);
+  --marp-shiki-token-string-expression: light-dark(#756bb1, #8f9c6c);
+  --marp-shiki-token-punctuation: var(--marp-shiki-foreground);
+  --marp-shiki-token-inserted: light-dark(#31a354, #8f9c6c);
+  --marp-shiki-token-deleted: #e6550d;
+  --marp-shiki-token-changed: #d59f62;
+
+  color-scheme: light;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  display: block;
+  place-content: safe center center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 40px;
+  height: 720px;
+  letter-spacing: 3px;
+  line-height: 1.4;
+  padding: 30px 70px;
+  position: relative;
+  text-align: center;
+  width: 1280px;
+  overflow-wrap: break-word;
+  z-index: 0;
+
+  /* Definitions for classic behavior: Users can adopt flex centering by tweaking style `section { display: flex }` */
+  flex-flow: column nowrap;
+  align-items: stretch;
+
+  &::after {
+    align-items: flex-end;
+    background: linear-gradient(
+      -45deg,
+      var(--color-background-paginate) 50%,
+      transparent 50%
+    );
+    background-size: cover;
+    color: var(--color-foreground);
+    display: flex;
+    font-size: 0.6em;
+    height: 80px;
+    justify-content: flex-end;
+    padding: 30px;
+    text-align: right;
+    text-shadow: 0 0 5px var(--color-background);
+    width: 80px;
+
+    /* Workaround: Firefox drops gradient alpha when exporting PDF
+     * https://bugzilla.mozilla.org/show_bug.cgi?id=1529152 */
+    @media print {
+      /* -moz-context-properties is only enabled if `svg.context-properties.content.enabled` is `true` in `about:config`.
+       * Marp CLI's Puppeteer should set this preference to `true` for getting correct PDF output. */
+      @supports (-moz-context-properties: fill) {
+        -moz-context-properties: fill;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0 1h1V0Z" fill="context-fill"/></svg>');
+        fill: var(--color-background-paginate);
+      }
+    }
+  }
+
+  &:where(.invert) {
+    color-scheme: dark;
+  }
+
+  > *:first-child,
+  &[data-header] > :nth-child(2) {
+    margin-top: 0;
+  }
+
+  > *:last-child,
+  &[data-footer] > :nth-last-child(2) {
+    margin-bottom: 0;
+  }
+
+  p,
+  blockquote {
+    margin: 0 0 15px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 15px 0 30px;
+
+    strong {
+      color: var(--color-highlight-heading);
+      font-weight: inherit;
+    }
+
+    &::part(auto-scaling) {
+      max-height: 660px; // Slide height - padding * 2
+    }
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.7em;
+  }
+
+  h3 {
+    font-size: 1.4em;
+    letter-spacing: 2px;
+  }
+
+  h4 {
+    font-size: 1.2em;
+    letter-spacing: 2px;
+  }
+
+  h5 {
+    font-size: 1em;
+    letter-spacing: 1px;
+  }
+
+  h6 {
+    font-size: 0.8em;
+    letter-spacing: 1px;
+  }
+
+  header,
+  footer {
+    color: var(--color-header);
+    font-size: 0.45em;
+    left: 70px;
+    letter-spacing: 1px;
+    position: absolute;
+    right: 70px;
+    text-shadow: 0 1px 0 var(--color-header-shadow);
+    z-index: 1;
+  }
+
+  header {
+    top: 30px;
+  }
+
+  footer {
+    bottom: 30px;
+  }
+
+  a {
+    color: var(--color-highlight);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-highlight-hover);
+      text-decoration: underline;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  > ul,
+  > ol {
+    margin-bottom: 15px;
+  }
+
+  code {
+    font-family:
+      SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    letter-spacing: 0;
+  }
+
+  & > code,
+  *:not(pre) > code {
+    background-color: var(--color-background-code);
+    color: var(--color-foreground);
+    margin: -0.2em 0.2em 0.2em;
+    padding: 0.2em;
+  }
+
+  pre {
+    --preserve-aspect-ratio: xMidYMid meet;
+
+    background-color: transparent !important; /* Override Shiki's background definiton because it is defined in the child <code> */
+    filter: drop-shadow(0 4px 4px rgba(#000, 0.2));
+    font-size: 70%;
+    line-height: 1.15;
+    margin: 15px 0 30px;
+    text-align: left;
+
+    &::part(auto-scaling) {
+      max-height: 570px;
+    }
+
+    .line.highlighted {
+      border-image: conic-gradient(var(--marp-shiki-line-highlight) 0 0) fill
+        0/ /0 10000vw;
+    }
+  }
+
+  pre > code {
+    box-sizing: content-box;
+    background-color: var(--marp-shiki-background);
+    display: block;
+    margin: 0 auto;
+    min-width: 456px; // (Slide width - padding * 2) * 40%
+    padding: 0.4em 0.6em;
+    contain: paint;
+  }
+
+  &[data-size='4:3'] pre > code {
+    min-width: 328px;
+  }
+
+  svg[data-marp-mermaid] {
+    letter-spacing: 0;
+    margin-inline: auto;
+    max-height: 570px;
+  }
+
+  table {
+    border-collapse: collapse;
+    margin: 0 auto 15px;
+
+    > thead,
+    > tbody {
+      > tr {
+        > td,
+        > th {
+          padding: 0.15em 0.5em;
+        }
+      }
+    }
+
+    > thead > tr {
+      > td,
+      > th {
+        border-bottom: 3px solid currentcolor;
+      }
+    }
+
+    > tbody > tr:not(:last-child) {
+      > td,
+      > th {
+        border-bottom: 1px solid currentcolor;
+      }
+    }
+  }
+
+  blockquote {
+    font-size: 90%;
+    line-height: 1.3;
+    padding: 0 2em;
+    position: relative;
+    z-index: 0;
+
+    &::before,
+    &::after {
+      content: url('./assets/uncover-quote.svg');
+      height: auto;
+      pointer-events: none;
+      position: absolute;
+      width: 1em;
+      z-index: -1;
+    }
+
+    &::before {
+      left: 0;
+      top: 0;
+    }
+
+    &::after {
+      bottom: 0;
+      right: 0;
+      transform: rotate(180deg);
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  mark {
+    color: var(--color-highlight);
+    background: transparent;
+  }
+}

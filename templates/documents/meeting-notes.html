@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>회의록</title>
+<meta name="description" content="참석자, 안건, 논의, 결정, 할 일 표를 갖춘 회의록 양식.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="../assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== 토큰 (DESIGN.md 2~3장) ===== */
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local("Pretendard Variable"), url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations"), url("../assets/fonts/PretendardVariable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Geist Mono"), url("../assets/fonts/GeistMono.woff2") format("woff2");
+}
+:root {
+  --bg: #FFFFFF;
+  --surface: #F6F7F8;
+  --border: #E4E6E9;
+  --text: #111315;
+  --text-muted: #5D636B;
+  --accent: #0F6E5C;
+  --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  color-scheme: dark;
+}
+
+/* ===== 기본 ===== */
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--accent); color: var(--accent-contrast); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+.skip:focus-visible { top: 12px; text-decoration: none; }
+
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 1024px) { body { font-size: 17px; } }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { width: 20px; height: 20px; flex: none; fill: currentColor; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-muted); }
+
+.toolbar { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); }
+.toolbar-inner { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+.toolbar .crumb { flex: 1 1 auto; min-width: 0; font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toolbar .crumb b { color: var(--text); font-weight: 600; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid transparent;
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease);
+  touch-action: manipulation;
+}
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--surface); }
+.btn-secondary:active { background: var(--border); }
+
+/* ===== 종이 ===== */
+.page {
+  max-width: 840px; margin: 32px auto 96px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  padding: 64px 72px;
+}
+@media screen and (max-width: 767px) {
+  .page { margin: 0; border: 0; border-radius: 0; padding: 32px 20px 64px; }
+}
+
+/* ===== 문서 머리 ===== */
+.doc-kind { font-size: 14px; font-weight: 600; color: var(--accent); margin: 0 0 12px; }
+.doc-title { font-size: 32px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+@media (min-width: 1024px) { .doc-title { font-size: 40px; } }
+.doc-sub { margin: 12px 0 0; color: var(--text-muted); max-width: 65ch; }
+.doc-head { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; padding-bottom: 32px; border-bottom: 1px solid var(--text); }
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; border-bottom: 1px solid var(--border); }
+.meta > div { padding: 16px 16px 16px 0; }
+.meta dt { font-size: 13px; color: var(--text-muted); }
+.meta dd { margin: 4px 0 0; font-size: 15px; font-weight: 500; }
+@media screen and (max-width: 767px) {
+  .doc-head { grid-template-columns: 1fr; gap: 24px; }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* 결재란 */
+.approval { border-collapse: collapse; font-size: 13px; text-align: center; }
+.approval th, .approval td { border: 1px solid var(--border); padding: 0; width: 72px; }
+.approval th { font-weight: 500; color: var(--text-muted); height: 28px; background: var(--surface); }
+.approval td { height: 56px; }
+.approval .stamp { display: inline-block; font-size: 12px; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px; }
+
+/* ===== 본문 ===== */
+.doc-body { counter-reset: sec; }
+.doc-body section { margin-top: 48px; }
+.doc-body h2 { counter-increment: sec; font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 16px; display: flex; gap: 12px; align-items: baseline; }
+.doc-body h2::before { content: counter(sec) "."; font-family: var(--mono); font-size: 18px; color: var(--accent); }
+.doc-body h3 { font-size: 18px; font-weight: 600; line-height: 1.4; margin: 32px 0 8px; }
+.doc-body p, .doc-body li { max-width: 65ch; }
+.doc-body p { margin: 0 0 16px; }
+.doc-body ul, .doc-body ol { margin: 0 0 16px; padding-left: 1.25em; }
+.doc-body li + li { margin-top: 4px; }
+@media (min-width: 1024px) { .doc-body h2 { font-size: 28px; } .doc-body h3 { font-size: 20px; } }
+
+.summary { background: var(--surface); border-radius: 12px; padding: 24px 24px 8px; margin-top: 32px; }
+.summary h2 { font-size: 16px !important; color: var(--text-muted); counter-increment: none !important; margin-bottom: 8px !important; }
+.summary h2::before { content: none !important; }
+.summary ul { padding-left: 1.1em; }
+.summary b { font-weight: 600; }
+
+.callout { border-left: 3px solid var(--accent); padding: 4px 0 4px 20px; margin: 24px 0; }
+.callout p:last-child { margin-bottom: 0; }
+.callout .label { display: block; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+
+.table-wrap { overflow-x: auto; margin: 16px 0 24px; }
+table.data { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.data caption { caption-side: bottom; text-align: left; font-size: 13px; color: var(--text-muted); padding-top: 8px; }
+table.data th, table.data td { text-align: left; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.data thead th { font-size: 13px; font-weight: 600; color: var(--text-muted); border-bottom-color: var(--text); white-space: nowrap; }
+table.data .r { text-align: right; font-variant-numeric: tabular-nums; padding-left: 16px; padding-right: 24px; }
+table.data .r:last-child { padding-right: 0; }
+table.data tfoot td { font-weight: 600; border-bottom: 0; }
+
+figure { margin: 24px 0; }
+figcaption { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .grid { stroke: var(--border); stroke-width: 1; }
+.chart .axis { fill: var(--text-muted); font-size: 12px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.chart .line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .line.prev { stroke: var(--text-muted); }
+.chart .dot { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.chart .lbl { fill: var(--text); font-size: 13px; font-weight: 600; font-family: var(--font); }
+.chart .bar { fill: var(--accent); }
+.chart .bar.dim { fill: var(--text-muted); opacity: 0.4; }
+.legend { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: var(--text-muted); margin: 0 0 8px; padding: 0; list-style: none; }
+.legend li { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 16px; height: 2px; background: var(--accent); display: inline-block; }
+.legend i.prev { background: var(--text-muted); }
+
+.checklist { list-style: none; padding: 0 !important; }
+.checklist li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: start; }
+.checklist input { width: 18px; height: 18px; margin: 4px 0 0; accent-color: var(--accent); }
+
+.foot { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* ===== 인쇄 (A4) ===== */
+@page { size: A4; margin: 18mm 16mm 20mm; }
+@media print {
+  :root { --bg: #fff; --surface: #F6F7F8; --border: #E4E6E9; --text: #111315; --text-muted: #5D636B; --accent: #0F6E5C; }
+  body { background: #fff; font-size: 10.5pt; }
+  .toolbar { display: none; }
+  .page { max-width: none; margin: 0; padding: 0; border: 0; }
+  .doc-body section { break-inside: auto; }
+  h2, h3 { break-after: avoid; }
+  table.data tr, figure, .callout, .summary { break-inside: avoid; }
+  .summary, .approval th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: inherit; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-print" viewBox="0 0 256 256"><path d="M214.67,72H200V40a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8V72H41.33C27.36,72,16,82.77,16,96v80a8,8,0,0,0,8,8H56v32a8,8,0,0,0,8,8H192a8,8,0,0,0,8-8V184h32a8,8,0,0,0,8-8V96C240,82.77,228.64,72,214.67,72ZM72,48H184V72H72ZM184,208H72V160H184Zm40-40H200V152a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v16H32V96c0-4.41,4.19-8,9.33-8H214.67c5.14,0,9.33,3.59,9.33,8Zm-24-52a12,12,0,1,1-12-12A12,12,0,0,1,200,116Z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+</svg>
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <a class="btn btn-secondary" href="../index.html" aria-label="양식 모음으로 돌아가기" style="padding:0 12px"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg></a>
+    <span class="crumb">양식 모음 / <b>회의록</b></span>
+    <button class="btn btn-secondary" type="button" onclick="window.print()"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>인쇄 / PDF</button>
+  </div>
+</header>
+<main class="page" id="main">
+  <header class="doc-head">
+    <div>
+      <p class="doc-kind">회의록</p>
+      <h1 class="doc-title">4분기 앱 출시 일정 점검 회의</h1>
+      <p class="doc-sub">결제 화면 개편의 출시일을 11월 20일로 유지할지 정하고, 남은 작업의 담당을 확인했습니다.</p>
+    </div>
+  </header>
+  <dl class="meta">
+    <div><dt>일시</dt><dd class="num">2026. 10. 13 (월) 14:00~14:50</dd></div>
+    <div><dt>장소</dt><dd>본사 7층 회의실 B, 화상 병행</dd></div>
+    <div><dt>진행</dt><dd>제품팀 오세진</dd></div>
+    <div><dt>기록</dt><dd>제품팀 윤가람</dd></div>
+  </dl>
+
+  <div class="doc-body">
+    <section>
+      <h2>참석자</h2>
+      <p>오세진(제품), 윤가람(제품), 강민호(앱 개발), 서지우(서버), 임채원(디자인), 배준혁(QA) <span class="muted">· 불참: 홍예린(마케팅, 서면 의견 제출)</span></p>
+    </section>
+
+    <section>
+      <h2>안건</h2>
+      <ol>
+        <li>결제 화면 개편 진행 상황 (10분)</li>
+        <li>간편결제 연동 지연 대응 (20분)</li>
+        <li>출시일 확정과 마케팅 일정 (15분)</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>논의 내용</h2>
+      <h3>1. 결제 화면 개편 진행 상황</h3>
+      <ul>
+        <li>화면 개발 90% 완료. 남은 작업은 오류 메시지 문구와 접근성 점검입니다.</li>
+        <li>QA는 10월 27일 시작 예정이며, 테스트 케이스 142개를 준비했습니다.</li>
+      </ul>
+      <h3>2. 간편결제 연동 지연 대응</h3>
+      <ul>
+        <li>결제 대행사 테스트 서버 장애로 연동 테스트가 5일 늦어졌습니다.</li>
+        <li>간편결제를 출시 범위에서 빼고 12월 2차 배포로 미루자는 의견과, 출시일을 일주일 늦추자는 의견이 나왔습니다.</li>
+        <li>마케팅팀 서면 의견: 11월 20일 할인 행사와 함께 알리는 것이 중요하며, 간편결제는 행사 필수 조건이 아닙니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>결정 사항</h2>
+      <div class="callout">
+        <span class="label">결정</span>
+        <p>출시일은 11월 20일로 유지하고, 간편결제는 12월 4일 2차 배포에 넣습니다.</p>
+      </div>
+      <ul>
+        <li>1차 출시 범위: 새 결제 화면, 카드 결제, 계좌이체</li>
+        <li>11월 13일까지 치명적 오류가 3건 이상 남으면 출시일을 다시 논의합니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>할 일</h2>
+      <div class="table-wrap">
+      <table class="data">
+        <thead><tr><th scope="col">할 일</th><th scope="col">담당</th><th scope="col">기한</th></tr></thead>
+        <tbody>
+          <tr><td>간편결제 버튼을 1차 화면에서 숨김 처리</td><td>강민호</td><td class="num">10. 17</td></tr>
+          <tr><td>오류 메시지 문구 최종안 공유</td><td>임채원</td><td class="num">10. 20</td></tr>
+          <tr><td>결제 대행사와 테스트 서버 복구 일정 확인</td><td>서지우</td><td class="num">10. 15</td></tr>
+          <tr><td>2차 배포 범위로 테스트 케이스 분리</td><td>배준혁</td><td class="num">10. 22</td></tr>
+          <tr><td>마케팅팀에 출시 범위 변경 공유</td><td>오세진</td><td class="num">10. 14</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>다음 회의</h2>
+      <p>2026. 10. 27 (월) 14:00, 같은 장소. 안건: QA 시작 점검, 2차 배포 일정.</p>
+    </section>
+  </div>
+
+  <footer class="foot"><span>제품팀 회의록 · 2026-10-13</span><span>참석자와 마케팅팀 공유</span></footer>
+</main>
+</body>
+</html>

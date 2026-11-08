@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- reveal.js 5 사용 예시. dist/ 파일만으로 인터넷 없이 동작합니다. 키: → ← 이동, S 발표자 노트, Esc 전체 보기 -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>reveal.js 예시</title>
+  <link rel="stylesheet" href="dist/reset.css">
+  <link rel="stylesheet" href="dist/reveal.css">
+  <link rel="stylesheet" href="dist/theme/white.css">
+  <style>
+    /* DESIGN.md 색과 글꼴로 white 테마를 덮어쓰기 */
+    @font-face { font-family: "Pretendard Variable"; font-weight: 45 920; font-display: swap; src: url("../../assets/fonts/PretendardVariable.woff2") format("woff2"); }
+    :root {
+      --r-background-color: #FFFFFF; --r-main-color: #111315; --r-heading-color: #111315;
+      --r-link-color: #0F6E5C; --r-link-color-hover: #0F6E5C; --r-selection-background-color: #0F6E5C;
+      --r-main-font: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+      --r-heading-font: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+      --r-heading-text-transform: none; --r-heading-letter-spacing: -0.02em; --r-heading-font-weight: 700;
+      --r-main-font-size: 34px;
+    }
+    .reveal { word-break: keep-all; }
+    .reveal .muted { color: #5D636B; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h2>reveal.js로 만든 발표</h2>
+        <p class="muted">→ 키로 넘기고, S 키로 발표자 노트를 엽니다</p>
+        <aside class="notes">여기에 쓴 내용은 발표자 화면에만 보입니다.</aside>
+      </section>
+      <section>
+        <section><h3>세로 슬라이드</h3><p>↓ 키로 같은 주제의 상세 내용으로 내려갑니다</p></section>
+        <section><h3>상세 1</h3><p>보충 자료나 질의응답용 장표를 아래에 둡니다</p></section>
+      </section>
+      <section>
+        <h3>한 번에 하나씩</h3>
+        <ul>
+          <li class="fragment">첫 번째 요점</li>
+          <li class="fragment">두 번째 요점</li>
+          <li class="fragment">세 번째 요점</li>
+        </ul>
+      </section>
+      <section><h2>끝</h2><p class="muted">PDF가 필요하면 주소 끝에 ?print-pdf 를 붙이고 인쇄합니다</p></section>
+    </div>
+  </div>
+  <script src="dist/reveal.js"></script>
+  <script src="dist/plugin/notes.js"></script>
+  <script>Reveal.initialize({ hash: true, plugins: [RevealNotes] });</script>
+</body>
+</html>

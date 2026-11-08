@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>양식 모음</title>
+<meta name="description" content="발표, 문서, 대시보드 양식과 GitHub에서 받은 원본 참고 양식을 상황별로 고를 수 있게 모은 페이지입니다.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: local("Pretendard Variable"), url("assets/fonts/PretendardVariable.woff2") format("woff2-variations"), url("assets/fonts/PretendardVariable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Geist Mono"), url("assets/fonts/GeistMono.woff2") format("woff2");
+}
+:root {
+  --bg: #FFFFFF; --surface: #F6F7F8; --border: #E4E6E9; --text: #111315;
+  --text-muted: #5D636B; --accent: #0F6E5C; --accent-contrast: #FFFFFF;
+  --font: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+    --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF;
+  --text-muted: #9AA0A8; --accent: #3FB59A; --accent-contrast: #06231D;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--accent); color: var(--accent-contrast); padding: 8px 16px; border-radius: 8px; font-weight: 600; }
+.skip:focus-visible { top: 12px; text-decoration: none; }
+
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; scroll-padding-top: 80px; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 16px; line-height: 1.7;
+  word-break: keep-all; overflow-wrap: break-word; -webkit-font-smoothing: antialiased;
+}
+@media (min-width: 1024px) { body { font-size: 17px; } }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { width: 24px; height: 24px; flex: none; fill: currentColor; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+@media (min-width: 1024px) { .wrap { padding: 0 32px; } }
+
+/* 머리 */
+.intro { padding: 64px 0 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.intro > div { grid-column: span 8; }
+.intro h1 { font-size: 40px; font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+@media (min-width: 1024px) { .intro { padding: 96px 0 64px; } .intro h1 { font-size: 64px; } }
+.intro p { margin: 24px 0 0; color: var(--text-muted); max-width: 52ch; }
+.intro dl { grid-column: span 4; align-self: end; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.intro dt { font-size: 14px; color: var(--text-muted); }
+.intro dd { margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+@media (max-width: 1023px) { .intro > div, .intro dl { grid-column: span 12; } }
+
+/* 구역 이동 */
+.jump { position: sticky; top: 0; z-index: 5; background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.jump ul { list-style: none; margin: 0 auto; padding: 0 20px; max-width: 1200px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+@media (min-width: 1024px) { .jump ul { padding: 0 32px; } }
+.jump a {
+  display: inline-flex; align-items: center; height: 56px; padding: 0 4px; margin-right: 16px;
+  color: var(--text-muted); font-size: 15px; font-weight: 500; white-space: nowrap;
+  border-bottom: 2px solid transparent; transition: color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.jump a:hover { color: var(--text); text-decoration: none; border-color: var(--border); }
+.jump a[aria-current="true"] { color: var(--text); border-color: var(--accent); }
+
+/* 구역 */
+.group { padding: 64px 0 0; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+@media (min-width: 1024px) { .group { padding-top: 96px; } }
+.group-head { grid-column: span 4; }
+.group-head h2 { font-size: 24px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; margin: 0; display: flex; align-items: center; gap: 12px; }
+@media (min-width: 1024px) { .group-head h2 { font-size: 32px; } }
+.group-head h2 .icon { color: var(--accent); }
+.group-head p { margin: 12px 0 0; color: var(--text-muted); font-size: 15px; max-width: 34ch; }
+.items { grid-column: span 8; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
+@media (max-width: 1023px) { .group-head, .items { grid-column: span 12; } }
+
+.item { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding: 24px 0; border-bottom: 1px solid var(--border); align-items: start; }
+.item h3 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4; }
+@media (min-width: 1024px) { .item h3 { font-size: 20px; } }
+.item h3 a { color: var(--text); }
+.item h3 a:hover { color: var(--accent); text-decoration: none; }
+.item p { margin: 4px 0 0; color: var(--text-muted); font-size: 15px; max-width: 60ch; }
+.item .when { margin-top: 8px; font-size: 14px; color: var(--text); }
+.item .when b { font-weight: 600; color: var(--text-muted); margin-right: 6px; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.tag { font-size: 13px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+@media (max-width: 599px) {
+  .item { grid-template-columns: 1fr; }
+  .tags { justify-content: flex-start; }
+}
+
+/* 마크다운 표 */
+.md-table { grid-column: span 8; }
+@media (max-width: 1023px) { .md-table { grid-column: span 12; } }
+.table-wrap { overflow-x: auto; border-top: 1px solid var(--text); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 14px 16px 14px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+thead th { font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+td:first-child { white-space: nowrap; font-weight: 600; }
+td.src { font-size: 14px; color: var(--text-muted); }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--surface); border-radius: 4px; padding: 1px 6px; }
+
+.how { margin: 96px 0 0; padding: 48px 0 128px; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.how h2 { grid-column: span 4; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.how ol { grid-column: span 8; margin: 0; padding-left: 1.2em; display: grid; gap: 12px; }
+.how li { max-width: 65ch; }
+@media (max-width: 1023px) { .how h2, .how ol { grid-column: span 12; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-slides" viewBox="0 0 256 256"><path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 256 256"><path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-32-80a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,136Zm0,32a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,168Z"/></symbol>
+  <symbol id="i-md" viewBox="0 0 256 256"><path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34ZM124.69,152H104V131.31l64-64L188.69,88ZM200,76.69,179.31,56,192,43.31,212.69,64ZM224,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h80a8,8,0,0,1,0,16H48V208H208V128a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 256 256"><path d="M104,40H56A16,16,0,0,0,40,56v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,104,40Zm0,64H56V56h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,64H152V56h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm0,64H56V152h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Zm0,64H152V152h48v48Z"/></symbol>
+  <symbol id="i-ref" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM184,96a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,96Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,128Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,160Z"/></symbol>
+  <symbol id="i-go" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></symbol>
+</svg>
+
+<header class="wrap intro">
+  <div>
+    <h1>양식 모음</h1>
+    <p>발표 자료, 보고서, 회의록, 대시보드를 새로 만들 때 여기서 고르세요. 직접 만든 양식은 DESIGN.md 기준을 따르고, GitHub에서 받은 원본은 구성과 항목을 참고하는 용도입니다.</p>
+  </div>
+  <dl>
+    <div><dt>바로 쓰는 양식</dt><dd>9</dd></div>
+    <div><dt>마크다운</dt><dd>9</dd></div>
+    <div><dt>원본 참고</dt><dd>11</dd></div>
+  </dl>
+</header>
+
+<nav class="jump" aria-label="구역 이동">
+  <ul>
+    <li><a href="#slides">발표</a></li>
+    <li><a href="#documents">문서</a></li>
+    <li><a href="#markdown">마크다운 문서</a></li>
+    <li><a href="#dashboards">대시보드</a></li>
+    <li><a href="#vendor">원본 참고</a></li>
+  </ul>
+</nav>
+
+<main class="wrap" id="main">
+  <section class="group" id="slides" aria-labelledby="h-slides">
+    <div class="group-head">
+      <h2 id="h-slides"><svg class="icon" aria-hidden="true"><use href="#i-slides"/></svg>발표</h2>
+      <p>HTML 덱은 화살표 키로 넘기고, 인쇄하면 한 장에 슬라이드 하나씩 PDF가 됩니다.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div><h3><a href="slides/presentation-layouts.html">발표 레이아웃 모음</a></h3>
+          <p>표지, 목차, 구역 구분, 핵심 메시지, 2단 비교, 큰 숫자, 차트, 표, 일정, 인용, 이미지, 마무리까지 12종.</p>
+          <p class="when"><b>이럴 때</b>새 발표를 시작하며 필요한 장만 골라 붙일 때</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">16:9</span><span class="tag">PDF 인쇄</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="slides/project-report-deck.html">분기 프로젝트 보고 덱</a></h3>
+          <p>요약, 지표, 차트, 작업 현황표, 위험과 대응, 다음 분기 일정, 결정 요청 순서의 8장.</p>
+          <p class="when"><b>이럴 때</b>경영진 보고, 분기 리뷰, 프로젝트 중간 점검</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">16:9</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="slides/design-template.pptx">PowerPoint 양식</a></h3>
+          <p>같은 색과 글꼴로 만든 9장짜리 .pptx. 발표자 노트 포함. <code>slides/tools/make_pptx.py</code>로 다시 만들 수 있습니다.</p>
+          <p class="when"><b>이럴 때</b>받는 쪽이 PowerPoint 파일을 요구할 때</p></div>
+        <div class="tags"><span class="tag">PPTX</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="slides/marp-deck.md">마크다운 발표 (Marp)</a></h3>
+          <p>마크다운으로 쓰고 Marp로 HTML, PDF, PPTX를 만듭니다. 주간 공유 예시 8장.</p>
+          <p class="when"><b>이럴 때</b>글로 빠르게 쓰고 슬라이드는 자동으로 뽑고 싶을 때</p></div>
+        <div class="tags"><span class="tag">Markdown</span><span class="tag">Marp</span></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="group" id="documents" aria-labelledby="h-docs">
+    <div class="group-head">
+      <h2 id="h-docs"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg>문서</h2>
+      <p>화면에서는 종이처럼 보이고, 인쇄하면 A4로 나옵니다. 결재란과 문서 정보 칸이 들어 있습니다.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div><h3><a href="documents/report.html">분석 보고서</a></h3>
+          <p>요약, 배경, 선 그래프, 유형별 표, 강조 상자, 대응 방안, 결론, 부록.</p>
+          <p class="when"><b>이럴 때</b>데이터를 근거로 원인과 대책을 보고할 때</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">A4</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="documents/proposal.html">기획·제안서</a></h3>
+          <p>문제 정의, 목표와 성공 기준, 범위, 일정, 예산, 위험, 결정 요청 체크리스트.</p>
+          <p class="when"><b>이럴 때</b>예산이나 인력 승인을 받아야 할 때</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">A4</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="documents/meeting-notes.html">회의록</a></h3>
+          <p>일시와 참석자, 안건, 논의, 결정 사항, 담당과 기한이 있는 할 일 표.</p>
+          <p class="when"><b>이럴 때</b>결정과 담당을 남겨 공유해야 하는 회의</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">A4</span></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="group" id="markdown" aria-labelledby="h-md">
+    <div class="group-head">
+      <h2 id="h-md"><svg class="icon" aria-hidden="true"><use href="#i-md"/></svg>마크다운 문서</h2>
+      <p>GitHub, Notion, 위키에 바로 붙여 쓰는 빈 양식입니다. 주석(&lt;!-- --&gt;)에 작성 요령이 있습니다.</p>
+    </div>
+    <div class="md-table">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">양식</th><th scope="col">쓰는 상황</th><th scope="col">참고한 원본</th></tr></thead>
+          <tbody>
+            <tr><td><a href="documents/markdown/prd.md">PRD</a></td><td>새 기능의 요구사항과 성공 지표를 정할 때</td><td class="src">직접 작성</td></tr>
+            <tr><td><a href="documents/markdown/design-doc.md">기술 설계</a></td><td>구조, 데이터, API를 리뷰받기 전</td><td class="src">Rust RFC 템플릿</td></tr>
+            <tr><td><a href="documents/markdown/decision-record.md">결정 기록 (ADR)</a></td><td>기술이나 정책 선택의 이유를 남길 때</td><td class="src">MADR 4.0</td></tr>
+            <tr><td><a href="documents/markdown/project-brief.md">프로젝트 개요서</a></td><td>시작 전 범위와 역할을 맞출 때</td><td class="src">직접 작성</td></tr>
+            <tr><td><a href="documents/markdown/weekly-report.md">주간 업무 보고</a></td><td>매주 같은 형식으로 진행을 공유할 때</td><td class="src">직접 작성</td></tr>
+            <tr><td><a href="documents/markdown/meeting-notes.md">회의록</a></td><td>위키나 이슈에 회의 결과를 남길 때</td><td class="src">직접 작성</td></tr>
+            <tr><td><a href="documents/markdown/postmortem.md">장애 회고</a></td><td>장애 뒤 원인과 후속 조치를 정리할 때</td><td class="src">postmortem-templates</td></tr>
+            <tr><td><a href="documents/markdown/retrospective.md">회고 (KPT)</a></td><td>스프린트, 프로젝트를 마칠 때</td><td class="src">직접 작성</td></tr>
+            <tr><td><a href="documents/markdown/release-notes.md">변경 기록</a></td><td>버전별 변경 사항을 공개할 때</td><td class="src">Keep a Changelog</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="group" id="dashboards" aria-labelledby="h-dash">
+    <div class="group-head">
+      <h2 id="h-dash"><svg class="icon" aria-hidden="true"><use href="#i-dash"/></svg>대시보드</h2>
+      <p>숫자는 파일 아래쪽 데이터 블록만 바꾸면 그래프와 표가 함께 바뀝니다.</p>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div><h3><a href="dashboards/kpi-dashboard.html">성과 지표 대시보드</a></h3>
+          <p>지표 타일 4개와 추세선, 작년 대비 월별 선 그래프, 채널별 막대, 상위 상품 표. 기간 선택, 마우스와 키보드 툴팁, 표로 보기 지원.</p>
+          <p class="when"><b>이럴 때</b>매출, 사용자, 전환율처럼 정기적으로 보는 숫자</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">SVG 차트</span></div>
+      </li>
+      <li class="item">
+        <div><h3><a href="dashboards/project-tracker.html">프로젝트 현황 대시보드</a></h3>
+          <p>진행률, 남은 일수, 예산, 위험, 영역별 진척 막대, 마일스톤, 상태로 거르는 작업 표.</p>
+          <p class="when"><b>이럴 때</b>여러 팀이 함께하는 프로젝트의 주간 점검</p></div>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">필터</span></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="group" id="vendor" aria-labelledby="h-vendor">
+    <div class="group-head">
+      <h2 id="h-vendor"><svg class="icon" aria-hidden="true"><use href="#i-ref"/></svg>원본 참고</h2>
+      <p>GitHub에서 받은 공개 양식입니다. 구성을 참고하되, 그대로 쓰면 DESIGN.md와 색과 글꼴이 다릅니다. 출처와 라이선스는 <a href="vendor/SOURCES.md">SOURCES.md</a>에 있습니다.</p>
+    </div>
+    <div class="md-table">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">원본</th><th scope="col">무엇을 참고하나</th><th scope="col">라이선스</th></tr></thead>
+          <tbody>
+            <tr><td><a href="vendor/bootstrap-examples/dashboard/index.html">Bootstrap 예제 18종</a></td><td>대시보드, 가격표, 결제, 블로그, 로그인, 사이드바, 헤더와 푸터 배치. <a href="vendor/bootstrap-examples/pricing/index.html">가격표</a> · <a href="vendor/bootstrap-examples/checkout/index.html">결제</a> · <a href="vendor/bootstrap-examples/blog/index.html">블로그</a> · <a href="vendor/bootstrap-examples/sidebars/index.html">사이드바</a></td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/sb-admin/index.html">SB Admin</a></td><td>관리자 화면 전체 구성: 사이드 메뉴, 차트, 데이터 표, 로그인과 오류 페이지</td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/reveal.js/example.html">reveal.js</a></td><td>HTML 발표 엔진. 발표자 노트, 세로 슬라이드, 테마</td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/marp-themes/example.md">Marp 테마</a></td><td>default, gaia, uncover 테마 원본과 예시</td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/simple-html-invoice/invoice.html">HTML 청구서</a></td><td>청구서, 견적서처럼 항목과 합계가 있는 한 장 문서</td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/madr/adr-template.md">MADR</a></td><td>결정 기록의 전체판과 축약판</td><td class="src">MIT / CC0</td></tr>
+            <tr><td><a href="vendor/postmortem-templates/postmortem-template-srebook.md">장애 회고 모음</a></td><td>Google SRE, Azure, Elastic 등 7가지 장애 보고 형식</td><td class="src">CC0</td></tr>
+            <tr><td><a href="vendor/rust-rfc-template/0000-template.md">Rust RFC</a></td><td>제안서와 설계 문서의 항목 구성</td><td class="src">MIT / Apache-2.0</td></tr>
+            <tr><td><a href="vendor/best-readme-template/BLANK_README.md">README 템플릿</a></td><td>저장소 소개 문서의 목차와 배지 구성</td><td class="src">Unlicense</td></tr>
+            <tr><td><a href="vendor/keep-a-changelog/CHANGELOG.md">Keep a Changelog</a></td><td>변경 기록 작성 규칙의 실제 예</td><td class="src">MIT</td></tr>
+            <tr><td><a href="vendor/github-issue-templates/readme.md">GitHub 이슈 템플릿</a></td><td>버그 신고, 질문, 체크리스트형 이슈와 PR 양식</td><td class="src">CC0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" aria-labelledby="h-how">
+    <h2 id="h-how">쓰는 방법</h2>
+    <ol>
+      <li>상황에 맞는 양식을 열어 보고, 파일을 복사해 새 이름으로 저장합니다.</li>
+      <li>제목과 본문, 데이터 블록의 숫자를 바꿉니다. 색과 글꼴은 그대로 둡니다.</li>
+      <li>HTML 양식은 한 파일이라 그대로 아티팩트로 올릴 수 있습니다. 글꼴 파일(<code>assets/fonts</code>)이 없으면 시스템 고딕 글꼴로 보입니다.</li>
+      <li>종이로 나눠 줄 때는 브라우저 인쇄에서 PDF로 저장합니다.</li>
+    </ol>
+  </section>
+</main>
+
+<script>
+/* 스크롤 위치에 맞춰 구역 이동 메뉴의 현재 항목을 표시 */
+(() => {
+  const links = [...document.querySelectorAll('.jump a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.removeAttribute('aria-current'));
+      map.get(e.target.id)?.setAttribute('aria-current', 'true');
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+})();
+</script>
+</body>
+</html>

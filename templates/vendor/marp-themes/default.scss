@@ -1,0 +1,201 @@
+/* stylelint-disable no-descending-specificity -- https://github.com/stylelint/stylelint/issues/5065 */
+/* stylelint-disable custom-property-pattern -- GitHub CSS variables are used as-is */
+
+/*!
+ * Marp default theme.
+ *
+ * @theme default
+ * @author Yuki Hattori
+ *
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+ */
+
+@use 'sass:meta';
+@include meta.load-css('pkg:github-markdown-css/github-markdown.css');
+
+h1 {
+  border-bottom: none;
+  color: var(--h1-color);
+  font-size: 1.6em;
+}
+
+h2 {
+  border-bottom: none;
+  font-size: 1.3em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+h4 {
+  font-size: 1.05em;
+}
+
+h5 {
+  font-size: 1em;
+}
+
+h6 {
+  font-size: 0.9em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  strong {
+    font-weight: inherit;
+    color: var(--heading-strong-color);
+  }
+
+  &::part(auto-scaling) {
+    max-height: 563px; // Slide height - padding * 2
+  }
+}
+
+hr {
+  height: 0;
+  padding-top: 0.25em;
+}
+
+img {
+  background-color: transparent;
+}
+
+pre {
+  border: 1px solid var(--borderColor-default);
+  line-height: 1.15;
+  overflow: visible;
+  padding: 0;
+  contain: paint;
+
+  &::part(auto-scaling) {
+    max-height: 529px; // Slide height - padding * 2 - code's padding * 3 - code's border * 2
+  }
+
+  code {
+    display: block;
+    padding: var(--base-size-16);
+  }
+
+  .line.highlighted {
+    border-image: conic-gradient(var(--marp-shiki-line-highlight) 0 0) fill
+      0/ /0 10000vw;
+  }
+}
+
+svg[data-marp-mermaid] {
+  max-height: 563px; // Slide height - padding * 2
+}
+
+header,
+footer {
+  margin: 0;
+  position: absolute;
+  left: 30px;
+  color: var(--header-footer-color);
+  font-size: 18px;
+}
+
+header {
+  top: 21px;
+}
+
+footer {
+  bottom: 21px;
+}
+
+section {
+  /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+  @extend .markdown-body;
+
+  --h1-color: light-dark(#246, #cee7ff);
+  --header-footer-color: light-dark(#{rgba(#666, 0.75)}, #{rgba(#999, 0.75)});
+  --heading-strong-color: light-dark(#48c, #7bf);
+  --paginate-color: light-dark(#777, #999);
+
+  /*
+   * GitHub Markdown CSS has defined space sizes with the rem unit. The root
+   * font size was changed by `font-size` property on `section` element so we
+   * have to revert them to the default value.
+   */
+  --base-size-4: 4px;
+  --base-size-8: 8px;
+  --base-size-16: 16px;
+  --base-size-24: 24px;
+  --base-size-40: 40px;
+
+  /* Colors for Shiki highlighter */
+  --marp-shiki-foreground: var(--fgColor-default);
+  --marp-shiki-background: var(--bgColor-muted);
+  --marp-shiki-line-highlight: var(--bgColor-attention-muted);
+  --marp-shiki-token-link: var(
+    --color-prettylights-syntax-constant-other-reference-link
+  );
+  --marp-shiki-token-string: var(--color-prettylights-syntax-string);
+  --marp-shiki-token-comment: var(--color-prettylights-syntax-comment);
+  --marp-shiki-token-constant: var(--color-prettylights-syntax-constant);
+  --marp-shiki-token-keyword: var(--color-prettylights-syntax-keyword);
+  --marp-shiki-token-parameter: var(--marp-shiki-foreground);
+  --marp-shiki-token-function: var(--color-prettylights-syntax-entity);
+  --marp-shiki-token-string-expression: var(--color-prettylights-syntax-string);
+  --marp-shiki-token-punctuation: var(--marp-shiki-foreground);
+  --marp-shiki-token-inserted: var(
+    --color-prettylights-syntax-markup-inserted-text
+  );
+  --marp-shiki-token-deleted: var(
+    --color-prettylights-syntax-markup-deleted-text
+  );
+  --marp-shiki-token-changed: var(
+    --color-prettylights-syntax-markup-changed-text
+  );
+
+  /* Colors for Mermaid diagrams */
+  --marp-mermaid-border: var(--borderColor-default);
+
+  display: block;
+  font-size: 29px;
+  height: 720px;
+  padding: 78.5px;
+  place-content: safe center center;
+  width: 1280px;
+
+  /* Definitions for classic behavior: Users can adopt flex centering by tweaking style `section { display: flex }` */
+  flex-flow: column nowrap;
+  align-items: stretch;
+
+  > *:last-child,
+  &[data-footer] > :nth-last-child(2) {
+    margin-bottom: 0;
+  }
+
+  > *:first-child,
+  > header:first-child + * {
+    margin-top: 0;
+  }
+
+  &::after {
+    position: absolute;
+    padding: 0;
+    right: 30px;
+    bottom: 21px;
+    font-size: 24px;
+    color: var(--paginate-color);
+  }
+
+  &[data-color] {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: currentcolor;
+    }
+  }
+}

@@ -10,5 +10,16 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "brainvibe": {
+      "source": {
+        "source": "github",
+        "repo": "minmin0923/brainvibe0923"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "skill-board@brainvibe": true
   }
 }

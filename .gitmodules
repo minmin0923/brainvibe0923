@@ -1,0 +1,12 @@
+[submodule "vendor/OpenMontage"]
+	path = vendor/OpenMontage
+	url = https://github.com/OpenMontageInc/OpenMontage.git
+	shallow = true
+[submodule "vendor/herk-edit-kit"]
+	path = vendor/herk-edit-kit
+	url = https://github.com/nateherkai/herk-edit-kit.git
+	shallow = true
+[submodule "vendor/Concat"]
+	path = vendor/Concat
+	url = https://github.com/jub0t/Concat.git
+	shallow = true

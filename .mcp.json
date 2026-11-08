@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "blender": {
+      "command": "uvx",
+      "args": ["--python", "3.11", "mcp-for-blender==2.2.7"],
+      "env": { "UV_PYTHON_PREFERENCE": "only-managed", "DISABLE_TELEMETRY": "true" }
+    },
+    "claude-video-vision": {
+      "command": "npx",
+      "args": ["-y", "claude-video-vision@1.4.0"]
+    }
+  }
+}

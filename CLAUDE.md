@@ -15,6 +15,37 @@
 4. **점검:** `web-design-guidelines` 스킬로 바뀐 파일을 점검하고, 나온 문제를 고친 뒤 3단계를 다시 한다.
 5. **완료 보고:** `DESIGN.md` 10장의 점검표를 채워서 보고한다. 확인하지 못한 항목은 그렇다고 적는다.
 
+## 스킬 대시보드 (작업 체크리스트)
+
+채팅 옆 "스킬 대시보드" 패널(`mods/skill-board`)이 설치된 스킬, UI 작업 순서 진행 상황, `.claude/dashboard/checklist.md`를 보여 준다.
+
+- 작업을 시작하면 "이번 작업에 적용할 것" 섹션에 이번 작업의 할 일을 `- [ ]` 항목으로 적는다.
+- 항목을 끝낼 때마다 그 줄을 `- [x]`로 고친다. 패널이 바로 갱신된다.
+- 작업이 끝나면 "이번 작업에 적용할 것" 섹션을 비우고 나머지 체크를 `- [ ]`로 되돌린다.
+
+## 이미지 만들기
+
+이미지가 필요하면(시안, 일러스트, 썸네일, 배경, 영상 장면 등) 사용자가 따로 말하지 않아도 `chatgpt-image-prompt` 스킬을 쓴다. Claude가 ChatGPT에 붙여 넣을 프롬프트를 써 주고, 사용자가 ChatGPT 구독으로 만든 이미지를 받아 확인하고 쓴다.
+
+- 프롬프트는 `generated/prompts/`에, 받은 이미지는 `generated/images/`에 같은 이름으로 둔다. 두 폴더 모두 커밋한다.
+- `image-to-code`처럼 먼저 디자인 이미지를 만들라는 스킬도 이 방식으로 이미지를 받는다.
+- API로 바로 만드는 `openai-image` 스킬은 크레딧이 들어서, 사용자가 분명히 요청할 때만 쓴다.
+
+## 영상 작업
+
+영상 편집·제작을 할 때는 먼저 `docs/video-tools.md`의 "어떤 걸 쓰나" 표에서 맞는 스킬을 고른다.
+
+- 설치된 스킬을 다시 받거나 버전을 올릴 때는 `python3 scripts/install-video-skills.py`를 쓴다. 이 스킬들을 직접 고치지 않는다.
+- `vendor/`의 작업 공간은 그 폴더 안에서 쓴다. 비어 있으면 `git submodule update --init --depth 1`로 받는다.
+
+## 문서, 발표, 대시보드 양식
+
+보고서, 회의록, 기획서, 발표 자료, 대시보드를 만들 때는 먼저 `templates/README.md`의 "상황별로 고르기" 표에서 맞는 양식을 찾아 그 구조와 스타일에서 시작한다.
+
+- 바로 쓰는 양식(`templates/slides`, `templates/documents`, `templates/dashboards`)은 DESIGN.md를 따른다. 파일을 복사해 내용만 바꾼다.
+- `templates/vendor`는 GitHub에서 받은 원본이다. 구성과 항목만 참고하고, 색과 글꼴은 DESIGN.md로 바꿔서 쓴다.
+- 새 양식을 만들면 `templates/index.html`과 `templates/README.md`에 추가한다.
+
 ## 환경
 
 - 클라우드 세션에서는 `.claude/hooks/session-start.sh`가 `agent-browser`를 설치하고, 미리 설치된 Chromium 경로를 `AGENT_BROWSER_EXECUTABLE_PATH`로 잡아 준다.

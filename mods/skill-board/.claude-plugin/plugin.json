@@ -1,0 +1,6 @@
+{
+  "name": "skill-board",
+  "version": "0.1.0",
+  "description": "설치된 스킬, UI 작업 순서 진행 상황, 적용할 체크리스트를 채팅 옆 패널로 보여 준다",
+  "types": "./types/index.d.ts"
+}
