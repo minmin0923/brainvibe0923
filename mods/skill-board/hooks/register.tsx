@@ -27,6 +27,7 @@ const WHEN: Record<string, string> = {
   'design-taste-frontend': '랜딩·포트폴리오·리디자인 → 2단계',
   'agent-browser': '360/768/1280px, 라이트/다크 스크린샷 → 3단계',
   'web-design-guidelines': '바뀐 파일 점검 → 4단계',
+  'openai-image': '이미지·시안·썸네일이 필요할 때 (OpenAI) → generated/images',
 }
 const STEP_OF: Record<string, string> = {
   'image-to-code': 'build',
