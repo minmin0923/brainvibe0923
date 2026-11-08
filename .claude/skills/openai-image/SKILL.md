@@ -1,6 +1,6 @@
 ---
 name: openai-image
-description: OpenAI 이미지 모델(gpt-image)로 이미지를 만들거나 고친다. 이미지, 일러스트, 사진, 썸네일, 배너, 아이콘, 시안, 목업, 배경, 영상용 장면·캐릭터·소품 이미지가 필요할 때, 또는 사용자가 "이미지 만들어", "그려 줘", "ChatGPT로", "GPT 이미지"라고 할 때 쓴다. image-to-code처럼 먼저 디자인 이미지를 만들어야 하는 스킬도 이 스킬로 이미지를 만든다. 결과는 generated/images/ 에 저장된다.
+description: OpenAI 이미지 API(gpt-image)로 이미지를 바로 만들거나 고친다. API 크레딧이 들기 때문에 사용자가 "API로 만들어", "직접 생성해"처럼 분명히 요청할 때만 쓴다. 그 밖의 이미지 요청은 chatgpt-image-prompt 스킬을 쓴다. 결과는 generated/images/ 에 저장된다.
 ---
 
 # OpenAI 이미지
