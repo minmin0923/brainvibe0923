@@ -1,0 +1,11 @@
+{
+  "name": "brainvibe",
+  "owner": { "name": "minmin0923" },
+  "plugins": [
+    {
+      "name": "skill-board",
+      "source": "./mods/skill-board",
+      "description": "설치된 스킬, UI 작업 순서 진행 상황, 적용할 체크리스트를 채팅 옆 패널로 보여 준다"
+    }
+  ]
+}
