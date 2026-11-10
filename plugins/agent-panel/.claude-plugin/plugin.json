@@ -1,0 +1,1 @@
+{ "name": "agent-panel", "version": "0.1.0", "description": "에이전트 모드의 명령함, 일지, 작업 브랜치를 보여 주는 감독 창. /agent-panel 로 열고 닫는다.", "types": "./types/index.d.ts" }

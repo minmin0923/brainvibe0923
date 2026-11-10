@@ -12,13 +12,20 @@
     ]
   },
   "enabledPlugins": {
-    "codex@openai-codex": true
+    "codex@openai-codex": false,
+    "agent-panel@brainvibe": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
       "source": {
         "source": "github",
         "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "brainvibe": {
+      "source": {
+        "source": "directory",
+        "path": "/home/user/brainvibe0923"
       }
     }
   }
