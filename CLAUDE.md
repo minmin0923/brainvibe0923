@@ -29,7 +29,8 @@
 
 - 사용자가 "에이전트에게 시켜: ..."라고 하면 `agent/INBOX.md`의 "할 일"에 `- [ ]` 항목으로 추가하고 커밋한다.
 - "지금 에이전트 실행해"는 예약 작업을 즉시 실행한다. "에이전트 멈춰"는 예약 작업을 끈다.
-- 감독 창은 `/agent-panel`로 열고 닫는다(`plugins/agent-panel`).
+- 사용자가 지시하고 과정을 보는 화면은 관제실(`agent/console.html`, https://claude.ai/artifact/PhVkovV8DEeonV949DC6qF)이다. 고치면 같은 주소로 다시 게시한다.
+- `/agent-panel`(`plugins/agent-panel`)은 창을 띄울 수 있는 화면에서만 보인다. 안 되는 화면에서는 글로 나온다.
 - "에이전트 상태"를 물으면 `agent/LOG.md`, 열린 `[에이전트]` PR, 남은 명령을 요약한다.
 
 ## 문서, 발표, 대시보드 양식
