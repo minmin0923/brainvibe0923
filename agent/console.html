@@ -81,6 +81,21 @@ select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .switch[aria-checked="true"] .track { background: var(--accent); }
 .switch[aria-checked="true"] .knob { transform: translateX(16px); border-color: var(--accent); }
 
+/* 반복 예약 */
+.routines { display: flex; flex-direction: column; gap: 16px; }
+.rt-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+.rt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.rt-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rt-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.rt.off .rt-main { color: var(--text-muted); }
+.mini { height: 36px; padding: 0 12px; font-size: 14px; }
+.switch.mini { padding: 0 12px 0 8px; gap: 8px; }
+.rt-form { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.rt-form label { font-size: 14px; font-weight: 600; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .rt { grid-template-columns: minmax(0, 1fr); } .rt-actions { justify-content: flex-start; } }
+
 /* 사용량 */
 .usage { display: flex; flex-direction: column; gap: 16px; }
 .usage-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
@@ -216,6 +231,25 @@ details summary:hover { color: var(--text); }
     </div>
     <p class="small notice" id="notice" aria-live="polite"></p>
   </form>
+
+  <section class="routines" aria-label="반복 예약">
+    <h2>반복 예약</h2>
+    <p class="small muted" id="rtEmpty">정해 둔 시간마다 에이전트가 알아서 하고 결과를 알림으로 올리는 일입니다. 아직 없습니다.</p>
+    <ul class="rt-list" id="rtList" hidden></ul>
+    <details id="rtNew">
+      <summary>새 반복 예약 만들기</summary>
+      <form class="rt-form" id="rtForm">
+        <div class="field"><label for="rtTitle">이름</label><input type="text" id="rtTitle" name="rtTitle" placeholder="예: 아침 브리핑…" autocomplete="off" maxlength="60" required></div>
+        <div class="field"><label for="rtText">할 일</label><textarea id="rtText" name="rtText" placeholder="예: 병합을 기다리는 PR과 어제 끝난 지시를 세 줄로 정리해 줘…" autocomplete="off" required></textarea></div>
+        <div class="fields">
+          <div class="field"><label for="rtSlot">언제</label><select id="rtSlot" name="rtSlot"><option value="morning">아침 (08:47)</option><option value="afternoon">오후 (14:47)</option><option value="evening">저녁 (20:47)</option><option value="every">하루 세 번 모두</option></select></div>
+          <div class="field"><label for="rtDays">요일</label><select id="rtDays" name="rtDays"><option value="daily">매일</option><option value="weekdays">평일만</option></select></div>
+          <div class="field"><label for="rtNotify">알림</label><select id="rtNotify" name="rtNotify"><option value="always">매번 결과 올리기</option><option value="onChange">바뀐 게 있을 때만</option></select></div>
+        </div>
+        <div class="row"><button class="btn-primary" type="submit" id="rtSave">예약 만들기</button></div>
+      </form>
+    </details>
+  </section>
 
   <section class="summary" aria-label="현황 요약">
     <div><span class="num" id="nQueued">0</span><span class="small muted">대기 중</span></div>
@@ -667,6 +701,52 @@ details summary:hover { color: var(--text); }
   }
   $("usageBtn").addEventListener("click", checkUsage);
 
+  // ---- 반복 예약 ----
+  var SLOT = { morning: "아침 08:47", afternoon: "오후 14:47", evening: "저녁 20:47", every: "하루 세 번" };
+  var confirmDel = {};
+  function renderRoutines(snap) {
+    var ul = $("rtList"); ul.textContent = "";
+    ul.hidden = snap.empty; $("rtEmpty").hidden = !snap.empty;
+    snap.docs.forEach(function (doc) {
+      var d = doc.data() || {}, on = d.enabled !== false;
+      var li = el("li", "rt" + (on ? "" : " off"));
+      var main = el("div", "rt-main");
+      main.appendChild(el("strong", null, String(d.title || "이름 없음")));
+      main.appendChild(el("span", "small", String(d.text || "")));
+      var meta = [(d.days === "weekdays" ? "평일 " : "매일 ") + (SLOT[d.slot] || SLOT.morning), d.notify === "onChange" ? "바뀐 게 있을 때만 알림" : "매번 알림"];
+      meta.push(d.lastRunAt ? "마지막 실행 " + when(d.lastRunAt) : "아직 실행 전");
+      main.appendChild(el("span", "small muted", meta.join(" · ")));
+      if (d.lastSummary) main.appendChild(el("span", "small muted", "지난 결과: " + String(d.lastSummary)));
+      li.appendChild(main);
+      var act = el("div", "rt-actions");
+      var sw = el("button", "switch mini"); sw.type = "button"; sw.setAttribute("role", "switch"); sw.setAttribute("aria-checked", String(on));
+      sw.setAttribute("aria-label", String(d.title || "예약") + " 켜기 또는 끄기");
+      var tr = el("span", "track"); tr.setAttribute("aria-hidden", "true"); tr.appendChild(el("span", "knob")); sw.appendChild(tr); sw.appendChild(el("span", null, on ? "켜짐" : "꺼짐"));
+      sw.addEventListener("click", function () { sw.disabled = true; db.doc("routines/" + doc.id).update({ enabled: !on, updatedAt: nowMs() }).catch(function () { say("바꾸지 못했습니다. 잠시 뒤 다시 눌러 주세요."); sw.disabled = false; }); });
+      var del = el("button", "btn-secondary mini", confirmDel[doc.id] ? "정말 삭제" : "삭제"); del.type = "button";
+      del.addEventListener("click", function () {
+        if (!confirmDel[doc.id]) { confirmDel[doc.id] = true; del.textContent = "정말 삭제"; setTimeout(function () { delete confirmDel[doc.id]; if (del.isConnected) del.textContent = "삭제"; }, 5000); return; }
+        del.disabled = true; delete confirmDel[doc.id];
+        db.doc("routines/" + doc.id).delete().then(function () { say("반복 예약을 삭제했습니다."); }).catch(function () { say("삭제하지 못했습니다. 잠시 뒤 다시 눌러 주세요."); del.disabled = false; });
+      });
+      act.appendChild(sw); act.appendChild(del); li.appendChild(act);
+      ul.appendChild(li);
+    });
+  }
+  $("rtForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var title = $("rtTitle").value.trim(), text = $("rtText").value.trim();
+    if (!title) { $("rtTitle").focus(); return; }
+    if (!text) { $("rtText").focus(); return; }
+    if (!db) { say("지금은 저장소에 연결되지 않아 만들 수 없습니다."); return; }
+    var b = $("rtSave"); b.disabled = true;
+    var t = nowMs();
+    db.collection("routines").add({ title: title, text: text, slot: $("rtSlot").value, days: $("rtDays").value, notify: $("rtNotify").value, enabled: true, createdAt: t, updatedAt: t, lastRunAt: 0, lastSummary: "" })
+      .then(function () { $("rtTitle").value = ""; $("rtText").value = ""; $("rtNew").open = false; say("반복 예약을 만들었습니다. 다음 실행 시간부터 돕니다."); })
+      .catch(function () { say("만들지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
+      .then(function () { b.disabled = false; });
+  });
+
   // ---- 기억 ----
   function renderMemory(snap) {
     var ul = $("memList"); ul.textContent = "";
@@ -714,6 +794,7 @@ details summary:hover { color: var(--text); }
         renderPower(); renderUsage();
       }, function () {});
       db.collection("usage").orderBy("date", "desc").limit(30).onSnapshot(function (snap) { usageDocs = snap.docs; renderUsage(); }, function () {});
+      db.collection("routines").orderBy("createdAt", "asc").limit(50).onSnapshot(renderRoutines, function () {});
       db.collection("memory").orderBy("at", "desc").limit(30).onSnapshot(renderMemory, function () {});
       db.doc("agent/state").onSnapshot(function (snap) { renderAgent(snap.exists ? snap.data() : null); }, function () {});
     }).catch(offline);
