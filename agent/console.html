@@ -69,6 +69,20 @@ select {
 }
 select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* 화면 고르기 */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab { height: 44px; padding: 0 16px; background: transparent; color: var(--text-muted); border: 0; border-bottom: 2px solid transparent; border-radius: 8px 8px 0 0; white-space: nowrap; }
+.tab:hover { color: var(--text); background: var(--surface); }
+.tab[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.tab .num { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+.panel { display: flex; flex-direction: column; gap: 32px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { height: auto; min-height: 36px; padding: 6px 12px; font-size: 14px; font-weight: 400; text-align: left; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+.chip:hover { color: var(--text); background: var(--surface); }
+.detect { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 12px 16px; background: var(--surface); border-radius: 8px; }
+.detect label { font-weight: 400; display: inline-flex; align-items: center; gap: 8px; min-height: 28px; }
+.detect input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+
 /* 켜고 끄기 */
 .power { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .switch {
@@ -214,41 +228,35 @@ details summary:hover { color: var(--text); }
     </div>
   </header>
 
-  <section aria-label="담당">
-    <ul class="roles" id="roleList"></ul>
-  </section>
+  <nav class="tabs" aria-label="화면 고르기">
+    <button type="button" class="tab" data-tab="home" aria-pressed="true">지시</button>
+    <button type="button" class="tab" data-tab="schedule" aria-pressed="false"><span>예약</span> <span class="num" id="tabRt"></span></button>
+    <button type="button" class="tab" data-tab="usage" aria-pressed="false">사용량</button>
+    <button type="button" class="tab" data-tab="memory" aria-pressed="false"><span>기억</span> <span class="num" id="tabMem"></span></button>
+  </nav>
 
+  <div class="panel" id="tab-home">
   <form class="compose" id="composeForm">
-    <label for="cmdText">새 지시</label>
-    <textarea id="cmdText" name="cmdText" placeholder="예: templates/dashboards/kpi-dashboard.html 에 월별 비교 표를 추가해 줘…" autocomplete="off" required></textarea>
+    <label for="cmdText">무엇을 맡길까요?</label>
+    <textarea id="cmdText" name="cmdText" placeholder="예: 매일 아침 병합을 기다리는 PR을 정리해 줘…" autocomplete="off" required></textarea>
+    <div class="detect small" id="detect" hidden>
+      <span class="status working"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg><span id="detectText"></span></span>
+      <label for="onceOnly"><input type="checkbox" id="onceOnly" name="onceOnly"> 예약하지 않고 이번 한 번만</label>
+    </div>
+    <div class="chips" id="chips" aria-label="예시"></div>
     <div class="row">
       <label class="small muted" for="cmdRole">맡길 담당</label>
       <select id="cmdRole" name="cmdRole"></select>
     </div>
     <div class="row">
-      <button class="btn-primary" type="submit" id="sendBtn">지시 보내기</button>
+      <button class="btn-primary" type="submit" id="sendBtn">보내기</button>
       <button class="btn-secondary" type="button" id="wakeBtn">에이전트 지금 깨우기</button>
     </div>
     <p class="small notice" id="notice" aria-live="polite"></p>
   </form>
 
-  <section class="routines" aria-label="반복 예약">
-    <h2>반복 예약</h2>
-    <p class="small muted" id="rtEmpty">정해 둔 시간마다 에이전트가 알아서 하고 결과를 알림으로 올리는 일입니다. 아직 없습니다.</p>
-    <ul class="rt-list" id="rtList" hidden></ul>
-    <details id="rtNew">
-      <summary>새 반복 예약 만들기</summary>
-      <form class="rt-form" id="rtForm">
-        <div class="field"><label for="rtTitle">이름</label><input type="text" id="rtTitle" name="rtTitle" placeholder="예: 아침 브리핑…" autocomplete="off" maxlength="60" required></div>
-        <div class="field"><label for="rtText">할 일</label><textarea id="rtText" name="rtText" placeholder="예: 병합을 기다리는 PR과 어제 끝난 지시를 세 줄로 정리해 줘…" autocomplete="off" required></textarea></div>
-        <div class="fields">
-          <div class="field"><label for="rtSlot">언제</label><select id="rtSlot" name="rtSlot"><option value="morning">아침 (08:47)</option><option value="afternoon">오후 (14:47)</option><option value="evening">저녁 (20:47)</option><option value="every">하루 세 번 모두</option></select></div>
-          <div class="field"><label for="rtDays">요일</label><select id="rtDays" name="rtDays"><option value="daily">매일</option><option value="weekdays">평일만</option></select></div>
-          <div class="field"><label for="rtNotify">알림</label><select id="rtNotify" name="rtNotify"><option value="always">매번 결과 올리기</option><option value="onChange">바뀐 게 있을 때만</option></select></div>
-        </div>
-        <div class="row"><button class="btn-primary" type="submit" id="rtSave">예약 만들기</button></div>
-      </form>
-    </details>
+  <section aria-label="담당">
+    <ul class="roles" id="roleList"></ul>
   </section>
 
   <section class="summary" aria-label="현황 요약">
@@ -258,6 +266,42 @@ details summary:hover { color: var(--text); }
     <div><span class="num" id="nDone">0</span><span class="small muted">완료</span></div>
   </section>
 
+  <section class="list" aria-label="지시와 알림">
+    <div class="list-head">
+      <h2 id="listTitle">지시와 알림</h2>
+      <span class="small muted" id="freshness" aria-live="polite"></span>
+    </div>
+    <div id="cmdList">
+      <div class="empty" id="emptyState">
+        <p><strong>아직 보낸 지시도, 받은 알림도 없습니다.</strong></p>
+        <p class="small muted">위 칸에 할 일을 적고 "지시 보내기"를 누르면 여기에 나타납니다. 에이전트가 일을 시작하면 단계별 과정이, 끝나면 결과와 PR 링크가 붙습니다. 에이전트가 먼저 알릴 일이 생기면 알림도 여기에 옵니다.</p>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <div class="panel" id="tab-schedule" hidden>
+  <section class="routines" aria-label="반복 예약">
+    <h2>반복 예약</h2>
+    <p class="small muted" id="rtEmpty">아직 예약이 없습니다. "지시" 화면에서 "매일 아침 ~해 줘"처럼 적어 보내면 여기에 예약이 생깁니다. 아래에서 직접 만들 수도 있습니다.</p>
+    <ul class="rt-list" id="rtList" hidden></ul>
+    <details id="rtNew">
+      <summary id="rtNewTitle">새 반복 예약 만들기</summary>
+      <form class="rt-form" id="rtForm">
+        <div class="field"><label for="rtTitle">이름</label><input type="text" id="rtTitle" name="rtTitle" placeholder="예: 아침 브리핑…" autocomplete="off" maxlength="60" required></div>
+        <div class="field"><label for="rtText">할 일</label><textarea id="rtText" name="rtText" placeholder="예: 병합을 기다리는 PR과 어제 끝난 지시를 세 줄로 정리해 줘…" autocomplete="off" required></textarea></div>
+        <div class="fields">
+          <div class="field"><label for="rtSlot">언제</label><select id="rtSlot" name="rtSlot"><option value="morning">아침 (08:47)</option><option value="afternoon">오후 (14:47)</option><option value="evening">저녁 (20:47)</option><option value="every">하루 세 번 모두</option></select></div>
+          <div class="field"><label for="rtDays">요일</label><select id="rtDays" name="rtDays"><option value="daily">매일</option><option value="weekdays">평일만</option></select></div>
+          <div class="field"><label for="rtNotify">알림</label><select id="rtNotify" name="rtNotify"><option value="always">매번 결과 올리기</option><option value="onChange">바뀐 게 있을 때만</option></select></div>
+        </div>
+        <div class="row"><button class="btn-primary" type="submit" id="rtSave">예약 만들기</button><button class="btn-secondary" type="button" id="rtCancel" hidden>수정 그만두기</button></div>
+      </form>
+    </details>
+  </section>
+  </div>
+
+  <div class="panel" id="tab-usage" hidden>
   <section class="usage" aria-label="사용량">
     <div class="usage-head">
       <h2>사용량</h2>
@@ -286,20 +330,9 @@ details summary:hover { color: var(--text); }
     </form>
     <p class="small muted">금액은 API 요금 기준으로 환산한 값이며, 에이전트 본부 세션이 쓴 양만 셉니다. 구독 요금제의 남은 한도(%)는 이 화면에서 읽을 수 없어 한도 상태(여유, 주의, 도달)로만 보여 줍니다. 하루 예산을 넘으면 에이전트는 새 지시를 시작하지 않습니다.</p>
   </section>
+  </div>
 
-  <section class="list" aria-label="지시와 알림">
-    <div class="list-head">
-      <h2 id="listTitle">지시와 알림</h2>
-      <span class="small muted" id="freshness" aria-live="polite"></span>
-    </div>
-    <div id="cmdList">
-      <div class="empty" id="emptyState">
-        <p><strong>아직 보낸 지시도, 받은 알림도 없습니다.</strong></p>
-        <p class="small muted">위 칸에 할 일을 적고 "지시 보내기"를 누르면 여기에 나타납니다. 에이전트가 일을 시작하면 단계별 과정이, 끝나면 결과와 PR 링크가 붙습니다. 에이전트가 먼저 알릴 일이 생기면 알림도 여기에 옵니다.</p>
-      </div>
-    </div>
-  </section>
-
+  <div class="panel" id="tab-memory" hidden>
   <section aria-label="기억">
     <details id="memBox">
       <summary id="memTitle">쌓인 기억 0건</summary>
@@ -307,6 +340,7 @@ details summary:hover { color: var(--text); }
     </details>
     <p class="small muted" id="memEmpty">에이전트가 일을 끝낼 때마다 결론과 배운 점을 여기에 쌓고, 다음 일을 시작할 때 먼저 읽습니다.</p>
   </section>
+  </div>
 
   <p class="small muted">에이전트는 매일 08:47, 14:47, 20:47(한국 시간)에 스스로 깨어납니다. 결과는 GitHub PR로 올라오며, 병합은 직접 하셔야 반영됩니다.</p>
 </main>
@@ -340,9 +374,22 @@ details summary:hover { color: var(--text); }
   ];
   var roleName = {}; ROLES.forEach(function (r) { roleName[r.id] = r.name; });
   var filter = "all";
-  function readHash() { var h = (location.hash || "").replace(/^#role-/, ""); filter = roleName[h] ? h : "all"; }
+  var TABS = ["home", "schedule", "usage", "memory"], tab = "home";
+  function readHash() {
+    var h = location.hash || "";
+    var r = h.replace(/^#role-/, ""), t = h.replace(/^#tab-/, "");
+    filter = /^#role-/.test(h) && roleName[r] ? r : "all";
+    tab = /^#tab-/.test(h) && TABS.indexOf(t) >= 0 ? t : "home";
+  }
+  function showTab() {
+    TABS.forEach(function (t) { document.getElementById("tab-" + t).hidden = t !== tab; });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-tab") === tab)); });
+  }
   readHash();
-  window.addEventListener("hashchange", function () { readHash(); render(); });
+  window.addEventListener("hashchange", function () { readHash(); showTab(); render(); });
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (b) {
+    b.addEventListener("click", function () { tab = b.getAttribute("data-tab"); filter = "all"; try { location.hash = tab === "home" ? "" : "tab-" + tab; } catch (e) {} showTab(); render(); if (tab === "usage") renderUsage(); });
+  });
   var $ = function (id) { return document.getElementById(id); };
   var db = null, mcp = null;
   var docs = [];            // 최신 스냅샷
@@ -546,17 +593,49 @@ details summary:hover { color: var(--text); }
       });
   }
 
+  // 글에서 "매일 아침" 같은 말을 찾아 반복 예약으로 바꾼다.
+  function detect(text) {
+    var days = /평일|주중/.test(text) ? "weekdays" : /매일|날마다|매 ?(아침|오전|오후|저녁|밤)|하루 ?(세|3) ?번|아침마다|저녁마다|오후마다/.test(text) ? "daily" : null;
+    if (!days) return null;
+    var slot = /하루 ?(세|3) ?번|수시로/.test(text) ? "every" : /저녁|밤|퇴근/.test(text) ? "evening" : /오후|점심|낮/.test(text) ? "afternoon" : "morning";
+    var notify = /바뀌|변경|변화|달라지|올라오면|생기면|있으면|있을 때만/.test(text) ? "onChange" : "always";
+    return { days: days, slot: slot, notify: notify };
+  }
+  function describe(r) { return (r.days === "weekdays" ? "평일 " : "매일 ") + SLOT[r.slot] + " · " + (r.notify === "onChange" ? "바뀐 게 있을 때만 알림" : "매번 알림"); }
+  function renderDetect() {
+    var r = detect($("cmdText").value);
+    $("detect").hidden = !r;
+    if (r) $("detectText").textContent = "반복 예약으로 만듭니다: " + describe(r);
+    $("sendBtn").textContent = r && !$("onceOnly").checked ? "예약 만들기" : "보내기";
+  }
+  $("onceOnly").addEventListener("change", renderDetect);
+  ["매일 아침 병합을 기다리는 PR과 어제 끝난 일을 세 줄로 정리해 줘", "평일 저녁 오늘 한 일을 주간 보고 양식에 이어서 적어 줘", "README를 지금 저장소 상태에 맞게 고쳐 줘", "templates 폴더 양식 중 고칠 곳이 있는지 살펴봐 줘"].forEach(function (t) {
+    var c = el("button", "chip", t); c.type = "button";
+    c.addEventListener("click", function () { $("cmdText").value = t; renderDetect(); $("cmdText").focus(); });
+    $("chips").appendChild(c);
+  });
+
   $("composeForm").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var ta = $("cmdText"), text = ta.value.trim();
     if (!text) { ta.focus(); return; }
+    var rec = detect(text);
+    if (rec && !$("onceOnly").checked && db && !busy) {
+      busy = true; $("sendBtn").disabled = true; say("예약을 만드는 중…");
+      var t0 = nowMs();
+      db.collection("routines").add({ title: text.length > 28 ? text.slice(0, 28) + "…" : text, text: text, slot: rec.slot, days: rec.days, notify: rec.notify, enabled: true, createdAt: t0, updatedAt: t0, lastRunAt: 0, lastSummary: "" })
+        .then(function () { ta.value = ""; try { localStorage.removeItem("agent-console-draft"); } catch (e) {} renderDetect(); say("반복 예약을 만들었습니다 (" + describe(rec) + "). \"예약\" 화면에서 고치거나 끌 수 있습니다."); })
+        .catch(function () { say("예약을 만들지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
+        .then(function () { busy = false; $("sendBtn").disabled = false; });
+      return;
+    }
     if (!db) { say("지금은 저장소에 연결되지 않아 보낼 수 없습니다. claude.ai에 로그인한 상태로 이 페이지를 다시 열어 주세요."); return; }
     if (busy) return;
     busy = true; $("sendBtn").disabled = true; say("보내는 중…");
     var t = nowMs();
     db.collection("commands").add({ text: text, kind: "command", role: $("cmdRole").value || "auto", status: "queued", createdAt: t, updatedAt: t, steps: [], result: "", links: [] })
       .then(function () {
-        ta.value = ""; try { localStorage.removeItem("agent-console-draft"); } catch (e) {}
+        ta.value = ""; $("onceOnly").checked = false; renderDetect(); try { localStorage.removeItem("agent-console-draft"); } catch (e) {}
         return wake("관제실에 새 지시가 도착했습니다. agent/RUNBOOK.md를 따라 대기 중인 지시를 지금 처리하세요.");
       })
       .catch(function (e) {
@@ -703,10 +782,21 @@ details summary:hover { color: var(--text); }
 
   // ---- 반복 예약 ----
   var SLOT = { morning: "아침 08:47", afternoon: "오후 14:47", evening: "저녁 20:47", every: "하루 세 번" };
-  var confirmDel = {};
+  var confirmDel = {}, editing = null;
+  // 다음 실행 시각 (한국 시간 고정, +9시간)
+  function nextRun(d) {
+    var hours = d.slot === "every" ? [8, 14, 20] : [d.slot === "afternoon" ? 14 : d.slot === "evening" ? 20 : 8];
+    var kst = nowMs() + 9 * 3600000, base = Math.floor(kst / 86400000) * 86400000;
+    for (var i = 0; i < 8; i++) {
+      var dow = new Date(base + i * 86400000).getUTCDay();
+      if (d.days === "weekdays" && (dow === 0 || dow === 6)) continue;
+      for (var j = 0; j < hours.length; j++) { var t = base + i * 86400000 + hours[j] * 3600000 + 47 * 60000; if (t > kst) return t - 9 * 3600000; }
+    }
+    return 0;
+  }
   function renderRoutines(snap) {
     var ul = $("rtList"); ul.textContent = "";
-    ul.hidden = snap.empty; $("rtEmpty").hidden = !snap.empty;
+    ul.hidden = snap.empty; $("rtEmpty").hidden = !snap.empty; $("tabRt").textContent = snap.size ? String(snap.size) : "";
     snap.docs.forEach(function (doc) {
       var d = doc.data() || {}, on = d.enabled !== false;
       var li = el("li", "rt" + (on ? "" : " off"));
@@ -714,6 +804,7 @@ details summary:hover { color: var(--text); }
       main.appendChild(el("strong", null, String(d.title || "이름 없음")));
       main.appendChild(el("span", "small", String(d.text || "")));
       var meta = [(d.days === "weekdays" ? "평일 " : "매일 ") + (SLOT[d.slot] || SLOT.morning), d.notify === "onChange" ? "바뀐 게 있을 때만 알림" : "매번 알림"];
+      if (on && settings.enabled !== false) meta.push("다음 실행 " + when(nextRun(d)));
       meta.push(d.lastRunAt ? "마지막 실행 " + when(d.lastRunAt) : "아직 실행 전");
       main.appendChild(el("span", "small muted", meta.join(" · ")));
       if (d.lastSummary) main.appendChild(el("span", "small muted", "지난 결과: " + String(d.lastSummary)));
@@ -729,7 +820,21 @@ details summary:hover { color: var(--text); }
         del.disabled = true; delete confirmDel[doc.id];
         db.doc("routines/" + doc.id).delete().then(function () { say("반복 예약을 삭제했습니다."); }).catch(function () { say("삭제하지 못했습니다. 잠시 뒤 다시 눌러 주세요."); del.disabled = false; });
       });
-      act.appendChild(sw); act.appendChild(del); li.appendChild(act);
+      var run = el("button", "btn-secondary mini", "지금 실행"); run.type = "button";
+      run.addEventListener("click", function () {
+        run.disabled = true; var t = nowMs();
+        db.collection("commands").add({ text: "[예약: " + String(d.title || "") + "] " + String(d.text || ""), kind: "command", role: "auto", status: "queued", createdAt: t, updatedAt: t, steps: [], result: "", links: [] })
+          .then(function () { return wake("관제실에 새 지시가 도착했습니다. agent/RUNBOOK.md를 따라 대기 중인 지시를 지금 처리하세요."); })
+          .catch(function () { say("실행을 요청하지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
+          .then(function () { run.disabled = false; });
+      });
+      var ed = el("button", "btn-secondary mini", "수정"); ed.type = "button";
+      ed.addEventListener("click", function () {
+        editing = doc.id; $("rtTitle").value = String(d.title || ""); $("rtText").value = String(d.text || "");
+        $("rtSlot").value = SLOT[d.slot] ? d.slot : "morning"; $("rtDays").value = d.days === "weekdays" ? "weekdays" : "daily"; $("rtNotify").value = d.notify === "onChange" ? "onChange" : "always";
+        $("rtNewTitle").textContent = "예약 수정"; $("rtSave").textContent = "수정 저장"; $("rtCancel").hidden = false; $("rtNew").open = true; $("rtTitle").focus();
+      });
+      act.appendChild(sw); act.appendChild(run); act.appendChild(ed); act.appendChild(del); li.appendChild(act);
       ul.appendChild(li);
     });
   }
@@ -740,18 +845,26 @@ details summary:hover { color: var(--text); }
     if (!text) { $("rtText").focus(); return; }
     if (!db) { say("지금은 저장소에 연결되지 않아 만들 수 없습니다."); return; }
     var b = $("rtSave"); b.disabled = true;
-    var t = nowMs();
-    db.collection("routines").add({ title: title, text: text, slot: $("rtSlot").value, days: $("rtDays").value, notify: $("rtNotify").value, enabled: true, createdAt: t, updatedAt: t, lastRunAt: 0, lastSummary: "" })
-      .then(function () { $("rtTitle").value = ""; $("rtText").value = ""; $("rtNew").open = false; say("반복 예약을 만들었습니다. 다음 실행 시간부터 돕니다."); })
+    var t = nowMs(), wasEdit = editing;
+    var body = { title: title, text: text, slot: $("rtSlot").value, days: $("rtDays").value, notify: $("rtNotify").value, updatedAt: t };
+    var job = wasEdit ? db.doc("routines/" + wasEdit).update(body)
+      : db.collection("routines").add({ title: title, text: text, slot: body.slot, days: body.days, notify: body.notify, enabled: true, createdAt: t, updatedAt: t, lastRunAt: 0, lastSummary: "" });
+    job.then(function () { resetRtForm(); say(wasEdit ? "예약을 고쳤습니다." : "반복 예약을 만들었습니다. 다음 실행 시간부터 돕니다."); })
       .catch(function () { say("만들지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
       .then(function () { b.disabled = false; });
   });
+
+  function resetRtForm() {
+    editing = null; $("rtTitle").value = ""; $("rtText").value = ""; $("rtNew").open = false;
+    $("rtNewTitle").textContent = "새 반복 예약 만들기"; $("rtSave").textContent = "예약 만들기"; $("rtCancel").hidden = true;
+  }
+  $("rtCancel").addEventListener("click", resetRtForm);
 
   // ---- 기억 ----
   function renderMemory(snap) {
     var ul = $("memList"); ul.textContent = "";
     $("memTitle").textContent = "쌓인 기억 " + snap.size + (snap.size >= 30 ? "건 이상 (최근 30건 표시)" : "건");
-    $("memBox").hidden = snap.empty;
+    $("memBox").hidden = snap.empty; $("memBox").open = true; $("tabMem").textContent = snap.size ? String(snap.size) : "";
     snap.docs.forEach(function (doc) {
       var d = doc.data() || {}, li = el("li");
       var head = el("span", "small muted"); head.appendChild(el("span", "num", when(d.at))); head.appendChild(el("span", null, " · " + (roleName[d.role] || "총괄")));
@@ -765,7 +878,7 @@ details summary:hover { color: var(--text); }
 
   // 쓰던 글은 이 브라우저에만 잠깐 보관한다.
   try { var saved = localStorage.getItem("agent-console-draft"); if (saved) $("cmdText").value = saved; } catch (e) {}
-  $("cmdText").addEventListener("input", function () { try { localStorage.setItem("agent-console-draft", $("cmdText").value); } catch (e) {} });
+  $("cmdText").addEventListener("input", function () { renderDetect(); try { localStorage.setItem("agent-console-draft", $("cmdText").value); } catch (e) {} });
 
   (function () {
     var sel = $("cmdRole");
@@ -804,7 +917,7 @@ details summary:hover { color: var(--text); }
     $("agentState").textContent = "claude.ai에 로그인한 상태로 열어야 지시를 보내고 과정을 볼 수 있습니다.";
     $("wakeBtn").hidden = true; $("powerBtn").disabled = true; $("usageBtn").hidden = true;
   }
-  $("memBox").hidden = true; renderUsage();
+  $("memBox").hidden = true; showTab(); renderDetect(); renderUsage();
   start();
 })();
 </script>
