@@ -94,10 +94,26 @@ export const register: Register = on => {
 
       return { text: '에이전트 감독 창을 닫았습니다. /agent-panel 로 다시 엽니다.' }
     }
-    await $.ui.open({ id: PANE, title: TITLE })
+    const opened = await $.ui.open({ id: PANE, title: TITLE })
     await refresh($)
+    if (opened.isPlaced) return { text: '에이전트 감독 창을 열었습니다.' }
+    // 이 화면이 창을 그리지 못하면 같은 내용을 글로 보여 준다.
+    const now = await read($, status)
 
-    return { text: '에이전트 감독 창을 열었습니다.' }
+    return {
+      text: [
+        `이 화면에서는 창을 띄울 수 없어 글로 보여 드립니다. (이유: ${opened.reason})`,
+        now.error,
+        `기다리는 명령 ${now.pending.length}건`,
+        ...now.pending.slice(0, 10).map(item => `· ${item}`),
+        `작업 중인 브랜치 ${now.branches.length}개`,
+        ...now.branches.slice(0, 8).map(name => `· ${name}`),
+        '최근 일지',
+        ...(now.log.length ? now.log.slice(0, 15) : ['아직 실행 기록이 없습니다.']),
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    }
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
