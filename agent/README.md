@@ -24,6 +24,15 @@
 - **기억:** `agent/MEMORY.md`에 배운 것이 쌓인다. 틀린 내용은 직접 고치면 된다.
 - **멈추기:** Claude 세션에서 "에이전트 멈춰"라고 하면 예약을 끈다.
 
+## 텔레그램으로 결과 받기
+
+1. 텔레그램에서 `@BotFather`에게 `/newbot`을 보내 봇을 만들고 토큰을 받는다.
+2. 만든 봇과의 대화방에서 아무 말이나 한 번 보낸다. 그다음 `@userinfobot`에게 말을 걸어 내 번호(Id)를 확인한다. 단체방으로 받으려면 봇을 단체방에 넣고 그 방의 번호를 쓴다.
+3. GitHub 저장소 Settings > Secrets and variables > Actions 에서 비밀값 두 개를 만든다: `TELEGRAM_BOT_TOKEN`(토큰), `TELEGRAM_CHAT_ID`(번호).
+4. 관제실 위쪽의 "텔레그램 전송" 스위치를 켠다.
+
+토큰은 GitHub 비밀값에만 넣는다. 채팅이나 파일에 적지 않는다. 전송은 `.github/workflows/telegram-send.yml`이 맡는다.
+
 ## 배우고 업그레이드하는 방식
 
 - 실행이 끝날 때 사용자의 수정 요청, 거절된 PR, 반복된 실수에서 교훈을 뽑아 `MEMORY.md`에 적고, 다음 실행은 그것부터 읽는다.
