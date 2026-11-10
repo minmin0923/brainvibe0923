@@ -6,12 +6,11 @@
 
 - 한국어로 보고한다. 쉬운 말로, 결론부터.
 - 화면 작업은 `DESIGN.md`가 기준이다.
-- 결과물은 Claude 초안 → Codex 검토 → Claude 완성 순서로 만든다.
+- Codex 검토는 하지 않는다(2026-11-10 지시, OpenAI 크레딧 없음). 사용자가 다시 켜라고 할 때까지 Claude가 스스로 검토한다.
 
 ## 이 저장소에서 통하는 방법
 
 - 문서, 발표, 대시보드는 `templates/`의 양식에서 시작한다.
-- Codex 검토는 `scripts/codex-review.sh`. OpenAI 크레딧이 없으면 `CODEX_FAILED`로 끝나며, 그때는 자체 검토하고 실패 사실을 보고한다.
 
 ## 실수와 교훈
 

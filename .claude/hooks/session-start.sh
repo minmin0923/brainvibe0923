@@ -22,13 +22,3 @@ else
 fi
 
 agent-browser --version
-
-# 3) Codex CLI 준비 (Claude→Codex 교차 검토용, codex-loop 스킬 참고)
-#    API 키는 클라우드 프록시가 api.openai.com 요청에 넣어 주므로 자리표시 값으로 로그인한다.
-if ! command -v codex >/dev/null 2>&1; then
-  npm install -g @openai/codex >/dev/null 2>&1 || echo "codex: 설치 실패" >&2
-fi
-if command -v codex >/dev/null 2>&1 && ! codex login status >/dev/null 2>&1; then
-  echo "sk-proxy-injected-placeholder" | codex login --with-api-key >/dev/null 2>&1 || true
-fi
-command -v codex >/dev/null 2>&1 && codex --version || true

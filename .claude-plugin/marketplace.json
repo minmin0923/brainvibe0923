@@ -1,0 +1,13 @@
+{
+  "name": "brainvibe",
+  "owner": { "name": "brainvibe0923" },
+  "metadata": { "description": "이 저장소 전용 플러그인", "version": "0.1.0" },
+  "plugins": [
+    {
+      "name": "agent-panel",
+      "description": "에이전트 모드의 명령함, 일지, 작업 브랜치를 보여 주는 감독 창",
+      "version": "0.1.0",
+      "source": "./plugins/agent-panel"
+    }
+  ]
+}
