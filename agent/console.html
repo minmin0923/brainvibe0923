@@ -69,6 +69,46 @@ select {
 }
 select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* 켜고 끄기 */
+.power { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.switch {
+  height: 44px; padding: 0 16px 0 12px; display: inline-flex; align-items: center; gap: 12px;
+  background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 999px; font-weight: 600;
+}
+.switch:hover { background: var(--surface); }
+.switch .track { width: 36px; height: 20px; border-radius: 999px; background: var(--border); position: relative; flex: none; transition: background-color 200ms var(--ease); }
+.switch .knob { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 999px; background: var(--bg); border: 1px solid var(--text-muted); transition: transform 200ms var(--ease); }
+.switch[aria-checked="true"] .track { background: var(--accent); }
+.switch[aria-checked="true"] .knob { transform: translateX(16px); border-color: var(--accent); }
+
+/* 사용량 */
+.usage { display: flex; flex-direction: column; gap: 16px; }
+.usage-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.meter { height: 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+.meter-fill { height: 100%; width: 0; background: var(--accent); border-radius: 999px 4px 4px 999px; transition: width 250ms var(--ease); }
+.meter-fill.over { background: var(--negative); }
+.meter-nums { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.big { font-family: var(--mono); font-size: 24px; line-height: 1.3; font-weight: 500; font-variant-numeric: tabular-nums; }
+.chart { position: relative; padding-left: 48px; }
+.plot { position: relative; height: 160px; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid var(--border); }
+.grid { position: absolute; left: 0; right: 0; border-top: 1px solid var(--border); opacity: 0.6; pointer-events: none; }
+.ylab { position: absolute; left: -48px; width: 40px; text-align: right; font-family: var(--mono); font-size: 12px; line-height: 1; color: var(--text-muted); transform: translateY(-50%); }
+.col { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; padding: 0; border: 0; background: transparent; border-radius: 4px; cursor: default; }
+.col:hover, .col:focus-visible { background: var(--surface); }
+.bar { width: 60%; max-width: 24px; min-height: 0; background: var(--accent); border-radius: 4px 4px 0 0; }
+.col.today .bar { outline: 2px solid var(--bg); }
+.xlabs { display: flex; gap: 2px; padding-top: 8px; }
+.xlabs span { flex: 1 1 0; min-width: 0; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; }
+.tip { position: absolute; z-index: 2; pointer-events: none; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; line-height: 1.6; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06); white-space: nowrap; transform: translate(-50%, -100%); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--border); }
+td.n, th.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; padding-right: 0; }
+.scroll { overflow-x: auto; margin-top: 12px; }
+input[type="number"] { width: 112px; height: 44px; font: inherit; font-family: var(--mono); color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0 12px; }
+.mem { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.mem li { display: flex; flex-direction: column; gap: 4px; padding-bottom: 16px; border-bottom: 1px solid var(--border); max-width: 65ch; }
+@media (prefers-reduced-motion: reduce) { .switch .track, .switch .knob, .meter-fill { transition: none; } }
+
 /* 지시 입력 */
 .compose { display: flex; flex-direction: column; gap: 12px; }
 .compose label { font-weight: 600; }
@@ -153,6 +193,10 @@ details summary:hover { color: var(--text); }
     <h1>에이전트 관제실</h1>
     <p class="muted">할 일을 적어 보내면 에이전트가 처리하고, 과정과 결과를 이 화면에 적습니다.</p>
     <p class="agent-state small" id="agentState" aria-live="polite"><span class="muted">에이전트 상태를 불러오는 중입니다.</span></p>
+    <div class="power">
+      <button class="switch" type="button" role="switch" aria-checked="true" id="powerBtn"><span class="track" aria-hidden="true"><span class="knob"></span></span><span id="powerLabel">에이전트 켜짐</span></button>
+      <span class="small muted" id="powerHint">끄면 예약 실행을 멈추고, 지시를 보내도 시작하지 않습니다.</span>
+    </div>
   </header>
 
   <section aria-label="담당">
@@ -180,6 +224,35 @@ details summary:hover { color: var(--text); }
     <div><span class="num" id="nDone">0</span><span class="small muted">완료</span></div>
   </section>
 
+  <section class="usage" aria-label="사용량">
+    <div class="usage-head">
+      <h2>사용량</h2>
+      <button class="btn-secondary" type="button" id="usageBtn">사용량 새로 확인</button>
+    </div>
+    <p class="state-line status queued small" id="limitLine" aria-live="polite"><span class="muted">한도 상태는 "사용량 새로 확인"을 누르면 불러옵니다.</span></p>
+    <div>
+      <div class="meter-nums">
+        <span><span class="big" id="todayCost">$0.00</span> <span class="small muted">오늘 쓴 양</span></span>
+        <span class="small muted" id="leftText"></span>
+      </div>
+      <div class="meter" role="img" id="meter" aria-label="오늘 예산 사용률"><div class="meter-fill" id="meterFill"></div></div>
+    </div>
+    <div>
+      <p class="small muted" id="chartTitle">최근 14일, 하루 사용량 (달러 환산)</p>
+      <div class="chart" id="chart"><div class="plot" id="plot"></div><div class="xlabs" id="xlabs"></div></div>
+      <details>
+        <summary>표로 보기</summary>
+        <div class="scroll"><table><thead><tr><th>날짜</th><th class="n">하루 사용량</th><th class="n">누적</th></tr></thead><tbody id="usageRows"></tbody></table></div>
+      </details>
+    </div>
+    <form class="row" id="budgetForm">
+      <label class="small muted" for="budgetInput">하루 예산 (달러)</label>
+      <input type="number" id="budgetInput" name="budget" min="0.5" max="500" step="0.5" inputmode="decimal" autocomplete="off" value="5">
+      <button class="btn-secondary" type="submit">예산 저장</button>
+    </form>
+    <p class="small muted">금액은 API 요금 기준으로 환산한 값이며, 에이전트 본부 세션이 쓴 양만 셉니다. 구독 요금제의 남은 한도(%)는 이 화면에서 읽을 수 없어 한도 상태(여유, 주의, 도달)로만 보여 줍니다. 하루 예산을 넘으면 에이전트는 새 지시를 시작하지 않습니다.</p>
+  </section>
+
   <section class="list" aria-label="지시와 알림">
     <div class="list-head">
       <h2 id="listTitle">지시와 알림</h2>
@@ -193,6 +266,14 @@ details summary:hover { color: var(--text); }
     </div>
   </section>
 
+  <section aria-label="기억">
+    <details id="memBox">
+      <summary id="memTitle">쌓인 기억 0건</summary>
+      <ul class="mem" id="memList"></ul>
+    </details>
+    <p class="small muted" id="memEmpty">에이전트가 일을 끝낼 때마다 결론과 배운 점을 여기에 쌓고, 다음 일을 시작할 때 먼저 읽습니다.</p>
+  </section>
+
   <p class="small muted">에이전트는 매일 08:47, 14:47, 20:47(한국 시간)에 스스로 깨어납니다. 결과는 GitHub PR로 올라오며, 병합은 직접 하셔야 반영됩니다.</p>
 </main>
 
@@ -200,6 +281,12 @@ details summary:hover { color: var(--text); }
 (function () {
   var AGENT_SESSION = "session_016Lmrda16KxAjjNTmkFheZ2";
   var SERVER = "Claude Code Remote";
+  var TRIGGER = "trig_01LUhpKrfSQDYUhH3LQAxrUZ";
+  var settings = { enabled: true, dailyBudgetUsd: 5 };
+  var usageDocs = [];       // usage/<YYYY-MM-DD>, 최신순
+  var usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  var dayKeyFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" });
+  function dayKey(ms) { return dayKeyFmt.format(new Date(ms)); }
   var STATUS = {
     queued: { label: "대기 중", icon: "i-clock" },
     working: { label: "진행 중", icon: "i-work" },
@@ -410,6 +497,7 @@ details summary:hover { color: var(--text); }
 
   // 에이전트 본부 세션을 바로 깨운다. 안 되면 다음 예약 실행 때 처리된다.
   function wake(message) {
+    if (!settings.enabled) { say("저장했습니다. 에이전트가 꺼져 있어 시작하지 않습니다. 켜면 처리합니다."); return Promise.resolve(false); }
     if (!mcp) { say("저장했습니다. 이 화면에서는 에이전트를 바로 깨울 수 없어, 다음 예약 실행 때 시작합니다."); return Promise.resolve(false); }
     return mcp.callTool(SERVER, "send_message", { session_id: AGENT_SESSION, message: message }, { cache: false })
       .then(function () { say("에이전트를 깨웠습니다. 곧 과정이 아래에 나타납니다."); return true; })
@@ -448,6 +536,153 @@ details summary:hover { color: var(--text); }
       .then(function () { b.disabled = false; });
   });
 
+  // ---- 켜고 끄기 ----
+  function renderPower() {
+    var on = settings.enabled !== false;
+    $("powerBtn").setAttribute("aria-checked", String(on));
+    $("powerLabel").textContent = on ? "에이전트 켜짐" : "에이전트 꺼짐";
+    $("powerHint").textContent = on ? "끄면 예약 실행을 멈추고, 지시를 보내도 시작하지 않습니다." : "꺼져 있습니다. 켜면 예약 실행이 다시 돌고 대기 중인 지시를 처리합니다.";
+    $("wakeBtn").disabled = !on;
+    if (document.activeElement !== $("budgetInput")) $("budgetInput").value = String(settings.dailyBudgetUsd || 5);
+  }
+  $("powerBtn").addEventListener("click", function () {
+    if (!db) { say("지금은 저장소에 연결되지 않아 바꿀 수 없습니다."); return; }
+    var b = $("powerBtn"), next = settings.enabled === false;
+    b.disabled = true;
+    db.doc("agent/settings").set({ enabled: next, dailyBudgetUsd: settings.dailyBudgetUsd || 5, updatedAt: nowMs() })
+      .then(function () {
+        if (!mcp) { say(next ? "켜짐으로 바꿨습니다." : "꺼짐으로 바꿨습니다. 예약 실행은 그대로지만, 에이전트가 깨어나도 꺼짐을 보고 바로 멈춥니다."); return; }
+        return mcp.callTool(SERVER, "update_trigger", { trigger_id: TRIGGER, enabled: next }, { cache: false })
+          .then(function () { say(next ? "에이전트를 켰습니다. 예약 실행이 다시 돕니다." : "에이전트를 껐습니다. 예약 실행을 멈췄습니다."); })
+          .catch(function () { say(next ? "켜짐으로 바꿨지만 예약 실행을 다시 켜지 못했습니다. Claude 세션에서 \"에이전트 켜 줘\"라고 말해 주세요." : "꺼짐으로 바꿨습니다. 예약 실행 자체는 멈추지 못했지만, 에이전트가 깨어나도 꺼짐을 보고 바로 멈춥니다."); });
+      })
+      .catch(function () { say("바꾸지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
+      .then(function () { b.disabled = false; });
+  });
+  $("budgetForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var v = Number($("budgetInput").value);
+    if (!db || !(v >= 0.5 && v <= 500)) { say("예산은 0.5에서 500 사이 숫자로 적어 주세요."); $("budgetInput").focus(); return; }
+    db.doc("agent/settings").set({ enabled: settings.enabled !== false, dailyBudgetUsd: v, updatedAt: nowMs() })
+      .then(function () { say("하루 예산을 " + usd.format(v) + "로 저장했습니다."); })
+      .catch(function () { say("예산을 저장하지 못했습니다. 잠시 뒤 다시 눌러 주세요."); });
+  });
+
+  // ---- 사용량 ----
+  function renderUsage() {
+    var today = dayKey(nowMs());
+    var byDay = {}; usageDocs.forEach(function (doc) { var d = doc.data() || {}; if (d.date) byDay[d.date] = d; });
+    var todayCost = byDay[today] ? Number(byDay[today].dayCostUsd) || 0 : 0;
+    var budget = Number(settings.dailyBudgetUsd) || 5;
+    $("todayCost").textContent = usd.format(todayCost);
+    var pct = Math.min(100, Math.round(todayCost / budget * 100));
+    var fill = $("meterFill"); fill.style.width = pct + "%"; fill.className = "meter-fill" + (todayCost >= budget ? " over" : "");
+    $("meter").setAttribute("aria-label", "오늘 예산의 " + pct + "% 사용");
+    var doneCount = docs.filter(function (doc) { var d = doc.data() || {}; return d.kind !== "notice" && d.status === "done"; }).length;
+    var total = usageDocs.length ? Number((usageDocs[0].data() || {}).totalCostUsd) || 0 : 0;
+    var left = Math.max(0, budget - todayCost);
+    var est = doneCount >= 3 && total > 0 ? Math.floor(left / (total / doneCount)) : null;
+    $("leftText").textContent = todayCost >= budget
+      ? "오늘 예산 " + usd.format(budget) + "를 다 썼습니다"
+      : "예산 " + usd.format(budget) + " 중 " + usd.format(left) + " 남음" + (est != null && est >= 1 ? " · 지금까지 평균으로 지시 약 " + est + "건 분량" : "");
+
+    // 최근 14일 막대
+    var days = [];
+    for (var i = 13; i >= 0; i--) { var k = dayKey(nowMs() - i * 86400000); days.push({ key: k, v: byDay[k] ? Number(byDay[k].dayCostUsd) || 0 : 0, total: byDay[k] ? Number(byDay[k].totalCostUsd) || 0 : null }); }
+    var max = Math.max.apply(null, days.map(function (d) { return d.v; }).concat([budget]));
+    var top = max <= 1 ? 1 : max <= 2 ? 2 : max <= 5 ? 5 : max <= 10 ? 10 : Math.ceil(max / 10) * 10;
+    var plot = $("plot"), xl = $("xlabs"); plot.textContent = ""; xl.textContent = "";
+    [1, 0.5].forEach(function (f) {
+      var g = el("div", "grid"); g.style.bottom = (f * 100) + "%";
+      var y = el("span", "ylab", "$" + (top * f)); g.appendChild(y); plot.appendChild(g);
+    });
+    days.forEach(function (d, idx) {
+      var md = d.key.slice(5).replace("-", "/").replace(/^0/, "");
+      var c = el("button", "col" + (d.key === today ? " today" : "")); c.type = "button";
+      c.setAttribute("aria-label", md + " 사용량 " + usd.format(d.v));
+      var bar = el("div", "bar"); bar.style.height = (d.v / top * 100) + "%";
+      c.appendChild(bar);
+      function show() { hideTip(); var t = el("div", "tip"); t.id = "tip"; t.appendChild(el("strong", "num", usd.format(d.v))); t.appendChild(el("span", "muted", "  " + md + (d.key === today ? " (오늘)" : ""))); t.style.left = (c.offsetLeft + c.offsetWidth / 2) + "px"; t.style.top = Math.max(0, c.offsetHeight - bar.offsetHeight - 8) + "px"; plot.appendChild(t); }
+      c.addEventListener("mouseenter", show); c.addEventListener("focus", show);
+      c.addEventListener("mouseleave", hideTip); c.addEventListener("blur", hideTip);
+      plot.appendChild(c);
+      xl.appendChild(el("span", null, idx === 0 || idx === 13 || d.key.slice(8) === "01" ? md : (idx % 2 ? "" : String(Number(d.key.slice(8))))));
+    });
+    var tb = $("usageRows"); tb.textContent = "";
+    days.slice().reverse().forEach(function (d) {
+      if (d.total == null) return;
+      var tr = el("tr"); tr.appendChild(el("td", null, d.key)); tr.appendChild(el("td", "n", usd.format(d.v))); tr.appendChild(el("td", "n", usd.format(d.total))); tb.appendChild(tr);
+    });
+    if (!tb.children.length) { var tr0 = el("tr"); var td0 = el("td", "muted", "아직 기록이 없습니다."); td0.colSpan = 3; tr0.appendChild(td0); tb.appendChild(tr0); }
+  }
+  function hideTip() { var t = $("tip"); if (t) t.remove(); }
+
+  function renderLimit(info, ctx) {
+    var line = $("limitLine"); line.textContent = "";
+    var st = info && info.status, cls = "queued", ic = "i-check", text = "한도 상태를 읽지 못했습니다";
+    if (st === "allowed") { cls = "done"; ic = "i-check"; text = "한도 여유 있음"; }
+    else if (st === "allowed_warning") { cls = "needs_you"; ic = "i-warn"; text = "주의: 한도에 가까워지고 있습니다"; }
+    else if (st) { cls = "failed"; ic = "i-x"; text = "한도 도달: 초기화될 때까지 에이전트가 일하지 못합니다"; }
+    line.className = "state-line status small " + cls;
+    line.appendChild(icon(ic)); line.appendChild(el("span", null, text));
+    var extra = [];
+    if (info && info.resetsAt) extra.push("5시간 한도 초기화 " + when(Number(info.resetsAt) * 1000));
+    if (info && info.isUsingOverage) extra.push("추가 사용량으로 과금 중");
+    if (ctx && ctx.max_tokens) extra.push("작업 기억 공간 " + Math.round(ctx.used_tokens / ctx.max_tokens * 100) + "% 사용");
+    if (extra.length) line.appendChild(el("span", "muted", extra.join(" · ")));
+  }
+  function parsePayload(r) {
+    var p = r && r.payload;
+    if (typeof p === "string") { try { p = JSON.parse(p.slice(p.indexOf("{"), p.lastIndexOf("}") + 1)); } catch (e) { p = null; } }
+    if (p && p.ccr) p = p.ccr;
+    return p && p.external_metadata ? p.external_metadata : null;
+  }
+  function checkUsage() {
+    var b = $("usageBtn");
+    if (!mcp) { say("이 화면에서는 사용량을 직접 불러올 수 없습니다. 에이전트가 일을 끝낼 때 적은 기록만 보입니다."); return; }
+    b.disabled = true; b.textContent = "불러오는 중…";
+    mcp.callTool(SERVER, "get_session", { session_id: AGENT_SESSION }, { cache: false })
+      .then(function (r) {
+        var m = parsePayload(r);
+        if (!m) { say("사용량 응답을 읽지 못했습니다."); return; }
+        renderLimit(m.rate_limit_info, m.context_usage);
+        var u = m.usage || {}, total = Number(u.cost_usd) || 0;
+        var tokens = (Number(u.input_tokens) || 0) + (Number(u.output_tokens) || 0) + (Number(u.cache_read_tokens) || 0) + (Number(u.cache_write_tokens) || 0);
+        var today = dayKey(nowMs()), prev = 0, cur = null;
+        usageDocs.forEach(function (doc) { var d = doc.data() || {}; if (d.date === today) cur = d; });
+        for (var i = 0; i < usageDocs.length; i++) { var d = usageDocs[i].data() || {}; if (d.date && d.date < today) { prev = Number(d.totalCostUsd) || 0; break; } }
+        if (total < prev) prev = 0;
+        if (db && (!cur || Math.abs((Number(cur.totalCostUsd) || 0) - total) > 0.005)) {
+          return db.doc("usage/" + today).set({ date: today, totalCostUsd: total, dayCostUsd: Math.max(0, total - prev), totalTokens: tokens, updatedAt: nowMs() });
+        }
+      })
+      .then(function () { say(""); })
+      .catch(function (e) {
+        var code = e && e.code;
+        say(code === "needs_reauth" || code === "server_not_connected" ? "사용량을 불러오려면 claude.ai 설정의 커넥터에서 Claude Code Remote를 연결해 주세요."
+          : code === "blocked_by_policy" || code === "not_in_manifest" || code === "approval_required" || code === "consent_required" ? "사용량 조회가 허용되지 않았습니다. 에이전트가 적은 기록만 보입니다."
+          : "사용량을 불러오지 못했습니다. 잠시 뒤 다시 눌러 주세요.");
+      })
+      .then(function () { b.disabled = false; b.textContent = "사용량 새로 확인"; });
+  }
+  $("usageBtn").addEventListener("click", checkUsage);
+
+  // ---- 기억 ----
+  function renderMemory(snap) {
+    var ul = $("memList"); ul.textContent = "";
+    $("memTitle").textContent = "쌓인 기억 " + snap.size + (snap.size >= 30 ? "건 이상 (최근 30건 표시)" : "건");
+    $("memBox").hidden = snap.empty;
+    snap.docs.forEach(function (doc) {
+      var d = doc.data() || {}, li = el("li");
+      var head = el("span", "small muted"); head.appendChild(el("span", "num", when(d.at))); head.appendChild(el("span", null, " · " + (roleName[d.role] || "총괄")));
+      li.appendChild(head);
+      li.appendChild(el("strong", null, String(d.title || "")));
+      if (d.conclusion) li.appendChild(el("span", null, String(d.conclusion)));
+      if (d.lesson) li.appendChild(el("span", "small muted", "배운 점: " + String(d.lesson)));
+      ul.appendChild(li);
+    });
+  }
+
   // 쓰던 글은 이 브라우저에만 잠깐 보관한다.
   try { var saved = localStorage.getItem("agent-console-draft"); if (saved) $("cmdText").value = saved; } catch (e) {}
   $("cmdText").addEventListener("input", function () { try { localStorage.setItem("agent-console-draft", $("cmdText").value); } catch (e) {} });
@@ -462,7 +697,7 @@ details summary:hover { color: var(--text); }
   function start() {
     var use = window.claude && window.claude.use;
     if (!use) { offline(); return; }
-    use("mcp").then(function (m) { mcp = m; if (!m) $("wakeBtn").hidden = true; }).catch(function () { $("wakeBtn").hidden = true; });
+    use("mcp").then(function (m) { mcp = m; if (!m) { $("wakeBtn").hidden = true; $("usageBtn").hidden = true; } }).catch(function () { $("wakeBtn").hidden = true; });
     use("db").then(function (d) {
       if (!d) { offline(); return; }
       db = d;
@@ -471,16 +706,24 @@ details summary:hover { color: var(--text); }
       db.collection("commands").orderBy("createdAt", "desc").limit(50).onSnapshot(function (snap) {
         docs = snap.docs;
         if (!snap.metadata.fromCache) { clearTimeout(timer); $("freshness").textContent = "실시간으로 갱신됩니다"; }
-        render();
+        render(); renderUsage();
       }, function () { clearTimeout(timer); $("freshness").textContent = "목록을 불러오지 못했습니다. 페이지를 다시 열어 주세요."; });
+      db.doc("agent/settings").onSnapshot(function (snap) {
+        var d = snap.exists ? snap.data() : null;
+        settings = { enabled: !d || d.enabled !== false, dailyBudgetUsd: (d && Number(d.dailyBudgetUsd)) || 5 };
+        renderPower(); renderUsage();
+      }, function () {});
+      db.collection("usage").orderBy("date", "desc").limit(30).onSnapshot(function (snap) { usageDocs = snap.docs; renderUsage(); }, function () {});
+      db.collection("memory").orderBy("at", "desc").limit(30).onSnapshot(renderMemory, function () {});
       db.doc("agent/state").onSnapshot(function (snap) { renderAgent(snap.exists ? snap.data() : null); }, function () {});
     }).catch(offline);
   }
   function offline() {
     $("freshness").textContent = "저장소에 연결되지 않았습니다";
     $("agentState").textContent = "claude.ai에 로그인한 상태로 열어야 지시를 보내고 과정을 볼 수 있습니다.";
-    $("wakeBtn").hidden = true;
+    $("wakeBtn").hidden = true; $("powerBtn").disabled = true; $("usageBtn").hidden = true;
   }
+  $("memBox").hidden = true; renderUsage();
   start();
 })();
 </script>
