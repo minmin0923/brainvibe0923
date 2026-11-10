@@ -275,6 +275,10 @@ details summary:hover { color: var(--text); }
       <button class="switch" type="button" role="switch" aria-checked="true" id="powerBtn"><span class="track" aria-hidden="true"><span class="knob"></span></span><span id="powerLabel">에이전트 켜짐</span></button>
       <span class="small muted" id="powerHint">끄면 예약 실행을 멈추고, 지시를 보내도 시작하지 않습니다.</span>
     </div>
+    <div class="power">
+      <button class="switch" type="button" role="switch" aria-checked="false" id="tgBtn"><span class="track" aria-hidden="true"><span class="knob"></span></span><span id="tgLabel">텔레그램 전송 꺼짐</span></button>
+      <span class="small muted" id="tgHint">켜면 에이전트가 일을 끝낼 때마다 결과 요약과 파일을 텔레그램으로 보냅니다.</span>
+    </div>
   </header>
 
   <nav class="tabs" aria-label="화면 고르기">
@@ -409,10 +413,10 @@ details summary:hover { color: var(--text); }
 
 <script>
 (function () {
-  var AGENT_SESSION = "session_016Lmrda16KxAjjNTmkFheZ2";
+  var AGENT_SESSION = "session_016LmrdcmU7SzYQVpLJtM2tg";
   var SERVER = "Claude Code Remote";
-  var TRIGGER = "trig_01LUhpKrfSQDYUhH3LQAxrUZ";
-  var settings = { enabled: true, dailyBudgetUsd: 5 };
+  var TRIGGER = "trig_015L9eeHQ5rBZhs68guBJDuC";
+  var settings = { enabled: true, dailyBudgetUsd: 5, telegram: false };
   var usageDocs = [];       // usage/<YYYY-MM-DD>, 최신순
   var usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
   var dayKeyFmt = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -791,13 +795,16 @@ details summary:hover { color: var(--text); }
     $("powerLabel").textContent = on ? "에이전트 켜짐" : "에이전트 꺼짐";
     $("powerHint").textContent = on ? "끄면 예약 실행을 멈추고, 지시를 보내도 시작하지 않습니다." : "꺼져 있습니다. 켜면 예약 실행이 다시 돌고 대기 중인 지시를 처리합니다.";
     $("wakeBtn").disabled = !on;
+    var tg = settings.telegram === true;
+    $("tgBtn").setAttribute("aria-checked", String(tg));
+    $("tgLabel").textContent = tg ? "텔레그램 전송 켜짐" : "텔레그램 전송 꺼짐";
     if (document.activeElement !== $("budgetInput")) $("budgetInput").value = String(settings.dailyBudgetUsd || 5);
   }
   $("powerBtn").addEventListener("click", function () {
     if (!db) { say("지금은 저장소에 연결되지 않아 바꿀 수 없습니다."); return; }
     var b = $("powerBtn"), next = settings.enabled === false;
     b.disabled = true;
-    db.doc("agent/settings").set({ enabled: next, dailyBudgetUsd: settings.dailyBudgetUsd || 5, updatedAt: nowMs() })
+    db.doc("agent/settings").set({ enabled: next, dailyBudgetUsd: settings.dailyBudgetUsd || 5, telegram: settings.telegram === true, updatedAt: nowMs() })
       .then(function () {
         if (!mcp) { say(next ? "켜짐으로 바꿨습니다." : "꺼짐으로 바꿨습니다. 예약 실행은 그대로지만, 에이전트가 깨어나도 꺼짐을 보고 바로 멈춥니다."); return; }
         return mcp.callTool(SERVER, "update_trigger", { trigger_id: TRIGGER, enabled: next }, { cache: false })
@@ -807,11 +814,19 @@ details summary:hover { color: var(--text); }
       .catch(function () { say("바꾸지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
       .then(function () { b.disabled = false; });
   });
+  $("tgBtn").addEventListener("click", function () {
+    if (!db) { say("지금은 저장소에 연결되지 않아 바꿀 수 없습니다."); return; }
+    var b = $("tgBtn"), next = settings.telegram !== true; b.disabled = true;
+    db.doc("agent/settings").set({ enabled: settings.enabled !== false, dailyBudgetUsd: settings.dailyBudgetUsd || 5, telegram: next, updatedAt: nowMs() })
+      .then(function () { say(next ? "텔레그램 전송을 켰습니다. 다음에 끝나는 일부터 보냅니다. 처음이라면 GitHub 저장소에 봇 토큰과 대화방 번호를 넣어야 실제로 도착합니다." : "텔레그램 전송을 껐습니다."); })
+      .catch(function () { say("바꾸지 못했습니다. 잠시 뒤 다시 눌러 주세요."); })
+      .then(function () { b.disabled = false; });
+  });
   $("budgetForm").addEventListener("submit", function (ev) {
     ev.preventDefault();
     var v = Number($("budgetInput").value);
     if (!db || !(v >= 0.5 && v <= 500)) { say("예산은 0.5에서 500 사이 숫자로 적어 주세요."); $("budgetInput").focus(); return; }
-    db.doc("agent/settings").set({ enabled: settings.enabled !== false, dailyBudgetUsd: v, updatedAt: nowMs() })
+    db.doc("agent/settings").set({ enabled: settings.enabled !== false, dailyBudgetUsd: v, telegram: settings.telegram === true, updatedAt: nowMs() })
       .then(function () { say("하루 예산을 " + usd.format(v) + "로 저장했습니다."); })
       .catch(function () { say("예산을 저장하지 못했습니다. 잠시 뒤 다시 눌러 주세요."); });
   });
@@ -1041,7 +1056,7 @@ details summary:hover { color: var(--text); }
       }, function () { clearTimeout(timer); $("freshness").textContent = "목록을 불러오지 못했습니다. 페이지를 다시 열어 주세요."; });
       db.doc("agent/settings").onSnapshot(function (snap) {
         var d = snap.exists ? snap.data() : null;
-        settings = { enabled: !d || d.enabled !== false, dailyBudgetUsd: (d && Number(d.dailyBudgetUsd)) || 5 };
+        settings = { enabled: !d || d.enabled !== false, dailyBudgetUsd: (d && Number(d.dailyBudgetUsd)) || 5, telegram: !!(d && d.telegram === true) };
         renderPower(); renderUsage();
       }, function () {});
       db.collection("usage").orderBy("date", "desc").limit(30).onSnapshot(function (snap) { usageDocs = snap.docs; renderUsage(); }, function () {});
@@ -1053,7 +1068,7 @@ details summary:hover { color: var(--text); }
   function offline() {
     $("freshness").textContent = "저장소에 연결되지 않았습니다";
     $("agentState").textContent = "claude.ai에 로그인한 상태로 열어야 지시를 보내고 과정을 볼 수 있습니다.";
-    $("wakeBtn").hidden = true; $("powerBtn").disabled = true; $("usageBtn").hidden = true;
+    $("wakeBtn").hidden = true; $("powerBtn").disabled = true; $("tgBtn").disabled = true; $("usageBtn").hidden = true;
   }
   $("memBox").hidden = true; showTab(); renderDetect(); renderUsage();
   start();

@@ -1,0 +1,42 @@
+# 에이전트가 끝낸 일의 결과를 텔레그램으로 보낸다.
+# 필요한 저장소 비밀값(Settings > Secrets and variables > Actions):
+#   TELEGRAM_BOT_TOKEN  : @BotFather 에서 받은 봇 토큰
+#   TELEGRAM_CHAT_ID    : 결과를 받을 대화방 번호
+name: 텔레그램으로 보내기
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: 보낼 글 (제목, 결과 요약, 링크)
+        required: true
+        type: string
+      files:
+        description: 함께 보낼 파일 경로. 공백으로 구분, 저장소 기준 (예 reports/a.png reports/a.html)
+        required: false
+        type: string
+        default: ""
+      ref:
+        description: 파일이 있는 브랜치. 비우면 기본 브랜치
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - name: 보내기
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TEXT: ${{ inputs.text }}
+          FILES: ${{ inputs.files }}
+        run: bash scripts/telegram-send.sh
