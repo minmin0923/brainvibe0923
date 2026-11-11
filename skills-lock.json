@@ -13,11 +13,60 @@
       "skillPath": "skills/taste-skill/SKILL.md",
       "computedHash": "6d838b246d0e35d0b53f4f23f98ba7a1dd561937e64f7d0c7553b0928e376c3e"
     },
+    "ffmpeg-skill": {
+      "source": "kajisho5/ffmpeg-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "5816166c5644330ae7c58dc9717c17cb372412a7826ec99d5d6a968fb44a5f3f",
+      "installMode": "copy"
+    },
+    "hyperframes": {
+      "source": "heygen-com/hyperframes",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes/SKILL.md",
+      "computedHash": "0e604f3e7415f0cc531516ea15dab512f3355021cbf8da57d7f67de222a4eba5",
+      "installMode": "copy"
+    },
+    "hyperframes-cli": {
+      "source": "heygen-com/hyperframes",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes-cli/SKILL.md",
+      "computedHash": "4a8a60c4cdab620c269feab2af9d445b592ead6cfff65ec1b87224c6d4a7fe40",
+      "installMode": "copy"
+    },
     "image-to-code": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",
       "skillPath": "skills/image-to-code-skill/SKILL.md",
       "computedHash": "58517b03b2a01f4c9ba65861559d03df931400871bbc200978c975b24bb92c73"
+    },
+    "remotion-best-practices": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-best-practices/SKILL.md",
+      "computedHash": "9a4c0a0f9e3cc4613cbe351bb6be48568eb1cca0b06995aeae9e91292102aa16",
+      "installMode": "copy"
+    },
+    "stop-slop-ko": {
+      "source": "leeandev/stop-slop-ko",
+      "sourceType": "github",
+      "skillPath": "plugins/stop-slop-ko/skills/stop-slop-ko/SKILL.md",
+      "computedHash": "86e9deca74a6988ad03f5d4d51804a260f8d6226a6ceca92f9999b630f863bc4",
+      "installMode": "copy"
+    },
+    "unslop": {
+      "source": "heydamir/unslop",
+      "sourceType": "github",
+      "skillPath": "skills/unslop/SKILL.md",
+      "computedHash": "344778f2d56441639668e65d3bfd4e875fd09db5036a261839ca8c965d198bed",
+      "installMode": "copy"
+    },
+    "video-use": {
+      "source": "browser-use/video-use",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "896d55ce2c26c3d0f6d5598c34eb882f7d5c6e98fc09aa44b55d4c7e2ac357a5",
+      "installMode": "copy"
     },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
