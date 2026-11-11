@@ -25,7 +25,7 @@
 
 ## 에이전트 모드
 
-예약 작업 "에이전트 실행"(`trig_01RcEtnYfiu8ahUAo3fcqxyw`)이 깨울 때마다 새 세션이 `agent/RUNBOOK.md`를 실행한다. 모델은 Sonnet, 깨어나는 시간은 켜진 반복 예약에 맞춘다. 사용법은 `agent/README.md`.
+예약 작업 "에이전트 실행 (저비용)"(`trig_01Bp9roXTSgDmPtBrxffupqM`)이 Sonnet 모델의 전용 세션(`session_016LmrdcWvVcAuVErebSyjeY`)을 깨워 `agent/RUNBOOK.md`를 실행한다. 깨어나는 시간은 켜진 반복 예약에 맞춘다. 매번 새 세션을 여는 방식은 저장소 쓰기 권한이 없어 쓰지 못한다. 사용법은 `agent/README.md`.
 
 - 사용자가 "에이전트에게 시켜: ..."라고 하면 `agent/INBOX.md`의 "할 일"에 `- [ ]` 항목으로 추가하고 커밋한다.
 - "지금 에이전트 실행해"는 예약 작업을 즉시 실행한다. "에이전트 멈춰"는 예약 작업을 끈다.

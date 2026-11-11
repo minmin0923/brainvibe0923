@@ -1,6 +1,6 @@
 # 에이전트 실행 순서 (RUNBOOK)
 
-예약 시간이나 사용자의 지시로 깨어난 세션은 이 문서를 처음부터 끝까지 따른다. 사람이 지켜보지 않는다고 가정한다. 실행마다 새 세션이므로 지난 일은 기억하지 못한다. 기억은 `agent/MEMORY.md`와 관제실에 있다.
+예약 시간이나 사용자의 지시로 깨어나면 이 문서를 따른다. 사람이 지켜보지 않는다고 가정한다. 같은 세션이 이어서 쓰이지만 지난 대화에 기대지 않는다. 기억은 `agent/MEMORY.md`와 관제실에 있다.
 
 ## 0.1 사용량 아끼기 (가장 먼저 지킨다)
 
@@ -10,7 +10,7 @@
 - 같은 파일을 두 번 읽지 않는다. 큰 파일은 필요한 부분만 읽는다. 이 문서도 이번 일에 필요한 절만 따른다.
 - 관제실에 적는 단계는 지시 하나에 3~5줄이면 된다. 쓰기는 묶어서(batch) 한다.
 - 막히면 한 번만 다른 방법을 시도하고, 그래도 안 되면 무엇이 막혔는지 적고 끝낸다.
-- 추가 글 없이 깨어났으면 예약 실행이다(반복 예약을 처리). 추가 글이 있으면 사용자가 깨운 것이다(대기 중인 지시만 처리).
+- "예약 실행이다"로 시작하는 글로 깨어났으면 반복 예약을 처리한다. 그 밖의 글이면 사용자가 깨운 것이니 대기 중인 지시만 처리한다.
 
 ## 0. 원칙
 
@@ -135,7 +135,7 @@
 
 `memory`가 50건 늘 때마다 되풀이되는 교훈을 `agent/MEMORY.md`에 원칙으로 옮기는 PR을 올린다.
 
-**사용량:** 실행을 마칠 때 `get_session`(자기 세션, `session_id` 생략)에서 `external_metadata.usage.cost_usd`(이번 실행에 든 양)와 `rate_limit_info`를 읽어 `usage/<한국 시간 YYYY-MM-DD>` 문서를 고친다: `dayCostUsd`에 이번 실행분을 더하고, `totalCostUsd`(가장 최근 문서의 값, 없으면 0)에도 더하고, `limitStatus`(rate_limit_info.status), `limitResetsAt`(resetsAt), `updatedAt`을 적는다. 문서가 없으면 `date`와 함께 새로 만든다. `get_session`을 쓸 수 없으면 건너뛴다.
+**사용량:** 실행을 마칠 때 `get_session`(자기 세션, `session_id` 생략)에서 `external_metadata.usage.cost_usd`(이 세션의 누적)와 `rate_limit_info`를 읽는다. 관제실 `agent/state`의 `lastSessionCostUsd`(없으면 0)와의 차이가 이번 실행에 든 양이다. `usage/<한국 시간 YYYY-MM-DD>` 문서의 `dayCostUsd`와 `totalCostUsd`(가장 최근 문서의 값, 없으면 0)에 그 차이를 더하고 `limitStatus`, `limitResetsAt`, `updatedAt`을 적는다. 문서가 없으면 `date`와 함께 새로 만든다. 그리고 `agent/state`의 `lastSessionCostUsd`를 지금 누적값으로 고친다. `get_session`을 쓸 수 없으면 건너뛴다.
 
 ## 4.7 텔레그램으로 결과 보내기
 

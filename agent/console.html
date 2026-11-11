@@ -413,9 +413,9 @@ details summary:hover { color: var(--text); }
 
 <script>
 (function () {
-  var AGENT_SESSION = "session_016LmrdcmU7SzYQVpLJtM2tg";
+  var AGENT_SESSION = "session_016LmrdcWvVcAuVErebSyjeY";
   var SERVER = "Claude Code Remote";
-  var TRIGGER = "trig_01RcEtnYfiu8ahUAo3fcqxyw";
+  var TRIGGER = "trig_01Bp9roXTSgDmPtBrxffupqM";
   var settings = { enabled: true, dailyBudgetUsd: 5, telegram: false };
   var usageDocs = [];       // usage/<YYYY-MM-DD>, 최신순
   var usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -719,7 +719,7 @@ details summary:hover { color: var(--text); }
   function wake(message) {
     if (!settings.enabled) { say("저장했습니다. 에이전트가 꺼져 있어 시작하지 않습니다. 켜면 처리합니다."); return Promise.resolve(false); }
     if (!mcp) { say("저장했습니다. 이 화면에서는 에이전트를 바로 깨울 수 없어, 다음 예약 실행 때 시작합니다."); return Promise.resolve(false); }
-    return mcp.callTool(SERVER, "fire_trigger", { trigger_id: TRIGGER, text: message }, { cache: false })
+    return mcp.callTool(SERVER, "send_message", { session_id: AGENT_SESSION, message: message }, { cache: false })
       .then(function () { say("에이전트를 깨웠습니다. 곧 과정이 아래에 나타납니다."); return true; })
       .catch(function (e) {
         var code = e && e.code;
