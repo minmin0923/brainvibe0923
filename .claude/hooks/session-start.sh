@@ -21,4 +21,9 @@ else
   agent-browser install >/dev/null 2>&1 || echo "agent-browser: 브라우저 다운로드 실패 (네트워크 정책 확인 필요)" >&2
 fi
 
+# 3) GSD 설치 (홈 폴더는 세션마다 초기화되므로 매번 확인, 이미 있으면 건너뜀)
+if [ ! -f "$HOME/.claude/skills/gsd-help/SKILL.md" ]; then
+  npx --yes @opengsd/gsd-core@latest --claude --global >/dev/null 2>&1 || echo "GSD: 설치 실패 (네트워크 정책 확인 필요)" >&2
+fi
+
 agent-browser --version
