@@ -4,3 +4,5 @@ screenshots/
 audio/narration.wav
 audio/cues/
 *.mp4
+voice/takes/
+voice/narration.wav
