@@ -1,0 +1,6 @@
+screenshots/
+.snapshots/
+.tts-cache/
+audio/narration.wav
+audio/cues/
+*.mp4

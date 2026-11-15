@@ -1,0 +1,189 @@
+{
+ "note": "files the skill's tools wrote into this project, with their sha256 — written by the tools; do not edit (check.mjs, SKILL.md → Originality)",
+ "files": {
+  "audio/cues/c01.wav": {
+   "sha256": "adb4acc3332f228bcda2602a98c653da08c81ad651aefc248a1c26000097229b",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c02.wav": {
+   "sha256": "9b08ce8cede9ab61dd6a1a1a0cdc76108da8576188af5105d4eb500e9c98bd7a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c03.wav": {
+   "sha256": "7ebff0a1c0f4cdd7cb793c01c92b8de3a0714f006c85bed16ab2e7356dccf35d",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c04.wav": {
+   "sha256": "7abce410693d5cfd20bf3a3247c58961a3075529b964efc7c88db6d12baa0e0a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c05.wav": {
+   "sha256": "ff0d86e7b1c973b393b0f54010b3f703217e9caa93214e8bb210ab8c03795720",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c06.wav": {
+   "sha256": "12227d8b00a4d845f3f70dd2dddf8af20714c87e237fcf8b30e73948473cfde4",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c07.wav": {
+   "sha256": "2338a0d048ab3c8b9a10ad8b11f6e361ee50a28109d5ee91dab60daae14a07ee",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c08.wav": {
+   "sha256": "08689fb3ce6fae0aaa89ed9b32d70efedac72b29d11cd9d6a8421d3ecfc5d6a4",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c09.wav": {
+   "sha256": "20925fd75128a2c5b5d21adec196c732d5754af8bba92e33fe9f0e5f989c6f83",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c10.wav": {
+   "sha256": "5a4776a5389cb90f17924245733977e5e5c7c1d1254105caa8e54c0232059a2b",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c11.wav": {
+   "sha256": "1f4fcbe3277e61f134f2a7774e7922964febcf2945a53f3d4ea7d76f3b1db551",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c12.wav": {
+   "sha256": "8c6d665f38d2233884d13023734340b6263c1af8848b35a080faa403580488ce",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c13.wav": {
+   "sha256": "efbd93f37294caf50d2a05df7593a75e642b5bfa8aa3ee7c79d77a75cb1e2211",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c14.wav": {
+   "sha256": "9b08ce8cede9ab61dd6a1a1a0cdc76108da8576188af5105d4eb500e9c98bd7a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c15.wav": {
+   "sha256": "9b638d94bbfcaaa5ca9bb50d026029f09ceab9e30bf33af787ece6c6ea6015fb",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c16.wav": {
+   "sha256": "29f5acdcde38c28c7c7fafa54e404b0707e226bdcd132e8f3c8a90d41ee6206f",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c17.wav": {
+   "sha256": "e9034dfd0eb14b51b411aaaac89c48e81000c19c235c91571589f266e8cd6561",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c18.wav": {
+   "sha256": "6115bac751fb39554eff1bb7560884127e6693c57419b330d18909bda427aa0e",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c19.wav": {
+   "sha256": "546c97be4d91c24cbdac13b9072fc008fb47a28b55926397c0597714731e212a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c20.wav": {
+   "sha256": "191a39153eead2d34fa17637ab4b071535b20c294491c2816b59d1e213eedec4",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c21.wav": {
+   "sha256": "5b8b566c37f88e52241e9fd160e9f381e4bb52f7a12dbe6ee822dc2a7424165f",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c22.wav": {
+   "sha256": "4ca05885f33a991ea07f0847e3dd4d80ceae6ff65fbbf5a8caa78b2291722648",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c23.wav": {
+   "sha256": "08689fb3ce6fae0aaa89ed9b32d70efedac72b29d11cd9d6a8421d3ecfc5d6a4",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c24.wav": {
+   "sha256": "41e6af89336f983c1c6b5af64b3762216245a6beabaf945cece8e27a18c4139e",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c25.wav": {
+   "sha256": "d038973ad9ac47576ad5349156a8e2443df5534a016872d9e349f8fc6701a0f1",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c26.wav": {
+   "sha256": "6bb223b863f28438e60254f26ece2682ee258ec2fd9dd741f98b0e60de7c40ce",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c27.wav": {
+   "sha256": "d58647f72782fd65d2c442e3dfc63a0540a82e2c5b11fde44b497ffc3cb2b5ca",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c28.wav": {
+   "sha256": "3709f6989d8e4dbffb56d14853fb5368b5271c4ce3205766caec95e8d3a07c8a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c29.wav": {
+   "sha256": "14edee8507684cabdb2cde5d108f6bbcd327f32cb6df778cb8c2753f64656a74",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c30.wav": {
+   "sha256": "a7620d6d43f25c5cbd74e163d61ac3686f00fef7cc3d046e830375cc46439eaa",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c31.wav": {
+   "sha256": "546c97be4d91c24cbdac13b9072fc008fb47a28b55926397c0597714731e212a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c32.wav": {
+   "sha256": "c4a02b96706c76e5213f2df106f991b0f1fca2f1922ea3d964bb6f3c1055ba3b",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c33.wav": {
+   "sha256": "d038973ad9ac47576ad5349156a8e2443df5534a016872d9e349f8fc6701a0f1",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c34.wav": {
+   "sha256": "42b69b67b3d22354e02c569ab80cf5f49c441d0087ee9e2b0660d8cf12f6e590",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c35.wav": {
+   "sha256": "477177cf1122e73e9cbb6bdc55c76d910e2251bba3484dd014e1c253990b63b5",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c36.wav": {
+   "sha256": "546c97be4d91c24cbdac13b9072fc008fb47a28b55926397c0597714731e212a",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c37.wav": {
+   "sha256": "e5149c44003b4c4b285a0e50428d8d12e4431963906f77fdbf3ebb984fd3e483",
+   "by": "tts.mjs"
+  },
+  "audio/cues/c38.wav": {
+   "sha256": "d50827eed5e82c163b7a71c66ec0a2341f8c67e89532492bba87c3e048b27a23",
+   "by": "tts.mjs"
+  },
+  "audio/narration.mp3": {
+   "sha256": "4e9e723323f0b5d191c724491b37246c0637a78efa36369ba86149288492de18",
+   "by": "tts.mjs"
+  },
+  "audio/narration.wav": {
+   "sha256": "b01b96c24be9f550f8be0f7bbec690bce3ed67fa99e0aa4f57eb695b0531d92e",
+   "by": "tts.mjs"
+  },
+  "screenshots/ai-beginner-guide_20261115-013144_0m00.00s-to-4m43.97s_every-240-frames-at-60fps_sheet-1-of-3.jpg": {
+   "sha256": "a0f0b307c4e6dc297124860419c5d4fce81706363c7fcde6b3c6c1425ec9a339",
+   "by": "render.py"
+  },
+  "screenshots/ai-beginner-guide_20261115-013144_0m00.00s-to-4m43.97s_every-240-frames-at-60fps_sheet-2-of-3.jpg": {
+   "sha256": "dccc6b730e39392e3d19e83d8c1aa7774e54f0e71a296d113526762d282d0729",
+   "by": "render.py"
+  },
+  "screenshots/ai-beginner-guide_20261115-013144_0m00.00s-to-4m43.97s_every-240-frames-at-60fps_sheet-3-of-3.jpg": {
+   "sha256": "2f2ee0f3f3482265bbeeee7bd280065fc02fe40a50e75db907cc9c0bb26c5819",
+   "by": "render.py"
+  },
+  "screenshots/ai-beginner-guide_20261115-013741_12-moments-0m50.00s-to-4m41.00s_sheet-1-of-1.jpg": {
+   "sha256": "053d082c6a09d2f18a90091ef0649b4efb694f789495e9b4f567e4562656abd9",
+   "by": "render.py"
+  },
+  "screenshots/ai-beginner-guide_20261115-021445_moment-4m14.30s_res-4k_crop-220x140-at-x1700-y860_seek-check-from-4m16.30s_sheet-1-of-1.jpg": {
+   "sha256": "824a5ba44e4ae4962ec3e1e05c632e2c46fc5cdefecb06b199e50d5cddbdd277",
+   "by": "render.py"
+  },
+  "screenshots/ai-beginner-guide_20261115-021520_0m28.40s-to-0m31.60s_every-8-frames-at-60fps_sheet-1-of-1.jpg": {
+   "sha256": "2b3bc73c43b475e5fca5b4cc1d6cac76b991d9d77f3e8c8d8469a481925b0e7f",
+   "by": "render.py"
+  }
+ }
+}

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>생 초보를 위한 AI 공부법</title>
+  <link rel="stylesheet" href="fonts/noto-sans-kr/noto-sans-kr-700.css">
+  <link rel="stylesheet" href="css/player.css">
+  <link rel="stylesheet" href="css/fxkit.css">
+  <link rel="stylesheet" href="css/typefx.css">
+  <link rel="stylesheet" href="css/reckit.css">
+  <link rel="stylesheet" href="css/look.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="stage" data-width="1920" data-height="1080">
+    <div id="wall"></div>
+    <div id="mid"></div>
+    <div id="cam">
+      <div id="world">
+        <svg id="thread" width="26400" height="1200" viewBox="0 0 26400 1200">
+          <path class="th-sh" d=""/>
+          <path class="th" d=""/>
+        </svg>
+
+        <!-- A · 도입 -->
+        <section class="st" id="sA" style="left:0px">
+          <div id="scraps"></div>
+          <svg class="ab knot" style="left:560px;top:520px" width="800" height="360" viewBox="0 0 800 360">
+            <path class="knot-sh" d="M60 250 C 160 60, 300 330, 380 170 S 560 40, 520 220 S 300 330, 260 180 S 470 60, 640 160 S 700 320, 560 290 S 380 120, 470 90 S 760 200, 740 260"/>
+            <path class="knot-p" d="M60 250 C 160 60, 300 330, 380 170 S 560 40, 520 220 S 300 330, 260 180 S 470 60, 640 160 S 700 320, 560 290 S 380 120, 470 90 S 760 200, 740 260"/>
+          </svg>
+          <div class="ab pt hero-ai" style="left:460px;top:150px;width:1000px">AI</div>
+          <div class="ab pt q-what" style="left:560px;top:250px;width:800px">무엇부터?</div>
+          <div class="ab flag f1" style="left:250px;top:520px"><span class="fn">01</span><span class="pt fw">왜</span></div>
+          <div class="ab flag f2" style="left:690px;top:470px"><span class="fn">02</span><span class="pt fw">어떻게</span></div>
+          <div class="ab flag f3" style="left:1180px;top:420px"><span class="fn">03</span><span class="pt fw">바이브 코딩</span></div>
+        </section>
+
+        <!-- B · 왜 -->
+        <section class="st" id="sB" style="left:2440px">
+          <div class="ab pt h1" style="left:140px;top:110px;width:1300px">왜 공부해야 할까?</div>
+          <svg class="ab flow" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">
+            <path class="fl-sh" d="M360 560 C 520 600, 640 520, 780 560"/>
+            <path class="fl fl0" d="M360 560 C 520 600, 640 520, 780 560"/>
+            <path class="fl-sh" d="M1110 520 C 1250 420, 1330 360, 1440 360"/>
+            <path class="fl fl1" d="M1110 520 C 1250 420, 1330 360, 1440 360"/>
+            <path class="fl-sh" d="M1120 560 C 1260 560, 1340 580, 1440 580"/>
+            <path class="fl fl2" d="M1120 560 C 1260 560, 1340 580, 1440 580"/>
+            <path class="fl-sh" d="M1110 610 C 1250 700, 1330 800, 1440 800"/>
+            <path class="fl fl3" d="M1110 610 C 1250 700, 1330 800, 1440 800"/>
+          </svg>
+          <div class="ab cut disc d-say" style="left:150px;top:450px;width:220px;height:220px"><span>말</span></div>
+          <div class="ab cut disc d-ai" style="left:790px;top:410px;width:310px;height:310px"><span>AI</span></div>
+          <div class="ab out o1" style="left:1450px;top:270px"><div class="cut page"><i></i><i></i><i></i><i class="s"></i></div><b>글</b></div>
+          <div class="ab out o2" style="left:1450px;top:490px"><div class="cut page pic"><em class="sun"></em><em class="hill"></em><em class="hill h2"></em></div><b>그림</b></div>
+          <div class="ab out o3" style="left:1450px;top:710px"><div class="cut page code"><span>{ }</span></div><b>코드</b></div>
+          <div class="ab names n1" style="left:600px;top:770px;width:330px"><b>ChatGPT</b><span>오픈AI</span></div>
+          <div class="ab names n2" style="left:970px;top:770px;width:330px"><b>Claude</b><span>앤트로픽</span></div>
+
+          <div class="ab pt h1 h-same" style="left:140px;top:1190px;width:1500px">같은 AI, <span class="am">다른 결과</span></div>
+          <div class="ab lane l1" style="left:160px;top:1420px">
+            <div class="cut rib short">글 써 줘</div>
+            <svg class="arr" width="160" height="60" viewBox="0 0 160 60"><path d="M10 30 H 130 M110 12 L 140 30 L 110 48"/></svg>
+            <div class="cut page crumple"><i></i><i class="s"></i><i></i></div>
+          </div>
+          <div class="ab lane l2" style="left:160px;top:1640px">
+            <div class="cut rib long">팀 회의 정리, 다섯 줄로, 할 일 먼저<em class="ul"></em></div>
+            <svg class="arr" width="160" height="60" viewBox="0 0 160 60"><path d="M10 30 H 130 M110 12 L 140 30 L 110 48"/></svg>
+            <div class="cut page neat"><i></i><i></i><i></i><i></i><i class="s"></i><svg class="ok" width="70" height="70" viewBox="0 0 70 70"><path d="M14 36 L 30 52 L 58 18"/></svg></div>
+          </div>
+          <div class="ab tag t-clear" style="left:420px;top:1560px">분명하게</div>
+          <div class="ab pt h2 h-not" style="left:160px;top:1330px;width:1500px">기계의 원리 외우기<em class="strike2"></em></div>
+          <div class="ab pt hero h-trust" style="left:160px;top:1540px;width:1600px"><span class="am">맡기고</span>, <span class="am">확인하는</span> 방법</div>
+        </section>
+
+        <!-- C · 어떻게 -->
+        <section class="st" id="sC1" style="left:4840px">
+          <div class="ab pt h2 h-order" style="left:140px;top:110px;width:1400px">어떤 순서로 연습할까?</div>
+          <div class="ab pt num n-1" style="left:150px;top:230px">1</div>
+          <div class="ab pt h1 s1t" style="left:720px;top:280px;width:1100px">하루 한 번,<br>실제 일 <span class="am">맡기기</span></div>
+          <div class="ab obj ob1" style="left:740px;top:600px"><div class="cut env"><em></em></div><b>메일 초안</b></div>
+          <div class="ab obj ob2" style="left:1090px;top:580px"><div class="cut memo"><i></i><i></i><i></i></div><b>회의 정리</b></div>
+          <div class="ab obj ob3" style="left:1420px;top:590px"><svg class="plane" width="200" height="160" viewBox="0 0 200 160"><path class="pl-a" d="M10 80 L 190 14 L 120 150 L 92 98 Z"/><path class="pl-b" d="M92 98 L 190 14 L 70 112 Z"/></svg><b>여행 계획</b></div>
+        </section>
+        <section class="st" id="sC2" style="left:6640px">
+          <div class="ab pt num n-2" style="left:150px;top:230px">2</div>
+          <div class="ab pt h1 s2t" style="left:720px;top:280px;width:1100px"><span class="am">자세히</span> 부탁하기</div>
+          <div class="ab seg-l" style="left:720px;top:490px"><span class="c-am">무엇을 위해</span><span class="c-sg">어떤 조건</span><span class="c-co">어떤 모양</span></div>
+          <div class="ab cut rib3" style="left:720px;top:560px"><span class="g g1">부모님께 보낼 생일 문자</span><span class="g g2">세 줄로</span><span class="g g3">따뜻한 말투로</span></div>
+        </section>
+        <section class="st" id="sC3" style="left:8440px">
+          <div class="ab pt num n-3" style="left:150px;top:230px">3</div>
+          <div class="ab pt h1 s3t" style="left:720px;top:280px;width:1100px">고치고, <span class="am">확인하기</span></div>
+          <div class="ab cut sheet" style="left:720px;top:470px">
+            <p>아버지, 생신 축하드립니다.</p>
+            <p class="bad">앞으로도 계속 행복하시길 바랍니다.<em class="strike"></em></p>
+            <p class="fix">주말에 맛있는 거 먹으러 가요.</p>
+            <p>늘 고맙습니다.</p>
+          </div>
+          <div class="ab stamp" style="left:1460px;top:500px"><span>직접<br>확인</span></div>
+          <div class="ab note n-warn" style="left:1380px;top:770px;width:480px">그럴듯해도 틀릴 수 있어요</div>
+        </section>
+
+        <!-- D · 바이브 코딩 -->
+        <section class="st" id="sD" style="left:11040px">
+          <div class="ab small d-step" style="left:140px;top:120px">한 걸음 더</div>
+          <div class="ab cut rib d-rib" style="left:140px;top:200px"><span class="d-txt">할 일 목록 페이지 만들어 줘</span></div>
+          <div class="ab pt hero d-vibe" style="left:140px;top:380px;width:1640px">바이브 코딩</div>
+          <div class="ab mono d-en" style="left:150px;top:640px">vibe coding</div>
+          <div class="ab pt d-date" style="left:820px;top:170px;width:1000px">2025<span class="dot">.</span>2</div>
+          <div class="ab note d-who" style="left:830px;top:470px;width:980px">AI 연구자 안드레이 카파시가 처음 쓴 말</div>
+          <div class="ab col c-hand" style="left:140px;top:400px;width:760px"><b>한 줄씩 직접</b><pre class="mono code slow"></pre></div>
+          <div class="ab col c-talk" style="left:1020px;top:400px;width:780px"><b>말로 설명하면, <span class="c-bl">AI가 코드를</span></b><pre class="mono code fast"></pre></div>
+
+          <div class="ab cut dict" style="left:400px;top:1170px">
+            <div class="dk">콜린스 사전 · 2025 올해의 단어</div>
+            <div class="dw">vibe coding</div>
+            <div class="dp">noun</div>
+            <div class="dd">말로 지시해서 AI가 코드를 쓰게 하는 것</div>
+          </div>
+          <div class="ab pt h1 d-start" style="left:160px;top:1790px;width:1600px">말할 수 있으면, <span class="am">시작할 수 있습니다</span></div>
+        </section>
+
+        <!-- E · 무엇을 만들까 -->
+        <section class="st" id="sE1" style="left:13640px">
+          <div class="ab pt h1 e-q" style="left:140px;top:110px;width:1600px">무엇을 만들 수 있을까?</div>
+          <div class="ab cut win" style="left:200px;top:290px">
+            <div class="wbar"><i></i><i></i><i></i><span>내 가계부</span></div>
+            <div class="row r1"><span>커피</span><b>4,500</b></div>
+            <div class="row r2"><span>점심</span><b>9,000</b></div>
+            <div class="row r3"><span>버스</span><b>1,450</b></div>
+            <div class="row r4"><span>책</span><b>15,000</b></div>
+            <div class="row tot"><span>합계</span><b class="sum">0</b></div>
+          </div>
+          <div class="ab note e-l1" style="left:1220px;top:420px;width:620px">가계부, 할 일 목록 같은<br><span class="am">나만의 작은 웹 페이지</span></div>
+        </section>
+        <section class="st" id="sE2" style="left:15440px">
+          <div class="ab pt h2 e-h2" style="left:140px;top:120px;width:1600px">매주 하던 일을 <span class="am">대신</span></div>
+          <div id="files" class="ab" style="left:0;top:0"></div>
+          <div class="ab note e-l2" style="left:1380px;top:720px;width:500px">파일 이름 바꾸기,<br>엑셀 정리 같은 반복 작업</div>
+        </section>
+        <section class="st" id="sE3" style="left:17240px">
+          <div class="ab film" style="left:160px;top:200px">
+            <div class="holes top"></div>
+            <div class="mini"><div class="mini-in"><span class="pt">AI</span></div></div>
+            <div class="holes bot"></div>
+          </div>
+          <div class="ab pt h1 e-this" style="left:1250px;top:250px;width:640px"><span class="am">이 영상</span>도</div>
+          <div class="ab note e-l3" style="left:1260px;top:470px;width:600px">한국어 부탁 한 번<br>→ AI가 대본과 화면</div>
+        </section>
+
+        <!-- 요령 -->
+        <section class="st" id="sT1" style="left:19240px">
+          <div class="ab pt h1 t-h" style="left:140px;top:110px;width:1600px">잘 되려면, <span class="am">요령 세 가지</span></div>
+          <div class="ab ghost" style="left:240px;top:300px"><span>처음부터 큰 것</span></div>
+          <div id="blocks" class="ab" style="left:0;top:0"></div>
+          <div class="ab pt h2 t-l1" style="left:960px;top:470px;width:900px"><span class="am">작게</span> 시작해서<br>하나씩 덧붙이기</div>
+        </section>
+        <section class="st" id="sT2" style="left:20940px">
+          <div class="ab bwrap" style="left:420px;top:380px"><div class="cut btn">저장</div></div>
+          <svg class="ab cursor" style="left:760px;top:560px" width="90" height="120" viewBox="0 0 90 120"><path d="M6 6 L 6 96 L 30 74 L 46 112 L 62 104 L 46 68 L 80 66 Z"/></svg>
+          <div class="ab pt h1 t-l2" style="left:1060px;top:360px;width:800px">열어 보고,<br><span class="am">눌러 보고</span></div>
+        </section>
+        <section class="st" id="sT3" style="left:22640px">
+          <div class="ab cut rib t-msg" style="left:160px;top:330px">저장을 눌러도 아무 일이 없어요</div>
+          <div class="ab cut rib t-rep" style="left:420px;top:480px">고쳤어요. 이제 저장됩니다<svg class="ok" width="50" height="50" viewBox="0 0 70 70"><path d="M14 36 L 30 52 L 58 18"/></svg></div>
+          <div class="ab pt h2 t-l3" style="left:160px;top:660px;width:1600px">어디가 어떻게 이상한지, <span class="am">말로</span></div>
+        </section>
+
+        <!-- F · 끝 -->
+        <section class="st" id="sF" style="left:24640px">
+          <div class="ab pt end" style="left:160px;top:300px;width:1600px">AI에게 진짜 내 일 하나를<br><span class="am">맡겨 보세요.</span></div>
+        </section>
+      </div>
+    </div>
+    <div id="fore"></div>
+    <div id="lamp"></div>
+    <div id="cool"></div>
+    <div id="vig"></div>
+    <div id="hud">
+      <div class="pt hud1">일을 <span class="am">맡기는 방법</span>을 익히기</div>
+      <div class="pt hud2">그 연습이 쌓이면, <span class="c-bl">바이브 코딩</span>까지</div>
+    </div>
+  </div>
+
+  <script src="vendor/gsap/gsap.min.js"></script>
+  <script src="vendor/gsap/SplitText.min.js"></script>
+  <script src="vendor/gsap/CustomEase.min.js"></script>
+  <script src="vendor/gsap/CustomBounce.min.js"></script>
+  <script src="vendor/gsap/CustomWiggle.min.js"></script>
+  <script src="vendor/gsap/DrawSVGPlugin.min.js"></script>
+  <script src="vendor/gsap/MorphSVGPlugin.min.js"></script>
+  <script src="vendor/gsap/MotionPathPlugin.min.js"></script>
+  <script src="vendor/gsap/TextPlugin.min.js"></script>
+  <script src="vendor/gsap/ScrambleTextPlugin.min.js"></script>
+  <script src="js/cues.js"></script>
+  <script src="js/sync.js"></script>          <!-- measured phrase times (scripts/sync.mjs): cue(id).when() uses them -->
+  <script src="js/player.js"></script>
+  <script src="js/fxkit.js"></script>          <!-- optional effects kit: FXKit.install(ctx) — references/fx-kit.md -->
+  <script src="js/typefx.js"></script>         <!-- expressive typography: TypeFX.install(ctx) — references/type-fx.md -->
+  <script src="js/art/core.js"></script>       <!-- illustration modules: add js/art/<group>.js below — references/art-library.md -->
+  <script src="js/media-src.js"></script>      <!-- footage: the clips this video shows (empty when none) — references/footage.md -->
+  <script src="js/media.js"></script>          <!-- footage on the master clock: MEDIA.install(ctx) -->
+  <script src="js/reckit.js"></script>         <!-- screen recordings without zooming: RecKit.install(ctx) -->
+  <script src="js/scenes.js"></script>
+</body>
+</html>
