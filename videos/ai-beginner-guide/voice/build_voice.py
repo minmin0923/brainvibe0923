@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parent.parent
 TAKES = ROOT / 'voice' / 'takes'
 SR = 44100
 SPEED = 1.0
+# 문장 앞 침묵은 0.05초, 문장 안·끝의 침묵은 0.35초까지만 남긴다 (영상에 빈 소리가 길게 남지 않게)
+TRIM = ('silenceremove=start_periods=1:start_threshold=-40dB:start_silence=0.05:'
+        'stop_periods=-1:stop_duration=0.35:stop_threshold=-40dB:stop_silence=0.35')
 
 
 def load_script():
@@ -39,7 +42,7 @@ def synth(cues, redo):
 
 def to_mono44(src):
     """ffmpeg로 44.1kHz 모노 16bit PCM 바이트로 바꾼다"""
-    r = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(src), '-ac', '1', '-ar', str(SR), '-f', 's16le', '-'],
+    r = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(src), '-af', TRIM, '-ac', '1', '-ar', str(SR), '-f', 's16le', '-'],
                        capture_output=True, check=True)
     return r.stdout
 
