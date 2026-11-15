@@ -21,4 +21,10 @@ else
   agent-browser install >/dev/null 2>&1 || echo "agent-browser: 브라우저 다운로드 실패 (네트워크 정책 확인 필요)" >&2
 fi
 
+# 3) script-to-motion 스킬의 보조 스크립트 패키지 설치 (node_modules는 저장소에 올리지 않음)
+stm_dir="${CLAUDE_PROJECT_DIR:-$(pwd)}/.claude/skills/script-to-motion/scripts"
+if [ -f "$stm_dir/package.json" ] && [ ! -d "$stm_dir/node_modules" ]; then
+  (cd "$stm_dir" && npm install --no-audit --no-fund >/dev/null 2>&1) || echo "script-to-motion: npm install 실패" >&2
+fi
+
 agent-browser --version
