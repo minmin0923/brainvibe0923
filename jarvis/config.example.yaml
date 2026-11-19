@@ -1,0 +1,68 @@
+# 자비스 설정. 이 파일을 config.yaml로 복사해서 고친다 (install.ps1이 처음 한 번 복사해 준다).
+# config.yaml은 내 컴퓨터에만 있고 GitHub에 올라가지 않는다.
+
+name: 자비스            # 화면과 대답에 쓰는 이름
+greeting: 자비스 준비됐습니다.   # 켜질 때 하는 첫마디. 비워 두면 조용히 켜진다
+
+wake:
+  # 부르는 방법
+  #  whisper : "자비스, 오늘 일정 알려 줘"처럼 이름을 먼저 부르면 반응 (한국어 이름 가능, 기본값)
+  #  oww     : 영어 "Hey Jarvis" 전용 감지 모델 (가볍고 오작동이 적음)
+  #  hotkey  : 단축키를 눌렀을 때만 들음
+  mode: whisper
+  words: [자비스, 쟈비스, 자비쓰, 재비스, 잡이스, jarvis, 자 비스]
+  hotkey: ctrl+alt+j      # 언제든 이 키를 누르면 바로 듣기 시작 (말하는 중이면 멈춤)
+  follow_up_seconds: 8    # 대답 뒤 이 시간 안에는 이름을 다시 부르지 않아도 됨
+  oww_threshold: 0.5
+
+mic:
+  device: null            # null이면 Windows 기본 마이크. 이름 일부를 적어도 됨 (예: "JOYTRON", "NVIDIA Broadcast")
+  # 가까운 목소리만 받기: 이 크기(dBFS)보다 작은 소리는 무시. `python -m jarvis --calibrate`로 내 값을 확인한다.
+  min_speech_dbfs: -38
+  vad_threshold: 0.6      # 사람 말소리 판정 기준 (0~1, 높을수록 엄격)
+  silence_end_seconds: 0.9
+  max_utterance_seconds: 20
+
+speaker:
+  # 내 목소리만 듣기. `python -m jarvis --enroll`로 목소리를 등록한 뒤 true로 바꾼다.
+  verify: false
+  threshold: 0.30
+
+stt:
+  model: large-v3-turbo   # RTX 그래픽카드 기준. 그래픽카드 메모리가 4GB 이하면 small
+  device: cuda            # 그래픽카드가 안 잡히면 자동으로 cpu + small 로 바뀐다
+  compute_type: float16
+  language: ko
+
+tts:
+  engine: edge            # edge: 무료 고품질 한국어 음성(인터넷 필요) / system: Windows 기본 음성(오프라인)
+  voice: ko-KR-InJoonNeural   # 남성. 여성은 ko-KR-SunHiNeural
+  rate: "+8%"
+
+claude:
+  command: claude         # Windows에 설치한 Claude Code
+  quick_model: haiku      # 짧은 질문, 검색
+  work_model: sonnet      # 조사, 문서 작성 같은 긴 작업
+  quick_timeout_seconds: 120
+  work_timeout_seconds: 1800
+  max_parallel_tasks: 2
+  history_turns: 4        # Claude에 함께 보내는 최근 대화 수 (적을수록 사용량이 적다)
+
+repo:
+  path: ..                # 이 저장소(brainvibe0923) 위치. jarvis 폴더 기준
+  auto_push: true         # 에이전트 지시, 하루 정리 문서를 GitHub에 바로 올림
+
+ui:
+  port: 8765
+  open_window: true       # 시작할 때 Edge 앱 창으로 화면을 연다
+
+# "○○ 열어" 로 실행할 프로그램과 사이트. 여기 등록된 것만 연다 (안전장치).
+apps:
+  메모장: notepad.exe
+  계산기: calc.exe
+  탐색기: explorer.exe
+  크롬: chrome.exe
+  브이에스코드: code
+  깃허브: https://github.com/minmin0923/brainvibe0923
+  관제실: https://claude.ai/artifact/PhVkovV8DEeonV949DC6qF
+  유튜브: https://www.youtube.com

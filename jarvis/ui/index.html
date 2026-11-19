@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0C0E" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<title>자비스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    --bg: #FFFFFF; --surface: #F6F7F8; --border: #E4E6E9; --text: #111315; --text-muted: #5D636B;
+    --accent: #0F6E5C; --accent-contrast: #FFFFFF; --negative: #A2413A; --caution: #8A5A12;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF; --text-muted: #9AA0A8;
+      --accent: #3FB59A; --accent-contrast: #06231D; --negative: #E3877F; --caution: #D6A55C;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0C0E; --surface: #141619; --border: #25282D; --text: #ECEDEF; --text-muted: #9AA0A8;
+    --accent: #3FB59A; --accent-contrast: #06231D; --negative: #E3877F; --caution: #D6A55C;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text); min-height: 100dvh;
+    font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "Geist Mono", ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-inline: 20px; }
+  @media (min-width: 768px) { .wrap { padding-inline: 32px; } body { font-size: 17px; } }
+  .ph { width: 20px; height: 20px; fill: currentColor; flex: none; }
+  [hidden] { display: none !important; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* 머리 */
+  header { border-bottom: 1px solid var(--border); }
+  .bar { display: flex; align-items: center; gap: 16px; min-height: 64px; flex-wrap: wrap; padding-block: 12px; }
+  .brand { font-size: 18px; font-weight: 600; letter-spacing: 0; margin: 0; }
+  .state { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted);
+           padding: 4px 12px; border: 1px solid var(--border); border-radius: 999px; }
+  .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--text-muted); transition: background .2s var(--ease); }
+  [data-state="listening"] .dot, [data-state="speaking"] .dot { background: var(--accent); }
+  [data-state="thinking"] .dot { background: var(--caution); }
+  [data-state="error"] .dot { background: var(--negative); }
+  .spacer { flex: 1; }
+  .meter { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+  .meter-track { width: 96px; height: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+  .meter-fill { height: 100%; width: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left center; transition: transform .15s linear; }
+  .meter-gate { font-size: 12px; }
+
+  /* 본문 */
+  main { padding-block: 32px 64px; }
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 64px 0; }
+  @media (min-width: 1024px) { .grid { gap: 32px; } }
+  .talk { grid-column: span 12; min-width: 0; }
+  .side { grid-column: span 12; min-width: 0; display: grid; gap: 48px; align-content: start; }
+  @media (min-width: 1024px) { .talk { grid-column: span 7; } .side { grid-column: span 5; } }
+
+  .skip { position: absolute; left: 16px; top: -64px; padding: 8px 16px; background: var(--accent); color: var(--accent-contrast); border-radius: 8px; z-index: 10; text-decoration: none; font-weight: 600; }
+  .skip:focus-visible { top: 12px; }
+  h1, h2, h3 { text-wrap: balance; }
+  h2 { font-size: 18px; font-weight: 600; line-height: 1.4; margin: 0 0 16px; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .section-head span { font-size: 14px; color: var(--text-muted); }
+
+  /* 음성 그래프 (DESIGN.md 7장 예외) */
+  .orb { display: grid; justify-items: center; gap: 8px; padding-block: 8px 32px; }
+  .orb canvas { width: min(280px, 72vw); aspect-ratio: 1; display: block; }
+  .orb-label { margin: 0; font-size: 15px; font-weight: 600; color: var(--text-muted); min-height: 1.7em; text-align: center; }
+  .orb[data-state="listening"] .orb-label,
+  .orb[data-state="speaking"] .orb-label { color: var(--accent); }
+  .orb[data-state="error"] .orb-label { color: var(--negative); }
+
+  /* 지시 입력 */
+  .compose { display: flex; gap: 8px; align-items: center; margin-bottom: 24px; }
+  .compose input {
+    flex: 1; min-width: 0; height: 44px; padding: 0 16px; font: inherit; font-size: 16px; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .compose input::placeholder { color: var(--text-muted); }
+  .compose input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  button {
+    font: inherit; font-weight: 600; font-size: 15px; height: 44px; border-radius: 8px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+    transition: background-color .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease);
+    touch-action: manipulation;
+  }
+  button:focus-visible, a:focus-visible, .item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn { background: var(--accent); color: var(--accent-contrast); border: 1px solid var(--accent); padding: 0 20px; }
+  .btn:hover { background: color-mix(in srgb, var(--accent) 88%, var(--text)); }
+  .btn:active { background: color-mix(in srgb, var(--accent) 78%, var(--text)); }
+  .btn-2 { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 0 16px; }
+  .btn-2:hover { background: var(--surface); }
+  .btn-2:active { border-color: var(--text-muted); }
+  .icon-btn { width: 44px; padding: 0; }
+  @media (max-width: 480px) { .compose .label { display: none; } .compose .btn { width: 44px; padding: 0; } }
+
+  /* 대화 */
+  .log { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
+  .msg { display: grid; gap: 4px; max-width: 65ch; }
+  .msg .meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 8px; flex-wrap: wrap; }
+  .msg .who { font-weight: 600; color: var(--text); }
+  .msg.user .body { color: var(--text); }
+  .msg.jarvis { padding-left: 16px; border-left: 2px solid var(--accent); }
+  .msg.system { font-size: 14px; color: var(--text-muted); }
+  .msg.error .who { color: var(--negative); }
+  .msg .detail { margin-top: 8px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
+                 border-radius: 8px; font-size: 14px; line-height: 1.6; }
+  .msg .detail > :first-child { margin-top: 0; } .msg .detail > :last-child { margin-bottom: 0; }
+  .empty { color: var(--text-muted); font-size: 15px; padding: 24px; border: 1px dashed var(--border); border-radius: 12px; }
+  .empty kbd { font-family: inherit; font-size: 13px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); }
+
+  /* 작업, 타임라인 */
+  .list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+  .item { display: grid; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; }
+  a.item:hover .title, button.item:hover .title { color: var(--accent); }
+  button.item { width: 100%; height: auto; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--border);
+                border-radius: 0; font-weight: 400; font-size: inherit; justify-content: stretch; display: grid; white-space: normal; }
+  .item .title { font-weight: 600; font-size: 16px; line-height: 1.5; transition: color .18s var(--ease); }
+  .item .sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
+  .tag.running, .tag.queued { color: var(--caution); }
+  .tag.done { color: var(--accent); }
+  .tag.failed, .tag.lost { color: var(--negative); }
+  .tag .ph { width: 14px; height: 14px; }
+
+  footer { border-top: 1px solid var(--border); padding-block: 24px; font-size: 13px; color: var(--text-muted); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+  /* 문서 보기 */
+  dialog { width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 64px); padding: 0; border: 1px solid var(--border);
+           border-radius: 12px; background: var(--bg); color: var(--text);
+           box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06); overscroll-behavior: contain; }
+  dialog::backdrop { background: rgba(11,12,14,.4); }
+  .doc-head { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 24px; border-bottom: 1px solid var(--border);
+              position: sticky; top: 0; background: var(--bg); }
+  .doc-head .path { flex: 1; min-width: 0; font-size: 13px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .doc { padding: 24px; max-width: 65ch; }
+  .doc h1 { font-size: 28px; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 16px; }
+  .doc h2 { font-size: 20px; margin: 32px 0 8px; } .doc h3 { font-size: 17px; margin: 24px 0 8px; }
+  .doc a, .detail a { color: var(--accent); text-decoration: none; } .doc a:hover, .detail a:hover { text-decoration: underline; }
+  .doc code, .detail code { font-family: ui-monospace, Consolas, monospace; font-size: .9em; background: var(--surface); padding: 1px 4px; border-radius: 4px; }
+  .doc ul, .detail ul { padding-left: 20px; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<!-- Phosphor Icons (regular, MIT) -->
+  <symbol id="i-microphone" viewBox="0 0 256 256"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z"/></symbol>
+  <symbol id="i-paper-plane-right" viewBox="0 0 256 256"><path d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 256 256"><path d="M200,40H56A16,16,0,0,0,40,56V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,160H56V56H200V200Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></symbol>
+  <symbol id="i-circle-notch" viewBox="0 0 256 256"><path d="M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 256 256"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol>
+  <symbol id="i-warning-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z"/></symbol>
+</svg>
+<a class="skip" href="#text">지시 입력으로 바로 가기</a>
+<header>
+  <div class="wrap bar">
+    <h1 class="brand" id="name">자비스</h1>
+    <div class="state" id="state" data-state="idle" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span><span id="state-label">연결 중…</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="meter" id="meter" title="마이크 소리 크기">
+      <svg class="ph" aria-hidden="true"><use href="#i-microphone"/></svg>
+      <div class="meter-track" role="meter" aria-label="마이크 소리 크기" aria-valuemin="-70" aria-valuemax="0" aria-valuenow="-70" id="meter-track">
+        <div class="meter-fill" id="meter-fill"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <section class="talk" aria-labelledby="talk-h">
+      <h2 id="talk-h" class="sr">대화</h2>
+      <div class="orb" id="orb-box" data-state="idle">
+        <canvas id="orb" role="img" aria-label="음성 그래프"></canvas>
+        <p class="orb-label" id="orb-label" aria-hidden="true"></p>
+      </div>
+      <form class="compose" id="compose" autocomplete="off">
+        <button type="button" class="btn icon-btn" id="listen" aria-label="말로 지시하기"><svg class="ph" aria-hidden="true"><use href="#i-microphone"/></svg></button>
+        <label for="text" class="sr">지시 입력</label>
+        <input id="text" name="command" type="text" placeholder="말하거나 적으세요…" enterkeyhint="send" spellcheck="false">
+        <button type="submit" class="btn"><svg class="ph" aria-hidden="true"><use href="#i-paper-plane-right"/></svg><span class="label">보내기</span></button>
+        <button type="button" class="btn-2 icon-btn" id="stop" aria-label="말 멈추기"><svg class="ph" aria-hidden="true"><use href="#i-stop"/></svg></button>
+      </form>
+      <ol class="log" id="log" aria-live="polite"></ol>
+    </section>
+
+    <aside class="side">
+      <section aria-labelledby="tasks-h">
+        <div class="section-head"><h2 id="tasks-h">작업</h2><span id="tasks-count"></span></div>
+        <ul class="list" id="tasks"></ul>
+      </section>
+      <section aria-labelledby="tl-h">
+        <div class="section-head"><h2 id="tl-h">타임라인</h2><span>문서로 남긴 일</span></div>
+        <ul class="list" id="timeline"></ul>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer><div class="wrap" id="info" translate="no"></div></footer>
+
+<dialog id="viewer" aria-labelledby="doc-path">
+  <div class="doc-head">
+    <span class="path mono" id="doc-path"></span>
+    <button type="button" class="btn-2 icon-btn" id="doc-close" aria-label="닫기"><svg class="ph" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <article class="doc" id="doc"></article>
+</dialog>
+
+<script>
+const TOKEN = "__TOKEN__";
+const $ = (id) => document.getElementById(id);
+const H = { "X-Token": TOKEN, "Content-Type": "application/json" };
+const ICON = { queued: "clock", running: "circle-notch", done: "check-circle", failed: "warning-circle", lost: "warning-circle" };
+const SOURCE = { local: "바로 처리", claude: "Claude", task: "작업", error: "오류", typed: "입력", voice: "음성" };
+let INFO = {};
+
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+// 아주 작은 마크다운 표시기 (제목, 목록, 굵게, 코드, 링크만)
+function md(src) {
+  const inline = (t) => esc(t)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, label, href) => {
+      const h = href.replace(/&amp;/g, "&");
+      if (/^https?:\/\//.test(h)) return `<a href="${esc(h)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+      if (/\.md$/.test(h)) return `<a href="#" data-doc="${esc(h)}">${label}</a>`;
+      return label;
+    });
+  const out = []; let list = false;
+  for (const line of String(src).split(/\r?\n/)) {
+    const h = line.match(/^(#{1,3})\s+(.*)$/);
+    const li = line.match(/^\s*[-*]\s+(.*)$/) || line.match(/^\s*\d+\.\s+(.*)$/);
+    if (!li && list) { out.push("</ul>"); list = false; }
+    if (h) out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`);
+    else if (li) { if (!list) { out.push("<ul>"); list = true; } out.push(`<li>${inline(li[1])}</li>`); }
+    else if (line.trim() && !/^---+$/.test(line.trim())) out.push(`<p>${inline(line)}</p>`);
+  }
+  if (list) out.push("</ul>");
+  return out.join("");
+}
+
+function setState(s) {
+  const el = $("state");
+  el.dataset.state = s.state;
+  Orb.setState(s.state);
+  $("orb-box").dataset.state = s.state;
+  $("orb-label").textContent = s.state === "idle"
+    ? (INFO.audio ? `"${INFO.name || "자비스"}"라고 불러 주세요` : "대기 중")
+    : (s.detail || s.state_label);
+  $("state-label").textContent = s.detail && s.detail !== s.state_label ? `${s.state_label} · ${s.detail}` : s.state_label;
+}
+
+function addMessage(m, scroll = true) {
+  if (m.role === "system" && !m.text) return;
+  const li = document.createElement("li");
+  const cls = m.source === "error" ? "error" : m.role;
+  li.className = `msg ${m.role} ${cls}`;
+  const who = m.role === "user" ? "나" : m.role === "jarvis" ? INFO.name || "자비스" : "알림";
+  const bits = [m.time];
+  if (m.source && SOURCE[m.source]) bits.push(SOURCE[m.source]);
+  if (m.ms) bits.push(`${(m.ms / 1000).toFixed(1)}초`);
+  li.innerHTML = `<div class="meta"><span class="who">${esc(who)}</span><span class="mono">${esc(bits.join(" · "))}</span></div>`
+    + `<div class="body">${esc(m.text)}</div>`
+    + (m.detail ? `<div class="detail">${md(m.detail)}</div>` : "");
+  const log = $("log");
+  $("empty")?.remove();
+  log.prepend(li);
+}
+
+function emptyState() {
+  if ($("log").children.length) return;
+  const hk = INFO.hotkey ? `<kbd>${esc(INFO.hotkey)}</kbd>를 누르거나 ` : "";
+  const how = INFO.audio ? `${hk}"자비스"라고 부른 뒤 말씀하세요.` : "위 입력창에 지시를 적어 보세요.";
+  $("log").innerHTML = `<li class="empty" id="empty">아직 오늘 나눈 대화가 없습니다. ${how} 예: "자비스, 오늘 한 일 정리해 줘"</li>`;
+}
+
+function renderTasks(tasks) {
+  const ul = $("tasks");
+  const list = [...tasks].reverse().slice(0, 8);
+  const active = tasks.filter((t) => t.status === "queued" || t.status === "running").length;
+  $("tasks-count").textContent = active ? `${active}개 진행 중` : "진행 중인 작업 없음";
+  if (!list.length) { ul.innerHTML = `<li class="item"><span class="sub">"경쟁사 세 곳 조사해서 보고서로 만들어 줘"처럼 말하면 뒤에서 처리하고 여기에 보입니다.</span></li>`; return; }
+  ul.innerHTML = list.map((t) => {
+    const tag = `<span class="tag ${esc(t.status)}"><svg class="ph" aria-hidden="true"><use href="#i-${ICON[t.status] || "clock"}"/></svg>${esc(t.status_label)}</span>`;
+    const when = `<span class="mono">${esc(t.finished || t.created)}</span>`;
+    const inner = `<span class="title">${esc(t.title)}</span><span class="sub">${tag} · ${when}${t.summary ? " · " + esc(t.summary) : ""}</span>`;
+    return t.has_report
+      ? `<li><button type="button" class="item" data-doc="${esc(t.report)}">${inner}</button></li>`
+      : `<li class="item">${inner}</li>`;
+  }).join("");
+}
+
+function renderTimeline(items) {
+  const ul = $("timeline");
+  if (!items || !items.length) { ul.innerHTML = `<li class="item"><span class="sub">끝낸 작업과 하루 정리가 여기에 날짜순으로 쌓입니다. 저장소의 docs/jarvis/timeline.md에도 같이 적힙니다.</span></li>`; return; }
+  ul.innerHTML = items.slice(0, 12).map((it) =>
+    `<li><button type="button" class="item" data-doc="${esc(it.path)}"><span class="title">${esc(it.title)}</span>`
+    + `<span class="sub"><span class="mono">${esc(it.when)}</span>${it.summary ? " · " + esc(it.summary) : ""}</span></button></li>`).join("");
+}
+
+function renderInfo(info) {
+  const parts = [];
+  parts.push(info.audio ? `음성 인식 ${info.stt || "준비 중"}` : info.demo ? "시험 모드 (Claude를 부르지 않음)" : "글 입력 모드");
+  if (info.audio) parts.push(info.wake_mode === "whisper" ? `부르는 말 "${info.name || "자비스"}"` : info.wake_mode === "oww" ? '부르는 말 "Hey Jarvis"' : "단축키로만 듣기");
+  if (info.hotkey) parts.push(`단축키 ${info.hotkey}`);
+  parts.push(`짧은 질문 ${info.quick_model} · 긴 작업 ${info.work_model}`);
+  $("info").innerHTML = parts.map((p) => `<span>${esc(p)}</span>`).join("");
+  $("listen").hidden = !info.audio;
+  $("meter").hidden = !info.audio;
+}
+
+async function openDoc(path) {
+  const r = await fetch(`/api/file?path=${encodeURIComponent(path)}&t=${TOKEN}`);
+  const data = await r.json();
+  $("doc-path").textContent = path;
+  $("doc").innerHTML = data.error ? `<p>${esc(data.error)}</p>` : md(data.text);
+  const v = $("viewer");
+  if (!v.open) v.showModal();
+}
+
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-doc]");
+  if (!el) return;
+  e.preventDefault();
+  let p = el.dataset.doc;
+  if (el.closest("#doc") && !p.startsWith("docs/")) {          // 문서 안의 상대 링크
+    const base = $("doc-path").textContent.split("/").slice(0, -1);
+    for (const seg of p.split("/")) { if (seg === "..") base.pop(); else if (seg && seg !== ".") base.push(seg); }
+    p = base.join("/");
+  }
+  openDoc(p);
+});
+$("doc-close").onclick = () => $("viewer").close();
+$("viewer").addEventListener("click", (e) => { if (e.target === $("viewer")) $("viewer").close(); });
+
+$("compose").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const text = $("text").value.trim();
+  if (!text) return;
+  $("text").value = "";
+  await fetch(`/api/command`, { method: "POST", headers: H, body: JSON.stringify({ text }) });
+});
+$("listen").onclick = () => fetch(`/api/listen`, { method: "POST", headers: H });
+$("stop").onclick = () => fetch(`/api/stop`, { method: "POST", headers: H });
+
+async function load() {
+  const s = await (await fetch(`/api/state?t=${TOKEN}`)).json();
+  INFO = { ...s.info, name: s.name };
+  $("name").textContent = s.name;
+  document.title = s.name;
+  setState(s);
+  $("log").innerHTML = "";
+  s.messages.forEach((m) => addMessage(m, false));
+  emptyState();
+  renderTasks(s.tasks);
+  renderTimeline(s.timeline);
+  renderInfo(INFO);
+}
+
+function connect() {
+  const es = new EventSource(`/api/events?t=${TOKEN}`);
+  es.addEventListener("state", (e) => setState(JSON.parse(e.data)));
+  es.addEventListener("message", (e) => addMessage(JSON.parse(e.data)));
+  es.addEventListener("tasks", (e) => { const d = JSON.parse(e.data); renderTasks(d.tasks); renderTimeline(d.timeline); });
+  es.addEventListener("level", (e) => {
+    const db = JSON.parse(e.data).db;
+    Orb.setLevel(db, JSON.parse(e.data).bands);
+    const pct = Math.max(0, Math.min(100, ((db + 70) / 70) * 100));
+    $("meter-fill").style.transform = `scaleX(${pct / 100})`;
+    $("meter-track").setAttribute("aria-valuenow", Math.round(db));
+  });
+  es.onerror = () => { $("state").dataset.state = "error"; $("state-label").textContent = "연결 끊김 · 다시 연결하는 중"; };
+  es.onopen = () => load();
+}
+
+// ---- 음성 그래프: 원 둘레의 막대가 마이크 소리(주파수별 세기)에 맞춰 움직인다 ----
+const Orb = (() => {
+  const cv = $("orb"), ctx = cv.getContext("2d");
+  const N = 72;                                    // 원 둘레 막대 수
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let state = "idle", level = 0, target = new Float32Array(N), cur = new Float32Array(N);
+  let boot = reduce ? 1 : 0, bootStart = performance.now(), raf = 0, last = 0, spin = 0;
+  const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  function size() {
+    const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1;
+    cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d);
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function setLevel(db, bands) {
+    level = Math.max(0, Math.min(1, (db + 60) / 45));
+    if (bands && bands.length) {
+      const B = bands.length;                      // 낮은 음 → 높은 음을 왼쪽/오른쪽 대칭으로
+      for (let i = 0; i < N; i++) {
+        const k = i < N / 2 ? i : N - 1 - i;
+        target[i] = bands[Math.min(B - 1, Math.floor((k / (N / 2)) * B))];
+      }
+    } else target.fill(level * 0.4);
+    if (reduce) { cur.set(target); draw(performance.now()); }
+    else wake();
+  }
+  function setState(s) {
+    state = s;
+    if (s !== "listening") target.fill(0);
+    wake();
+  }
+  function active() { return boot < 1 || state === "listening" || state === "speaking" || state === "thinking"
+    || cur.some((v) => v > 0.01); }
+  function wake() { if (!raf && !reduce) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  function tick(now) {
+    const dt = Math.min(64, now - last); last = now;
+    if (boot < 1) boot = Math.min(1, Math.max(0, (now - bootStart) / 1200));
+    if (state === "speaking") {                    // 자비스가 말할 때: 말하듯 출렁이는 모양
+      for (let i = 0; i < N; i++) {
+        const k = i < N / 2 ? i : N - 1 - i;
+        target[i] = 0.25 + 0.45 * Math.abs(Math.sin(now / 170 + k * 0.45) * Math.sin(now / 410 + k * 0.17));
+      }
+    }
+    if (state === "thinking") spin += dt * 0.004;
+    const a = 1 - Math.pow(0.001, dt / 1000 * 4);  // 부드럽게 따라가기
+    for (let i = 0; i < N; i++) cur[i] += (target[i] - cur[i]) * a;
+    raf = 0;
+    draw(now);
+    if (active()) raf = requestAnimationFrame(tick);
+  }
+  function draw(now) {
+    const w = cv.clientWidth, h = cv.clientHeight, c = w / 2, R = w * 0.26;
+    const accent = css("--accent"), border = css("--border"), muted = css("--text-muted");
+    ctx.clearRect(0, 0, w, h);
+    const ease = 1 - Math.pow(1 - boot, 3);
+    // 바깥 고리 (켜질 때 한 바퀴 그려진다)
+    ctx.lineWidth = 1; ctx.strokeStyle = border;
+    ctx.beginPath(); ctx.arc(c, c, R * 1.78, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * ease); ctx.stroke();
+    ctx.beginPath(); ctx.arc(c, c, R * 0.82, 0, Math.PI * 2 * ease); ctx.stroke();
+    // 눈금
+    for (let i = 0; i < 48 * ease; i++) {
+      const t = (i / 48) * Math.PI * 2 - Math.PI / 2, long = i % 4 === 0;
+      const r1 = R * 1.78, r2 = r1 - (long ? 8 : 4);
+      ctx.beginPath(); ctx.moveTo(c + Math.cos(t) * r1, c + Math.sin(t) * r1);
+      ctx.lineTo(c + Math.cos(t) * r2, c + Math.sin(t) * r2); ctx.stroke();
+    }
+    // 소리 막대
+    const on = state === "listening" || state === "speaking";
+    ctx.strokeStyle = on || boot < 1 ? accent : muted; ctx.lineCap = "round"; ctx.lineWidth = Math.max(2, w / 150);
+    const shown = Math.floor(N * ease);
+    for (let i = 0; i < shown; i++) {
+      const t = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const len = 3 + cur[i] * R * 0.62;
+      const r1 = R * 1.06, r2 = r1 + len;
+      ctx.globalAlpha = on ? 1 : 0.55;
+      ctx.beginPath(); ctx.moveTo(c + Math.cos(t) * r1, c + Math.sin(t) * r1);
+      ctx.lineTo(c + Math.cos(t) * r2, c + Math.sin(t) * r2); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // 가운데 원: 소리 크기만큼 커진다
+    const pulse = state === "listening" ? level * 0.08 : 0;
+    if (ease <= 0) return;
+    ctx.lineWidth = 2; ctx.strokeStyle = on ? accent : border;
+    ctx.beginPath(); ctx.arc(c, c, R * (0.62 + pulse) * ease, 0, Math.PI * 2); ctx.stroke();
+    // 생각 중: 도는 호 두 개
+    if (state === "thinking") {
+      ctx.strokeStyle = accent; ctx.lineWidth = 2;
+      for (const off of [0, Math.PI]) {
+        ctx.beginPath(); ctx.arc(c, c, R * 1.38, spin + off, spin + off + Math.PI * 0.45); ctx.stroke();
+      }
+    }
+  }
+  addEventListener("resize", () => { size(); draw(performance.now()); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => draw(performance.now()));
+  size();
+  if (reduce) draw(0); else wake();
+  return { setLevel, setState };
+})();
+
+load().then(connect);
+if (matchMedia("(pointer: fine)").matches) $("text").focus();
+</script>
+</body>
+</html>

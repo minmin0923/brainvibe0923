@@ -33,6 +33,15 @@
 - `/agent-panel`(`plugins/agent-panel`)은 창을 띄울 수 있는 화면에서만 보인다. 안 되는 화면에서는 글로 나온다.
 - "에이전트 상태"를 물으면 `agent/LOG.md`, 열린 `[에이전트]` PR, 남은 명령을 요약한다.
 
+## 자비스 (Windows 음성 비서)
+
+사용자 Windows 컴퓨터에서 도는 음성 비서는 `jarvis/`에 있다. 설치와 사용법은 `jarvis/README.md`.
+
+- 듣기, 읽어 주기는 사용자 컴퓨터에서 처리하고, Claude에는 글로 바뀐 지시만 보낸다(`claude -p`). 사용량을 늘리는 변경(대화 기록을 더 많이 보내기, 기본 모델 올리기)은 사용자에게 먼저 묻는다.
+- 자비스가 남기는 문서: `docs/jarvis/timeline.md`, `docs/jarvis/reports/`, `docs/journal/`. "에이전트한테 시켜"는 `agent/INBOX.md`로 들어간다.
+- 화면(`jarvis/ui/index.html`)도 DESIGN.md를 따른다. 음성 그래프만 DESIGN.md 7장의 예외로 움직임을 허용한다.
+- 시험: `cd jarvis && python -m pytest tests`. 화면 확인: `python -m jarvis --demo`.
+
 ## 문서, 발표, 대시보드 양식
 
 보고서, 회의록, 기획서, 발표 자료, 대시보드를 만들 때는 먼저 `templates/README.md`의 "상황별로 고르기" 표에서 맞는 양식을 찾아 그 구조와 스타일에서 시작한다.

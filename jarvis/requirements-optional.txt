@@ -1,0 +1,4 @@
+# 있으면 좋은 것. 설치에 실패해도 자비스는 돈다.
+openwakeword>=0.6.0     # wake.mode: oww ("Hey Jarvis" 전용 감지)
+onnxruntime>=1.17
+speechbrain>=1.0        # speaker.verify: true (내 목소리만 듣기)

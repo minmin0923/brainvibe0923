@@ -1,1 +1,8 @@
 .codex-loop/
+
+# 자비스: 내 컴퓨터에만 두는 것
+jarvis/.venv/
+jarvis/config.yaml
+jarvis/data/
+__pycache__/
+.pytest_cache/

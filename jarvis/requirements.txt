@@ -1,0 +1,10 @@
+# torch(그래픽카드용)는 install.ps1이 먼저 따로 설치한다.
+pyyaml>=6.0
+numpy>=1.26
+sounddevice>=0.4.6
+faster-whisper>=1.1.0
+silero-vad>=5.1
+edge-tts>=6.1.12
+pygame>=2.5
+pyttsx3>=2.90
+keyboard>=0.13.5
