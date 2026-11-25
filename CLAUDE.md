@@ -41,6 +41,23 @@
 - `templates/vendor`는 GitHub에서 받은 원본이다. 구성과 항목만 참고하고, 색과 글꼴은 DESIGN.md로 바꿔서 쓴다.
 - 새 양식을 만들면 `templates/index.html`과 `templates/README.md`에 추가한다.
 
+## 유튜브 분석은 yt-* 스킬이 기본
+
+사용자 지시(2026-11-25): 유튜브 검색, 점수, 비교는 vidIQ 대신 `.claude/skills/yt-*` 스킬(한국어판)로 한다. 사용자가 "vidIQ로 해"라고 하기 전까지 유지한다.
+
+| 하려는 일 | 쓰는 스킬 |
+|---|---|
+| 내 분야에서 잘 되는 영상 찾기, 경쟁 채널 비교 | `yt-viral` (`collect.py`로 모으고 `swipe.py`로 순위) |
+| 제목과 썸네일 문구 점수 | `yt-package` (`title.py`) |
+| 첫 마디(훅) 점수, 대본 | `yt-script` (`hookscore.py`) |
+| 설명란, 태그, 검색어 | `yt-seo` |
+| 채널 진단 | `yt-audit` |
+| 시청 유지, 편집, 챕터, 쇼츠, 업로드 계획, 댓글 | `yt-retention`, `yt-edit`, `yt-chapters`, `yt-shorts`, `yt-plan`, `yt-comment` |
+
+- vidIQ 도구(`mcp__vidIQ__*`)는 먼저 쓰지 않는다. yt-* 스킬에 없는 데이터(키워드 검색량, 경쟁도 점수, 남의 채널 상세 분석 같은 vidIQ 고유 지표)가 꼭 필요할 때만, 무엇 때문에 필요한지 말하고 사용자에게 먼저 묻는다. vidIQ는 크레딧을 쓴다.
+- 영상 목록은 `yt-dlp`로 공개 페이지만 읽는다. `yt-dlp`가 없으면 `pip install yt-dlp`로 설치한다. 유튜브 주소는 이 환경의 허용 목록에 들어 있다.
+- 점수는 경험칙이다. 결과를 보고할 때 높은 점수가 성과를 보장하지 않는다고 함께 말한다.
+
 ## 환경
 
 - 클라우드 세션에서는 `.claude/hooks/session-start.sh`가 `agent-browser`를 설치하고, 미리 설치된 Chromium 경로를 `AGENT_BROWSER_EXECUTABLE_PATH`로 잡아 준다.
