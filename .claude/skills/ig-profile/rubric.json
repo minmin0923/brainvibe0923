@@ -1,0 +1,116 @@
+{
+  "version": "1.0",
+  "total": 100,
+  "note": "Twelve items. Score each honestly - a generous score helps nobody. Most first-pass profiles land in the 30s and 40s. The weighting is deliberate: the name field, the first bio line and the pinned three are worth more than the photo, because they are what a stranger who arrived from one reel actually processes before deciding to follow.",
+  "items": [
+    {
+      "id": "name_field",
+      "points": 12,
+      "full_marks": "The name field (30 characters, the bold line, not the handle) carries the name plus what they do in words people search: 'Dana Ruiz | Proposal templates'. This field is indexed by Instagram search and most accounts waste it on a name alone.",
+      "common_fail": "Just a name, or a name with an emoji.",
+      "name_ko": "이름 칸",
+      "full_marks_ko": "굵게 보이는 이름 칸(30자, 아이디 아님)에 이름과 하는 일을 사람들이 검색하는 말로 적는다: '김민지 | 프리랜서 계약서 양식'. 인스타그램 검색이 이 칸을 읽는다. 한글 검색어와 영어 검색어(예: 'AI 자동화 | AI automation')를 같이 넣을지 정한다.",
+      "common_fail_ko": "이름만 있거나, 이름 + 이모지뿐."
+    },
+    {
+      "id": "bio_first_line",
+      "points": 12,
+      "full_marks": "Line one names who this is for and what changes for them, in their words. Not a job title, not a list of adjectives, not three emoji separated by bars.",
+      "common_fail": "'Entrepreneur | Coffee lover | Dog dad'.",
+      "name_ko": "소개 첫 줄",
+      "full_marks_ko": "첫 줄에 누구를 위한 계정이고 그 사람에게 무엇이 바뀌는지를 그 사람의 말로 쓴다. 직함, 형용사 나열, 막대로 나눈 이모지 셋은 안 된다.",
+      "common_fail_ko": "'CEO | 커피 덕후 | 강아지 아빠'."
+    },
+    {
+      "id": "bio_body",
+      "points": 8,
+      "full_marks": "The rest of the 150 characters carries one piece of proof or one specific offer, and reads as sentences rather than a pipe-separated list.",
+      "common_fail": "Keyword soup, or blank space.",
+      "name_ko": "소개 나머지",
+      "full_marks_ko": "150자 안의 나머지에 증거 하나나 구체적인 제안 하나를 문장으로 쓴다. 검색어는 문장 속에 자연스럽게 넣는다.",
+      "common_fail_ko": "키워드 나열, 또는 빈칸."
+    },
+    {
+      "id": "pinned_three",
+      "points": 10,
+      "full_marks": "Three posts pinned to the top of the grid, doing three different jobs: the best proof, the clearest explanation of the offer, and the best introduction to the person. Not the three highest-view posts by accident.",
+      "common_fail": "Nothing pinned, so the top of the grid is whatever was posted last.",
+      "name_ko": "고정 게시물 3개",
+      "full_marks_ko": "맨 위에 고정한 게시물 3개가 서로 다른 일을 한다: 가장 강한 증거, 제안을 가장 잘 설명하는 것, 나를 가장 잘 소개하는 것.",
+      "common_fail_ko": "고정 없음. 맨 위가 그냥 마지막에 올린 것."
+    },
+    {
+      "id": "link",
+      "points": 8,
+      "full_marks": "One destination that matches what the bio just promised. Up to five links are allowed; more than two is a menu, and a menu converts worse than a door.",
+      "common_fail": "A link tree with eleven options, or no link at all.",
+      "name_ko": "링크",
+      "full_marks_ko": "소개글이 약속한 것과 맞는 목적지 하나. 링크는 5개까지 되지만 2개를 넘으면 메뉴판이고, 메뉴판은 문 하나보다 덜 누른다.",
+      "common_fail_ko": "링크트리에 선택지 11개, 또는 링크 없음."
+    },
+    {
+      "id": "highlights",
+      "points": 8,
+      "full_marks": "Four to six highlights named for the questions a buyer actually asks: Pricing, Results, How it works, About. Covers consistent. Nothing older than a year sitting at the front.",
+      "common_fail": "'Random', 'Life', 'Faves', or 14 highlights in no order.",
+      "name_ko": "하이라이트",
+      "full_marks_ko": "구매자가 실제로 묻는 질문 이름으로 4~6개: 가격, 후기, 진행 방식, 소개. 표지는 통일. 1년 넘은 것이 앞에 없음.",
+      "common_fail_ko": "'일상', '기록', '잡동사니', 또는 순서 없는 14개."
+    },
+    {
+      "id": "grid_legibility",
+      "points": 8,
+      "full_marks": "The first nine covers are legible at thumbnail size and say what the account is about without a single tap. Reel covers are chosen deliberately, not left as frame one.",
+      "common_fail": "Nine covers of a face mid-word with no text.",
+      "name_ko": "피드 첫 9칸",
+      "full_marks_ko": "첫 9개 표지가 작은 크기에서도 읽히고, 누르지 않아도 계정 주제가 보인다. 릴스 표지를 직접 고른다.",
+      "common_fail_ko": "말하다 멈춘 얼굴 표지 9개, 글자 없음."
+    },
+    {
+      "id": "photo",
+      "points": 6,
+      "full_marks": "Face fills roughly 60% of a circle that renders at about 40 pixels. Eyes visible, shot in the last two years, background not competing.",
+      "common_fail": "A full-body shot, a logo for a personal brand, or a photo taken at arm's length in a dark room.",
+      "name_ko": "프로필 사진",
+      "full_marks_ko": "약 40픽셀 원 안에서 얼굴이 60% 정도를 채운다. 눈이 보이고, 2년 안에 찍었고, 배경이 튀지 않는다.",
+      "common_fail_ko": "전신 사진, 개인 브랜드인데 로고, 어두운 셀카."
+    },
+    {
+      "id": "handle",
+      "points": 6,
+      "full_marks": "Readable, sayable out loud, and the same handle as the other platforms. No stacked underscores or numbers standing in for letters.",
+      "common_fail": "A handle nobody can spell after hearing it once.",
+      "name_ko": "아이디",
+      "full_marks_ko": "읽기 쉽고 소리 내어 말할 수 있으며 다른 플랫폼과 같은 아이디. 밑줄 여러 개나 숫자로 글자 대신하지 않기.",
+      "common_fail_ko": "한 번 듣고는 아무도 못 적는 아이디."
+    },
+    {
+      "id": "category_contact",
+      "points": 6,
+      "full_marks": "Professional account with a category that matches the offer, and contact buttons that work. Email that is checked, not the one from 2019.",
+      "common_fail": "Personal account, so there are no insights and no contact button.",
+      "name_ko": "카테고리·연락처",
+      "full_marks_ko": "프로페셔널 계정, 제안과 맞는 카테고리, 실제로 확인하는 이메일 연락 버튼.",
+      "common_fail_ko": "개인 계정이라 인사이트도 연락 버튼도 없음."
+    },
+    {
+      "id": "recent_activity",
+      "points": 10,
+      "full_marks": "Posted in the last seven days and replied to comments on the most recent post. An account that last posted in March reads as closed.",
+      "common_fail": "A five-week gap, or a wall of unanswered comments.",
+      "name_ko": "최근 활동",
+      "full_marks_ko": "최근 7일 안에 올렸고, 가장 최근 게시물 댓글에 답했다. 3월이 마지막 게시물이면 문 닫은 가게처럼 보인다.",
+      "common_fail_ko": "5주 공백, 또는 답 없는 댓글 더미."
+    },
+    {
+      "id": "story_presence",
+      "points": 6,
+      "full_marks": "A story up right now, or at least most days. It is the difference between a profile and a person.",
+      "common_fail": "No ring, ever.",
+      "name_ko": "스토리",
+      "full_marks_ko": "지금 스토리가 있거나 거의 매일 있다. 프로필과 사람의 차이다.",
+      "common_fail_ko": "스토리 링이 한 번도 없음."
+    }
+  ],
+  "note_ko": "12개 항목. 후하게 주지 말고 정직하게 매긴다. 처음 점검하면 대부분 30~40점대다. 이름 칸, 소개 첫 줄, 고정 3개가 사진보다 배점이 큰 이유는, 릴스 하나 보고 들어온 사람이 팔로우를 정하기 전에 실제로 읽는 곳이 여기라서다."
+}
