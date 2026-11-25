@@ -5,6 +5,7 @@ description: >-
   what order, sized to the creator's actual capacity. Use for "plan my
   week", "content calendar", "what should I post", "I have no idea what to
   make next".
+  Korean requests too: "이번 주 업로드 계획", "콘텐츠 일정", "뭐 올리지".
 ---
 
 # yt-plan
@@ -44,3 +45,9 @@ goes wrong.
 
 Nothing here publishes. This skill writes and you publish. Every output ends in a block the user
 copies, and the last line of every run is the question: **ship it, or change it?**
+
+## 한국어로 쓸 때
+
+- 사용자가 한국어로 말하면 모든 결과(설명, 표, 마지막 질문)를 한국어로 쓴다. 마지막 줄의 질문은 **"이대로 올릴까요, 고칠까요?"**로 쓴다.
+- 함께 있는 스크립트는 한국어를 읽는다(`yt-script/ko.py`: 조사 떼기, 한국어 과장어·군말·호칭 목록, 한글 표시 폭). 점수는 경험칙이라서, 낮은 점수는 다시 볼 이유일 뿐이고 높은 점수가 성과를 보장하지 않는다고 함께 말한다.
+- 목소리 파일(`~/.claude/youtube/voice.md`)에 존댓말/반말, 자주 쓰는 말투("~거든요", "~입니다")를 적고 그대로 따른다.

@@ -1,6 +1,6 @@
 {
  "version": "1.0",
- "note": "21 hook formulas for YouTube. A YouTube hook is the first 15 seconds and it does three jobs: confirm the click the title promised, raise a question the viewer cannot close, and prove the payoff exists. A hook that only does the third is a summary and it leaks. Every formula here carries the shape, a worked example, the failure mode, and the patterns hookscore.py classifies transcribed speech against.",
+ "note": "21 hook formulas for YouTube. A YouTube hook is the first 15 seconds and it does three jobs: confirm the click the title promised, raise a question the viewer cannot close, and prove the payoff exists. A hook that only does the third is a summary and it leaks. Every formula here carries the shape, a worked example, the failure mode, and the patterns hookscore.py classifies transcribed speech against. Korean edition adds name_ko/match_ko to every formula and a 22nd formula, the-all-in-one.",
  "rules": [
   "Confirm the title in the first sentence. A hook that ignores its own title is why people leave at 0:08.",
   "One idea. A hook carrying two promises keeps neither.",
@@ -19,6 +19,12 @@
     "\\b\\d+(\\.\\d+)?\\s?%",
     "\\b\\d+ (out of|in) \\d+\\b",
     "\\b\\d{2,}(,\\d{3})+\\b"
+   ],
+   "name_ko": "통계형",
+   "match_ko": [
+    "\\d+\\s?(%|퍼센트)",
+    "\\d+\\s?(명|개) ?중 ?\\d+",
+    "\\d+\\s?배"
    ]
   },
   {
@@ -31,6 +37,11 @@
     "\\bthis (channel|guy|creator|account)\\b",
     "\\bwent from .* to\\b",
     "\\bin (a|one|two|three|\\d+) (week|month|year)s?\\b"
+   ],
+   "name_ko": "남의 성과형",
+   "match_ko": [
+    "(채널|회사|사람|개발자|유튜버|대표|사장).{0,15}(\\d|만|억).{0,12}(만들|벌|달성|성장|늘|찍)",
+    "구독자 ?\\d+"
    ]
   },
   {
@@ -43,6 +54,11 @@
     "\\byou('re| are) (probably |still )?(doing|making)\\b",
     "\\bthe (mistake|reason) (everyone|most people|nobody)\\b",
     "\\bstop (doing )?\\b"
+   ],
+   "name_ko": "실수 지적형",
+   "match_ko": [
+    "(실수|착각|잘못 (알고|하고|쓰고))",
+    "(이유|문제)(는|가)? .{0,12}(아닙니다|아니에요|아니다)"
    ]
   },
   {
@@ -55,6 +71,12 @@
     "\\beveryone (says|thinks|tells you)\\b",
     "\\bis (actually )?wrong\\b",
     "\\bnobody (tells|talks about)\\b"
+   ],
+   "name_ko": "통념 뒤집기형",
+   "match_ko": [
+    "(다들|모두|흔히|보통|남들).{0,25}(하지만|그런데|근데|아닙니다|틀렸|반대)",
+    "(오히려|반대로|정반대)",
+    "(다들|모두|흔히|보통|남들).{0,25}(라고 (하|말하)|하잖아|하죠)"
    ]
   },
   {
@@ -67,6 +89,11 @@
     "\\bI('m| am) going to show you\\b",
     "\\bhere('s| is) (the|exactly)\\b",
     "\\bon screen\\b"
+   ],
+   "name_ko": "공개형",
+   "match_ko": [
+    "(보여|공개|알려)\\s?(드릴|드립|드리겠|줄게|준다)",
+    "(화면|그대로|직접|전부) ?(보여|공개)"
    ]
   },
   {
@@ -78,6 +105,11 @@
    "match": [
     "\\bthe (best|worst|fastest|easiest|only)\\b",
     "\\bnumber one\\b"
+   ],
+   "name_ko": "최상급형",
+   "match_ko": [
+    "가장 (빠른|쉬운|싼|좋은|강력한|확실한|쉽게|빠르게)",
+    "(최고|최강|최악|제일|1위)"
    ]
   },
   {
@@ -90,6 +122,11 @@
     "\\bin (the next )?\\d+ (seconds|minutes|hours)\\b",
     "\\bby the end of this video\\b",
     "\\bunder \\d+\\b"
+   ],
+   "name_ko": "시간 약속형",
+   "match_ko": [
+    "\\d+\\s?(초|분|시간)\\s?(만에|안에|이면|컷|내로)",
+    "(다음|앞으로) ?\\d+\\s?(초|분)"
    ]
   },
   {
@@ -102,6 +139,11 @@
     "\\bI (tried|spent|tested|let|gave)\\b",
     "\\bfor \\d+ (days|weeks|months)\\b",
     "\\bso you don'?t have to\\b"
+   ],
+   "name_ko": "직접 해봄형",
+   "match_ko": [
+    "(해봤|써봤|해 봤|써 봤|시켜봤|시켜 봤|맡겨봤|맡겨 봤|도전|실험|만들어봤|만들어 봤)",
+    "\\d+\\s?(일|주|개월|달|시간) ?(동안|간)"
    ]
   },
   {
@@ -113,6 +155,11 @@
    "match": [
     "^(why|how|what|when|should|can|do|does|is)\\b",
     "\\?\\s*$"
+   ],
+   "name_ko": "질문형",
+   "match_ko": [
+    "\\?\\s*$",
+    "^(왜|어떻게|무엇|뭐가|어떤|언제|누가|진짜)"
    ]
   },
   {
@@ -125,6 +172,10 @@
     "\\bbefore\\b.*\\bafter\\b",
     "\\bthis was\\b.*\\bthis is\\b",
     "\\bused to\\b"
+   ],
+   "name_ko": "전후 비교형",
+   "match_ko": [
+    "(전과 후|비포|애프터|이전|이후|바뀌|달라졌|달라진)"
    ]
   },
   {
@@ -138,6 +189,11 @@
     "\\bteardown\\b",
     "\\banalys(ed|ed|is|e)\\b",
     "\\bI pulled\\b"
+   ],
+   "name_ko": "분석·해부형",
+   "match_ko": [
+    "(분석|파헤|뜯어|해부|분해|낱낱이)",
+    "\\d+\\s?개.{0,10}(분석|비교)"
    ]
   },
   {
@@ -150,6 +206,11 @@
     "\\b\\w+ (plus|\\+) \\w+\\b",
     "\\bcombine\\b",
     "\\btogether\\b"
+   ],
+   "name_ko": "도구 조합형",
+   "match_ko": [
+    "\\S+\\s?[+＋]\\s?\\S+",
+    "(조합|같이 쓰|함께 쓰|연동|합치)"
    ]
   },
   {
@@ -163,6 +224,10 @@
     "\\bdon'?t (upload|post|publish|start)\\b",
     "\\bbefore you\\b",
     "\\bstop\\b"
+   ],
+   "name_ko": "경고형",
+   "match_ko": [
+    "(하지 ?마|절대|금지|주의|경고|전에 (꼭|반드시)|보기 전에|쓰기 전에)"
    ]
   },
   {
@@ -174,6 +239,11 @@
    "match": [
     "^\\d+ \\w+",
     "\\b(here are|these are) \\d+\\b"
+   ],
+   "name_ko": "목록형",
+   "match_ko": [
+    "^\\d+\\s?(가지|개|단계)",
+    "\\d+\\s?(가지|단계|개의)"
    ]
   },
   {
@@ -187,6 +257,10 @@
     "\\bscreenshot\\b",
     "\\bproof\\b",
     "\\breceipts?\\b"
+   ],
+   "name_ko": "증거 제시형",
+   "match_ko": [
+    "(인증|실제 (수익|화면|데이터|결과)|스크린샷|수익 공개|통장)"
    ]
   },
   {
@@ -199,6 +273,11 @@
     "\\b(nobody|almost nobody|most people) (knows?|opens?|uses?)\\b",
     "\\bhidden\\b",
     "\\bburied\\b"
+   ],
+   "name_ko": "내부자형",
+   "match_ko": [
+    "(아무도|대부분|거의 모든|모르는|몰랐던|안 알려|숨겨진|비밀)",
+    "(현직|내부|실무자|전직)"
    ]
   },
   {
@@ -212,6 +291,12 @@
     "\\bnever\\b",
     "\\bin one\\b",
     "\\bzero\\b"
+   ],
+   "name_ko": "불가능해 보이는 주장형",
+   "match_ko": [
+    "(없이|0원|무료로|공짜로).{0,20}(가능|만들|된다|됩니다|할 수)",
+    "(코딩 ?없이|몰라도|하나도 모르)",
+    "(한 줄 (모르|안)|모르고|없이도)"
    ]
   },
   {
@@ -225,6 +310,11 @@
     "\\bversus\\b",
     "\\bwhich (one )?(is|wins)\\b",
     "\\bsame .* (three|two) ways\\b"
+   ],
+   "name_ko": "비교형",
+   "match_ko": [
+    "(\\bvs\\b|비교|차이|어느 ?게|뭐가 (더|나))",
+    "\\S+ 대 \\S+"
    ]
   },
   {
@@ -237,6 +327,10 @@
     "\\bevery (video|post) .* starts\\b",
     "\\bit all (starts|started)\\b",
     "\\bthe (real )?reason\\b"
+   ],
+   "name_ko": "기원형",
+   "match_ko": [
+    "(모든 영상|시작은|처음 시작|비결|출발점|원래는)"
    ]
   },
   {
@@ -250,6 +344,10 @@
     "\\bis changing\\b",
     "\\bno longer\\b",
     "\\bas of\\b"
+   ],
+   "name_ko": "마감형",
+   "match_ko": [
+    "(이번 ?(주|달)|부터 (바뀝|바뀐|달라|사라|종료)|마감|곧 (사라|바뀌|종료)|\\d+월 \\d+일)"
    ]
   },
   {
@@ -262,7 +360,32 @@
     "^if you\\b",
     "\\bfor (anyone|everyone|people) who\\b",
     "\\byou specifically\\b"
+   ],
+   "name_ko": "대상 지목형",
+   "match_ko": [
+    "^(만약 )?.{0,15}(라면|이라면|하는 분|분들|분이라면)",
+    "(초보|비개발자|입문자|직장인|개발자|사장님)(라면|분들|를 위한|을 위한|필수)"
    ]
+  },
+  {
+   "id": "the-all-in-one",
+   "name": "The All-in-One",
+   "name_ko": "올인원형",
+   "shape": "Promise that this one video replaces every other one on the topic.",
+   "example": "[2026 풀버전] 클로드 코드 2시간 안에 마스터하기 | 입문→실전→심화",
+   "fails_when": "The video has to actually be complete and long. A 12-minute 'full course' is a broken promise, and a chaptered structure is mandatory.",
+   "match": [
+    "\\bfull (course|version|guide)\\b",
+    "\\bcomplete guide\\b",
+    "\\beverything (you|about)\\b",
+    "\\bmaster(ing)?\\b.{0,20}\\bin \\d+"
+   ],
+   "match_ko": [
+    "(풀코스|풀버전|풀강의|완전 ?정복|총정리|통합본|전체 ?강의|모든 것|A ?to ?Z)",
+    "(하나만 보(시)?면|이것만 보(시)?면|이 영상 하나)",
+    "(입문|기초)(부터|→).{0,15}(실전|심화|까지)"
+   ],
+   "added": "Korean edition: the most common outlier format in Korean AI-coding channels (Nov 2026 sample)."
   }
  ]
 }

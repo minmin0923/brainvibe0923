@@ -39,7 +39,7 @@ def main():
     files = [x for x in a if not x.startswith("--") and x != tr]
     if not files or not os.path.exists(files[0]): print(__doc__); sys.exit(1)
     rows = load_csv(files[0])
-    if len(rows) < 8: print("could not read at least 8 data points from that csv"); sys.exit(1)
+    if len(rows) < 8: print("csv에서 데이터 점을 8개 이상 읽지 못함"); sys.exit(1)
     xs = [r[0] for r in rows]; ys = [r[1] for r in rows]
     pct_axis = max(xs) <= 100.5
     dur = None
@@ -73,18 +73,18 @@ def main():
             said[str(c["from"])] = " ".join(near)[:140]
     out = {"points": len(rows), "start": start, "hook_leak": round(hook_leak, 2),
            "end": ys[-1], "cliffs": cliffs, "slide_per_unit": round(slide, 3), "said": said}
-    if as_json: print(json.dumps(out, indent=1)); return
-    print(f"\n  {files[0]}   {len(rows)} points   {ys[0]:.1f}% -> {ys[-1]:.1f}%\n")
-    verdict = "healthy" if hook_leak < 25 else "leaking" if hook_leak < 40 else "severe"
-    print(f"  HOOK LEAK   {hook_leak:.1f}% lost in the opening   [{verdict}]")
-    print(f"              under 25 is healthy for this length. Fix the first line before anything else.\n")
-    print("  CLIFFS      the moments people actually left")
+    if as_json: print(json.dumps(out, indent=1, ensure_ascii=False)); return
+    print(f"\n  {files[0]}   점 {len(rows)}개   {ys[0]:.1f}% -> {ys[-1]:.1f}%\n")
+    verdict = "양호" if hook_leak < 25 else "새는 중" if hook_leak < 40 else "심각"
+    print(f"  첫머리 이탈  시작 부분에서 {hook_leak:.1f}% 이탈   [{verdict}]")
+    print(f"              25% 미만이면 양호. 다른 것보다 첫 문장을 먼저 고치기.\n")
+    print("  급락 지점    시청자가 실제로 나간 순간")
     for c in cliffs:
         where = f"{c['at_seconds']:.0f}s" if c["at_seconds"] is not None else f"{c['from']}"
         print(f"    -{c['lost']:5.1f}%  at {where:>8}" + (f"   \"{said.get(str(c['from']),'')}\"" if said else ""))
-    if not cliffs: print("    none steeper than 0.8% - the loss is all slide, not moments")
-    print(f"\n  SLIDE       {slide:.3f}% per unit across the middle")
-    print( "              a flat slide is pacing, not content. Cut the middle, do not rewrite it.\n")
+    if not cliffs: print("    0.8%보다 가파른 급락 없음 - 특정 순간이 아니라 꾸준히 빠지는 것")
+    print(f"\n  완만한 하락  중간 구간에서 단위당 {slide:.3f}%")
+    print( "              꾸준한 하락은 내용이 아니라 속도 문제. 중간을 새로 쓰지 말고 잘라내기.\n")
 
 if __name__ == "__main__":
     main()

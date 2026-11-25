@@ -14,8 +14,11 @@ runtime you would land on, and you apply it in whatever editor you use. Nothing 
 """
 import json, os, re, sys
 
-FILLER_ONLY = re.compile(r"^[\s,.-]*((um+|uh+|er+|ah+|so|okay|ok|right|yeah|like|anyway|basically|"
-                         r"actually|you know|i mean|let me see|hold on)[\s,.-]*)+$", re.I)
+# 영어 군말 + 한국어 군말(음, 어, 그러니까, 이제, 약간, 뭐랄까 ...)
+_KO_FILLER = (r"음+|어+|아+|그+|에+|저기|그러니까|뭐지|뭐랄까|이제|약간|그래서|네|자|일단|아무튼|"
+              r"어쨌든|뭐|좀|막|그니까|있잖아요|있잖아|그런|저|아니")
+FILLER_ONLY = re.compile(r"^[\s,.?!~-]*((um+|uh+|er+|ah+|so|okay|ok|right|yeah|like|anyway|basically|"
+                         r"actually|you know|i mean|let me see|hold on|" + _KO_FILLER + r")[\s,.?!~-]*)+$", re.I)
 
 def parse_ts(s):
     s = s.strip().replace(",", ".")
@@ -38,7 +41,7 @@ def load(path):
             cur[2].append(line.strip())
     return [(a, b, " ".join(t)) for a, b, t in cues if t]
 
-def norm(t): return re.sub(r"[^a-z ]", "", t.lower()).split()
+def norm(t): return re.sub(r"[^a-z가-힣0-9 ]", "", t.lower()).split()
 
 def main():
     a = sys.argv[1:]
@@ -47,7 +50,7 @@ def main():
     a = [x for x in a if not x.startswith("--") and not re.match(r"^[\d.]+$", x)]
     if not a or not os.path.exists(a[0]): print(__doc__); sys.exit(1)
     cues = load(a[0])
-    if not cues: print("no cues found - is this an srt, vtt or whisper json?"); sys.exit(1)
+    if not cues: print("자막을 못 찾음 - srt, vtt, whisper json 파일인지 확인"); sys.exit(1)
     dur = cues[-1][1]
     cuts = []
     for i, (s, e, t) in enumerate(cues):
@@ -58,7 +61,7 @@ def main():
             if gap > floor:
                 keep = floor / 2
                 cuts.append({"kind": "DEAD", "start": round(cues[i - 1][1] + keep, 3),
-                             "end": round(s - keep, 3), "why": f"{gap:.2f}s gap"})
+                             "end": round(s - keep, 3), "why": f"{gap:.2f}초 멈춤"})
         # A restart is compared against the last cue that was actually SPEECH. Comparing against
         # the literal previous cue misses every retake with an "um" between the two attempts, which
         # is most of them.
@@ -66,21 +69,24 @@ def main():
             j = i - 1
             while j >= 0 and (FILLER_ONLY.match(cues[j][2]) or not cues[j][2].strip()): j -= 1
             if j >= 0:
+                # 한국어는 낱말이 길어서 앞 3낱말(영어는 5낱말까지)이 같으면 다시 말한 것으로 본다
                 a1, b1 = norm(cues[j][2])[:5], norm(t)[:5]
-                if len(a1) >= 3 and a1 == b1:
+                k = 3 if re.search(r"[가-힣]", t) else min(len(a1), len(b1), 5)
+                if k >= 3 and a1[:k] == b1[:k]:
                     cuts.append({"kind": "REPEAT", "start": cues[j][0], "end": cues[j][1],
-                                 "why": f'restart of "{" ".join(a1)}"'})
+                                 "why": f'"{" ".join(a1[:k])}" 다시 시작'})
     cuts = [c for c in cuts if c["end"] > c["start"]]
     cuts.sort(key=lambda c: c["start"])
     removed = sum(c["end"] - c["start"] for c in cuts)
     if as_json:
         print(json.dumps({"source": a[0], "duration": dur, "cuts": cuts,
-                          "removed": round(removed, 3), "out": round(dur - removed, 3)}, indent=1)); return
-    print(f"\n  {a[0]}   {dur:.2f}s in, {len(cues)} cues, dead-air floor {floor}s\n")
+                          "removed": round(removed, 3), "out": round(dur - removed, 3)}, indent=1, ensure_ascii=False)); return
+    KIND = {"DEAD": "공백", "FILLER": "군말", "REPEAT": "다시말함"}
+    print(f"\n  {a[0]}   원본 {dur:.2f}초, 자막 {len(cues)}줄, 공백 기준 {floor}초\n")
     for c in cuts:
-        print(f"    {c['kind']:<7} {c['start']:8.2f} -> {c['end']:8.2f}   {c['end']-c['start']:5.2f}s   {c['why']}")
-    print(f"\n  {len(cuts)} cuts, {removed:.2f}s removed, {dur - removed:.2f}s out "
-          f"({removed / dur * 100:.1f}% shorter)\n")
+        print(f"    {KIND[c['kind']]:<5} {c['start']:8.2f} -> {c['end']:8.2f}   {c['end']-c['start']:5.2f}초   {c['why']}")
+    print(f"\n  자를 곳 {len(cuts)}군데, {removed:.2f}초 삭제, 결과 {dur - removed:.2f}초 "
+          f"({removed / dur * 100:.1f}% 짧아짐)\n")
 
 if __name__ == "__main__":
     main()
